@@ -1,0 +1,458 @@
+<!-- <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css"> -->
+<!-- <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script> -->
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/chartist@1.3.0/dist/index.umd.min.js"></script> -->
+<!-- <link href="https://cdn.jsdelivr.net/npm/chartist@1.3.0/dist/index.min.css" rel="stylesheet"> -->
+
+<!-- <div class="ct-chart ct-perfect-fourth"></div> -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+
+
+
+<fieldset>
+	<legend>load source data</legend>
+	<table id="source">
+		<tr id="cgmlst">
+			<td> cgMLST </td>
+			<!-- <td> <input type="file" onchange="loadFile(event,'cgmlst')" /> </td> -->
+			<td> <input type="file" /> </td>
+			<td class="help"> accepting TSV-format with the following headers: <i>sequenceID, patientID, typingDate,
+					allele1,..., alleleX</i> </td>
+		</tr>
+		<tr id="locations">
+			<td> locations </td>
+			<td> <input type="file" /> </td>
+			<td class="help"> accepting TSV-format with the following headers: <i>locationID, patientID, clinic, ward,
+					room, from, till</i> </td>
+		</tr>
+	</table>
+	<br />
+	<!-- <a onclick="loadDemo()">load demo files instead</a> -->
+	<a id="loadDemo">load demo files instead</a>
+	<!-- <hr /> -->
+	<!-- <div id="loadResult"></div> -->
+</fieldset>
+<fieldset>
+	<legend>filter & options</legend>
+	<table id="filter">
+		<tr id="from">
+			<td> from </td>
+			<td> <input type="date" value="2016-01-01" /> </td>
+			<td class="help"> remove all entries <i>before</i> the given date </td>
+		</tr>
+
+		<tr id="till">
+			<td> till </td>
+			<td> <input type="date" value="2017-01-01" /> </td>
+			<td class="help"> remove all entries <i>after</i> the given date </td>
+		</tr>
+
+		<tr id="rows">
+			<td> rows </td>
+			<td> <input type="numer" value="95" min="0" max="100" size="3" />% </td>
+			<td class="help"> minimal percentage of correct alleles </td>
+		</tr>
+
+		<tr id="cols">
+			<td> cols </td>
+			<td> <input type="numer" value="95" min="0" max="100" size="3" />% </td>
+			<td class="help"> minimal percentage of correct alleles </td>
+		</tr>
+
+		<tr id="hasRoom">
+			<td> with room data </td>
+			<td> <input type="checkbox" checked> </td>
+			<td class="help"> keep only patients that have at least one room entry </td>
+		</tr>
+		<tr id="matchingPatients">
+			<td> match </td>
+			<td></td>
+			<td class="help"> keep only patients that have typing and location records</td>
+		</tr>
+		<tr id="pseudonymize">
+			<td> pseudonymize </td>
+			<td> <input type="checkbox" checked> </td>
+			<td class="help"> replace identifiers in input data with random strings </td>
+		</tr>
+
+		<!-- <tr>
+			<td> counting </td>
+			<td> <input type="checkbox"> </td>
+			<td class="help"> count unresolved alleles as difference </td>
+		</tr> -->
+	</table>
+
+	<hr />
+	<table id="filterResults">
+		<tr id="cgmlst">
+			<td> cgMLST </td>
+			<td class="help"></td>
+			<td> <a hidden>download</a> </td>
+		</tr>
+		<tr id="locations">
+			<td> locations </td>
+			<td class="help"></td>
+			<td> <a hidden>download</a> </td>
+		</tr>
+	</table>
+	</table>
+
+</fieldset>
+
+<fieldset>
+	<legend>calculate distance matrices</legend>
+	<table id="distance">
+		<!-- <tr>
+			<td> counting </td>
+			<td> <input type="checkbox"> </td>
+			<td class="help"> count unresolved alleles as difference </td>
+		</tr> -->
+		<tr id="cgmlst">
+			<td> cgMLST </td>
+			<td> <progress value="0" max="100"> </progress> </td>
+			<td class="current"></td>
+			<td>/</td>
+			<td class="total"></td>
+			<td hidden> <a class="matrix">matrix</a> <a class="stat">stats</a> <a class="graph">graph</a> </td>
+			<td class="help"></td>
+		</tr>
+		<tr id="locations">
+			<td> locations </td>
+			<td> <progress value="0" max="100"> </progress> </td>
+			<td class="current"></td>
+			<td>/</td>
+			<td class="total"></td>
+			<td hidden> <a class="matrix">matrix</a> </td>
+			<td class="help"></td>
+		</tr>
+	</table>
+
+	<div id="chart"></div>
+
+</fieldset>
+
+<!-- < fieldset >
+		<legend>show cgmlst statistics</legend>
+</fieldset > -->
+
+<fieldset>
+	<legend>correlation of cgmlst and location data</legend>
+	<table id="correlation">
+		<tr id="td">
+			<td> TD </td>
+			<td class="help"> [TypingDistance] </td>
+			<td> <input type="number" value="20" min="0" max="3000" size="4" /> </td>
+			<td class="help"> upper limit of allowed cgmlst - distances between two typings</td>
+		</tr>
+		<tr id="ti">
+			<td> TI </td>
+			<td class="help"> [TypingInterval] </td>
+			<td> <input type="number" value="365" min="0" max="9999" size="4" /> </td>
+			<td class="help"> time period between typings in days (use "0" for "unlimited") /TP </td>
+		</tr>
+		<tr id="ci">
+			<td> CI </td>
+			<td class="help"> [ContactInterval] </td>
+			<td> <input type="number" value="-7" min="-100" max="100" size="3" /> </td>
+			<td class="help"> lower limit of accepted time interval between contacts in days<br />negative numbers
+				indicate non-overlapping time-distance, positive numbers indicate strict overlap /TI </td>
+		</tr>
+		<tr id="cl">
+			<td> CL </td>
+			<td class="help"> [ContactLevel] </td>
+			<td>
+				<select>
+					<option>room</option>
+					<option>ward</option>
+					<option>clinic</option>
+					<option selected="selected">any</option>
+				</select>
+			</td>
+			<td class="help"> adminstrative level of contact-comparisons: room, ward, clinic or any of the
+				aforementioned </td>
+		</tr>
+		<tr id="cd">
+			<td> CD </td>
+			<td class="help"> [ContactDepth] </td>
+			<td> <input type="number" value="0" min="0" max="5" size="2" /> </td>
+			<td class="help"> allowed amount of intermediary contacts between two patients, "0" means direct contact
+			</td>
+		</tr>
+	</table>
+	<hr />
+	<table id="correlationResult">
+		<!-- <tr>
+			<td> counting </td>
+			<td> <input type="checkbox"> </td>
+			<td class="help"> count unresolved alleles as difference </td>
+		</tr> -->
+		<tr id="cgmlst">
+			<td> cgMLST </td>
+			<td> <progress value="0" max="100"> </progress> </td>
+			<td class="current"></td>
+			<td>/</td>
+			<td class="total"></td>
+			<td> <a hidden>download</a> </td>
+			<td class="help"></td>
+		</tr>
+		<tr id="locations">
+			<td> locations </td>
+			<td> <progress value="0" max="100"> </progress> </td>
+			<td class="current"></td>
+			<td>/</td>
+			<td class="total"></td>
+			<td> <a hidden>download</a> </td>
+			<td class="help"></td>
+		</tr>
+	</table>
+
+
+</fieldset>
+
+<style>
+	* {
+		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	}
+
+	.help {
+		color: gray;
+	}
+
+	fieldset {
+		margin-bottom: 3em;
+	}
+
+	a {
+		cursor: pointer;
+		/* color: blue; */
+		text-decoration: underline;
+	}
+
+	a:hover {
+		color: blue;
+	}
+</style>
+
+<!-- < script type = "module" src = "deps.js" ></script > -->
+<script type="module">
+	import * as fs from './lib/fs.js'
+	import { TALI } from './lib/deps.js'
+	import { typeDateFilter, locationDateFilter } from './lib/filter.js'
+	// import { gridStats, colFilter, rowFilter } from './lib/filter.js'
+	// import { roomFilter, patientIntersectionFilter } from './lib/filter.js'
+	import { unique } from './lib/deps.js'
+	import { typeStats } from './lib/type.stats.js'
+
+	// const FS = new Worker("./lib/fs.js");
+	const worker = {
+		filter: new Worker("./lib/filter.js", { type: "module" }),
+		pseudonymize: new Worker("./lib/pseudonymize.js", { type: "module" }),
+		correlation: new Worker("./lib/correlation.js", { type: "module" })
+	}
+	const distanceWorker = {
+		cgmlst: new Worker("./lib/typings.matrix.js", { type: "module" }),
+		locations: new Worker("./lib/locations.matrix.js", { type: "module" })
+	}
+
+	let DATA = { LIST: {}, DIST: {}, PSEUDO: {} }
+	let PARTS = ['cgmlst', 'locations']
+
+
+	function start() {
+		for (let x of PARTS)
+			if (!DATA.LIST[x]) return // input data not yet fully available
+
+		for (let x of PARTS) { // parse TSV
+			let bytes = DATA.LIST[x].length
+			let mb = (bytes / 1024 / 1024).toFixed(1)
+			DATA.LIST[x] = fs.parseTSV(DATA.LIST[x])
+			$(`#source #${x} .help`).innerHTML = showEntriesAndPatients(DATA.LIST[x])
+		}
+		console.log('start filter', DATA.LIST)
+		worker.filter.postMessage([DATA.LIST, getFilterSettings()])
+	}
+
+
+
+	worker.filter.onmessage = event => {
+		console.log('corrrr', getCorrelationSettings())
+		// console.log('yeah'); return
+		let [action, data] = event.data
+		let total = { rows: Object.values(DATA.LIST.cgmlst).length, cols: Object.values(Object.values(DATA.LIST.cgmlst)[0]).length }
+		if (action == 'from')
+			$(`#filter #from .help`).innerHTML = `removed ${data[0]} typings and ${data[1]} locations`
+		if (action == 'till')
+			$(`#filter #till .help`).innerHTML = `removed ${data[0]} typings and ${data[1]} locations`
+		if (action == 'rows')
+			$(`#filter #rows .help`).innerHTML = `removed ${data.dropped}/${total.rows} rows that had less than ${data.cutoffValue}/${data.maxEntries} values`
+		if (action == 'cols')
+			$(`#filter #cols .help`).innerHTML = `removed ${data.dropped}/${total.cols} columns that had less than ${data.cutoffValue}/${data.maxEntries} values`
+		if (action == 'hasRoom')
+			$(`#filter #hasRoom .help`).innerHTML = `removed ${data} locations`
+		if (action == 'matchingPatients')
+			$(`#filter #matchingPatients .help`).innerHTML = `removed ${data.cgmlst} typings and ${data.locations} locations`
+
+		if (action == 'result') {
+			DATA.LIST = data
+			for (let x of PARTS) {
+				$(`#filterResults #${x} .help`).innerHTML = showEntriesAndPatients(DATA.LIST[x])
+				$(`#filterResults #${x} a`).hidden = false
+			}
+
+			if (getFilterSettings().pseudonymize) {// optionally anonymize all data
+				$('#filter #pseudonymize .help').innerHTML = `<progress value="0" max="100"> </progress>`
+				worker.pseudonymize.postMessage(DATA.LIST)
+			} else calculateDistanceMatrices()
+		}
+	}
+	worker.pseudonymize.onmessage = event => {
+		let [action, data] = event.data
+		if (action == 'progress') {
+			let [current, total] = data
+			$(`#filter #pseudonymize progress`).value = current
+			$(`#filter #pseudonymize progress`).max = total
+		}
+		if (action == 'result') {
+			// console.log('pseudo', 'done', data)
+			DATA.LIST = data[0]
+			DATA.PSEUDO = data[1]
+			$('#filter #pseudonymize .help').innerHTML += ` <a> download mapping </a>`
+			$('#filter #pseudonymize .help a').addEventListener('click', () => download(`pseudonym.map.tsv`, TALI.grid.stringify(DATA.PSEUDO, { sortCol: 'count', pretty: 4 })))
+			calculateDistanceMatrices()
+			// $(`#distance #${name} [hidden]`).hidden = false
+		}
+	}
+
+	function calculateDistanceMatrices() {
+		DATA.DIST = {}
+		distanceWorker.cgmlst.postMessage(DATA.LIST.cgmlst)
+		distanceWorker.locations.postMessage(DATA.LIST.locations)
+	}
+
+	Object.entries(distanceWorker).map(([name, worker]) =>
+		worker.onmessage = event => {
+			let [action, data] = event.data
+			if (action == 'progress') {
+				let [current, total] = data
+				$(`#distance #${name} progress`).value = current
+				$(`#distance #${name} progress`).max = total
+				$(`#distance #${name} .current`).innerText = current
+				$(`#distance #${name} .total`).innerText = total
+			}
+			if (action == 'result') {
+				// console.log(name, 'done', data)
+				DATA.DIST[name] = data
+				$(`#distance #${name} [hidden]`).hidden = false
+				startCorrelation()
+			}
+		}
+	)
+	function startCorrelation() {
+		if (DATA.DIST.cgmlst && DATA.DIST.locations)
+			worker.correlation.postMessage([DATA.LIST, DATA.DIST, getCorrelationSettings()])
+	}
+	worker.correlation.onmessage = event => {
+		let [action, data] = event.data
+		if (action == 'result') {
+			DATA.CORR = data
+			console.log(data)
+		}
+	}
+
+
+	let $ = x => document.querySelector(x)
+	let $$ = x => [...document.querySelectorAll(x)]
+
+	$('#loadDemo').addEventListener('click', async x => { DATA.LIST = await fs.loadDemo(); start() })
+	$('#source #cgmlst input').addEventListener('change', async x => { DATA.LIST.cgmlst = await fs.loadFile(event); start() })
+	$('#source #locations input').addEventListener('change', async x => { DATA.LIST.locations = await fs.loadFile(event); start() })
+
+	// $$('#filterResults #cgmlst a').map(x => x.addEventListener('click', () => download(`cgmlst.list.tsv`, TALI.grid.stringify({sequenceID: LIST.cgmlst }, {sortCol: 'typingDate' }))))
+	$('#filterResults #cgmlst a').addEventListener('click', () => download(`cgmlst.list.tsv`, TALI.grid.stringify({ sequenceID: DATA.LIST.cgmlst }, { sortCol: 'typingDate' })))
+	$('#filterResults #locations a').addEventListener('click', () => download(`locations.list.tsv`, TALI.grid.stringify({ sequenceID: DATA.LIST.locations }, { sortCol: 'from' })))
+
+	$('#distance #cgmlst .matrix').addEventListener('click', () => download(`cgmlst.dist.tsv`, TALI.grid.stringify({ sequenceID: DATA.DIST.cgmlst }, { sortRows: true, sortCols: true })))
+	$('#distance #locations .matrix').addEventListener('click', () => download(`locations.dist.tsv`, TALI.grid.stringify(DATA.DIST.locations, { sortRows: true, sortCols: true })))
+
+	$('#distance #cgmlst .stat').addEventListener('click', () => download(`cgmlst.dist.stat.tsv`, TALI.grid.stringify(typeStats(DATA.LIST, DATA.DIST), { flip: false })))
+	$('#distance #cgmlst .graph').addEventListener('click', () => showTypeStats())
+
+
+
+	function getFilterSettings() {
+		return {
+			from: $('#filter #from input').value,
+			till: $('#filter #till input').value,
+			requiredRowCompleteness: $('#filter #rows input').value * 1,
+			requiredColumnCompleteness: $('#filter #cols input').value * 1,
+			hasRoom: $('#filter #hasRoom input').checked,
+			pseudonymize: $('#filter #pseudonymize input').checked,
+		}
+	}
+	function getCorrelationSettings() {
+		// $$('#correlation select, #correlation input')
+		return {
+			td: $('#correlation #td input').value * 1,
+			ti: $('#correlation #ti input').value * 1,
+			ci: $('#correlation #ci input').value * 1,
+			cl: $('#correlation #cl select').value,
+			cd: $('#correlation #cd input').value * 1,
+		}
+	}
+	function showEntriesAndPatients(grid) {
+		let entries = Object.keys(grid).length
+		let patients = unique(Object.values(grid).map(x => x.patientID)).length
+		return `${entries} entries, ${patients} patients`
+	}
+
+
+	function showTypeStats() {
+		$("#chart").innerHTML = ''
+		let data = typeStats(DATA.LIST, DATA.DIST)
+		console.log('typestat', data.ABS.cgmlstByPatient)
+		var options = {
+			chart: {
+				animations: {
+					enabled: false,
+				},
+				type: 'bar',
+				background: '#fff',
+				width: '100%',
+				height: '300px',
+			},
+			plotOptions: {
+				bar: {
+					barHeight: '90%',
+				}
+			},
+			dataLabels: {
+				enabled: false,
+			},
+			tooltip: {
+				enabled: false,
+			},
+			series: [{
+				name: 'cgMLST distribution',
+				data: Object.entries(data.ABS.cgmlstByPatient).map(([x, y]) => ({ x: x % 100 == 0 ? x : '', y }))
+			}],
+		}
+
+		var chart = new ApexCharts($("#chart"), options);
+
+		chart.render();
+	}
+
+
+
+	function download(filename, text) {
+		var element = document.createElement('a');
+		element.setAttribute('href', 'data:text/tsv;charset=utf-8,' + encodeURIComponent(text));
+		element.setAttribute('download', filename);
+		element.style.display = 'none';
+		document.body.appendChild(element);
+		element.click();
+		document.body.removeChild(element);
+	}
+
+</script>
