@@ -57,10 +57,23 @@ export function showCorrelationChart() {
 			width: '100%',
 			height: '300px',
 		},
+		stroke: {
+			curve: 'smooth',
+			width: 4,
+		},
+		markers: {
+			size: 5,
+		},
 		plotOptions: {
 			// bar: {
 			// barHeight: '90%',
 			// }
+
+			line: {
+				markers: {
+					size: 3,
+				},
+			}
 		},
 		dataLabels: {
 			// enabled: false,
