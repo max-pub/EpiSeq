@@ -33,11 +33,13 @@ export function start() {
 		// console.log(x, DATA.LIST[x])
 		$(`#source #${x} .help`).innerHTML = showEntriesAndPatients(DATA.LIST[x])
 	}
+	startFilter()
+}
+
+export function startFilter() {
 	console.log('start filter', DATA.LIST)
 	worker.filter.postMessage([DATA.LIST, getFilterSettings()])
 }
-
-
 
 worker.filter.onmessage = event => {
 	// console.log('corrrr', getCorrelationSettings())
@@ -151,12 +153,25 @@ worker.correlation.onmessage = event => {
 		DATA.CORR[getCorrelationString()] = data
 		// for(let dist in data)
 		// data[dist].percentage = data[dist].percentage.toFixed(1) + '%'
-		$('#correlationTables').innerHTML = TALI.grid.stringify(DATA.CORR, { flip: true, format: 'html', caption: true })
-		showCorrelationChart(DATA.CORR)
+		showCorrelationTables()
+		showCorrelationChart()
 	}
 }
+function showCorrelationTables() {
+	let tables = TALI.grid.stringify(DATA.CORR, { flip: true, format: 'html', caption: true })
+	tables = tables.replaceAll('<table>', '<div><table>').replaceAll('</table>', `</table><a class='remove'>remove</a> </div>`)
+	$('#correlationTables').innerHTML = tables
+	$$(`#correlationTables a.remove`).map(a => a.addEventListener('click', e => removeCorrelation(e)))
+}
 
-
+function removeCorrelation(event) {
+	let caption = event.target.closest('div').querySelector('caption')
+	let id = caption.textContent
+	console.log('remove', id)
+	delete DATA.CORR[id]
+	showCorrelationTables()
+	showCorrelationChart()
+}
 
 function show(path) {
 	try {
@@ -192,8 +207,11 @@ function getCorrelationSettings() {
 }
 function getCorrelationString() {
 	let x = getCorrelationSettings()
-	return Object.entries(x).map(x => `${x[0]} = ${x[1]}`).join('     ')
+	return Object.entries(getCorrelationSettings()).map(x => `${x[0]} = ${x[1]}`).join('     ')
 }
+// let getCorrelationID = () => Object.entries(getCorrelationSettings()).map(x => `${x[0]}_${x[1]}`).join('__')
+
+
 function showEntriesAndPatients(grid) {
 	let entries = Object.keys(grid).length
 	let patients = unique(Object.values(grid).map(x => x.patientID)).length

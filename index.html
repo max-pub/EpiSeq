@@ -59,7 +59,7 @@
 
 		<tr id="till">
 			<td> till </td>
-			<td> <input type="date" value="2019-01-01" /> </td>
+			<td> <input type="date" value="2018-01-01" /> </td>
 			<td class="help"> remove all entries <i>after</i> the given date </td>
 		</tr>
 
@@ -247,7 +247,7 @@
 	</table>
 
 	<hr />
-
+	<a id="correlationDownload">download</a>
 	<div id="correlationTables">
 
 	</div>
@@ -299,10 +299,15 @@
 		white-space: pre;
 	}
 
+	#correlationTables>div {
+		margin-bottom: 0.5rem;
+	}
+
 	#correlationTables table {
 		border-collapse: collapse;
-		margin-bottom: 0.5rem;
+		/* margin-bottom: 0.5rem; */
 		caption-side: bottom;
+		width: 100%;
 	}
 
 	#correlationTables td,
@@ -315,6 +320,15 @@
 
 	#correlationTables th:first-child {
 		text-align: left;
+	}
+
+	a.remove {
+		display: block;
+		margin: auto;
+		text-align: center;
+		text-decoration: none;
+		font-size: 11px;
+		color: red;
 	}
 </style>
 

@@ -18,7 +18,7 @@ export function showTypeChart() {
 		},
 		plotOptions: {
 			bar: {
-				barHeight: '90%',
+				// barHeight: '90%',
 			}
 		},
 		dataLabels: {
@@ -40,12 +40,12 @@ export function showTypeChart() {
 
 
 
-export function showCorrelationChart(data) {
+export function showCorrelationChart() {
 	// data = Object.entries(data).map(x => ({ name: x[0], data: x[1] }))
 	// console.log('dataaa', data)
 	// return
-	data = Object.entries(data).map(x => ({ name: x[0], data: Object.entries(x[1]).map(y => ({ x: y[0], y: y[1].percentage.slice(0, -1) * 1 })) }))
-	console.log('dataaa', data)
+	let data = Object.entries(DATA.CORR).map(x => ({ name: x[0], data: Object.entries(x[1]).map(y => ({ x: y[0], y: y[1].percentage.slice(0, -1) * 1 })) }))
+	// console.log('dataaa', data)
 	$("#correlationChart").innerHTML = ''
 	var options = {
 		chart: {
@@ -76,7 +76,7 @@ export function showCorrelationChart(data) {
 	chart.render();
 	setTimeout(() => {
 		chart.render();
-	}, 500)
+	}, 100)
 }
 
 
