@@ -1,6 +1,6 @@
-import { mapValues } from './deps.js'
-import { groupDistanceMatrixByPatientID, groupDistanceMatrixByDistance, matrixFilter } from './stats.js'
-import { matrixToList, rowsAndCols, diagonalX } from './matrix.js'
+import { mapValues } from '../lib/deps.js'
+import { groupDistanceMatrixByPatientID, groupDistanceMatrixByDistance, matrixFilter } from '../lib/stats.js'
+import { matrixToList, rowsAndCols, diagonalX } from '../lib/matrix.js'
 // import { TALI } from './deps.js'
 
 onmessage = event => {
@@ -12,24 +12,23 @@ onmessage = event => {
 
 function reduce(LIST, DIST, OPTIONS) {
 	console.log("reduce", OPTIONS)
-	// let typingDates = getTypingDates(LIST.cgmlst)
+	// let typingDates = getTypingDates(LIST.typings)
 
-	let seq = DIST.cgmlst
+	let seq = DIST.typings
 
-	// console.log('filter sequence matrix by date...')
 	let seqCount1 = matrixToList(seq).length
-	seq = OPTIONS.TI ? matrixDateFilter(DIST.cgmlst, LIST.cgmlst, OPTIONS.TI) : DIST.cgmlst // TI==0 -> no filter
+
+	seq = matrixDistanceFilter(seq, { maxDistance: OPTIONS.TD })
 	// rowsAndCols(seq, 'after date')
 	let seqCount2 = matrixToList(seq).length
-	postMessage(['TI', { dropped: seqCount1 - seqCount2 }])
+	postMessage(['TD', { dropped: seqCount1 - seqCount2 }])
 
-	// console.log('filter sequence matrix by distance...')
-	seq = matrixDistanceFilter(seq, { maxDistance: OPTIONS.TD })
+	seq = OPTIONS.TI ? matrixDateFilter(seq, LIST.typings, OPTIONS.TI) : DIST.typings // TI==0 -> no filter
 	let seqCount3 = matrixToList(seq).length
-	postMessage(['TD', { dropped: seqCount2 - seqCount3 }])
+	postMessage(['TI', { dropped: seqCount2 - seqCount3 }])
 
 	// console.log('group sequence matrix ...')
-	let pat = groupDistanceMatrixByPatientID(seq, LIST.cgmlst)
+	let pat = groupDistanceMatrixByPatientID(seq, LIST.typings)
 	diagonalX(seq)
 	diagonalX(pat)
 	// console.log('seq', seq)
@@ -55,7 +54,7 @@ function reduce(LIST, DIST, OPTIONS) {
 	postMessage(['location', { location: loc, count: matrixToList(loc).length }])
 
 	let pairs = groupDistanceMatrixByDistance(pat, OPTIONS.TD)
-	console.log('pairs', pairs)
+	// console.log('pairs', pairs)
 	let data = correlate(pairs, loc)
 	postMessage(['correlate', data])
 
@@ -134,9 +133,9 @@ export function correlate(pairs, loc) {
 
 // function typingFilter(LIST, DIST, TD, TP, typingDates) {
 // 	console.log('filter sequence matrix by date...')
-// 	let seq = TP ? matrixDateFilter(DIST.cgmlst, typingDates, TP) : DIST.cgmlst // TP==0 -> no filter
+// 	let seq = TP ? matrixDateFilter(DIST.typings, typingDates, TP) : DIST.typings // TP==0 -> no filter
 // 	console.log('group sequence matrix ...')
-// 	let pat = groupDistanceMatrixByPatientID(seq, LIST.cgmlst)
+// 	let pat = groupDistanceMatrixByPatientID(seq, LIST.typings)
 // 	console.log('filter sequence matrix by distance...')
 // 	pat = matrixFilter(pat, { maxDistance: TD, removeDiagonal: true, removeMultipleValues: true })
 // 	console.log('build sequence matrix pairs...')
@@ -264,8 +263,8 @@ function addDepth(DATA, CD) {
 
 export function correlation(LIST, DIST, CORRELATION, debugFolder) {
 	console.log(`\nstart correlation ...`)
-	let typingDates = getTypingDates(LIST.cgmlst)
-	// let patientIDs = Object.keys(LIST.cgmlst).sort()
+	let typingDates = getTypingDates(LIST.typings)
+	// let patientIDs = Object.keys(LIST.typings).sort()
 	// Deno.writeTextFileSync(`test_000.tsv`, TALI.grid.stringify({ locations: DIST.locations.room }, { sortRows: true, sortCols: true }))
 	addAnyLocation(DIST.locations)
 

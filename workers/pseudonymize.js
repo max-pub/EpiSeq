@@ -63,7 +63,7 @@ function anonymizeTypings(DATA, MAP) {
 
 export function anonymize(DATA) {
 	let MAP = { clinic: {}, ward: {}, room: {}, patientID: {}, locationID: {}, sequenceID: {}, alleleID: {}, }
-	DATA.cgmlst = anonymizeTypings(DATA.cgmlst, MAP)
+	DATA.typings = anonymizeTypings(DATA.typings, MAP)
 	DATA.locations = anonymizeLocations(DATA.locations, MAP)
 	postMessage(['result', [DATA, MAP]])
 	return MAP

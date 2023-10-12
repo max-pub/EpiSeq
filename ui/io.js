@@ -19,15 +19,26 @@ export async function loadDemo(mro) {
 	// $('#loadResult').innerHTML = 'loading...'
 	// console.log("FUCK", await fetch('demo/cgmlst.tsv').then(x => x.text()))
 	return {
-		cgmlst: await fetch(`demo/${mro}/cgmlst.tsv`).then(x => x.text()),
+		typings: await fetch(`demo/${mro}/cgmlst.tsv`).then(x => x.text()),
 		locations: await fetch(`demo/${mro}/locations.tsv`).then(x => x.text())
 	}
 	// console.log('li', LIST.cgmlst)
 }
 
 
-import { TALI } from './deps.js'
+import { TALI } from '../lib/deps.js'
 export function parseTSV(text) {
 	// $('#loadResult').innerHTML = 'parsing...'
 	return Object.values(TALI.grid.parse(text))[0]
+}
+
+
+export function download(filename, text) {
+	var element = document.createElement('a');
+	element.setAttribute('href', 'data:text/tsv;charset=utf-8,' + encodeURIComponent(text));
+	element.setAttribute('download', filename);
+	element.style.display = 'none';
+	document.body.appendChild(element);
+	element.click();
+	document.body.removeChild(element);
 }

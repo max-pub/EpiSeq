@@ -1,8 +1,9 @@
-import { select } from './deps.js'
-import { matrixToList, rowsAndCols, diagonalX } from './matrix.js'
+import { select } from '../lib/deps.js'
+import { matrixToList, rowsAndCols, diagonalX } from '../lib/matrix.js'
 
 
 onmessage = event => {
+	console.log('start location worker')
 	let list = event.data
 	// console.log('hello from LOCATION matrix::', list)
 	calculateDistanceMatrix(list)
@@ -116,23 +117,7 @@ export function distanceTreeToDistanceMatrix(data, options = {}) {
 	return out
 }
 
-export function cleanNumbers(data) {
-	let out = {}
-	for (let table in data) {
-		out[table] ??= {}
-		for (let row in data[table]) {
-			out[table][row] ??= {}
-			for (let col in data[table][row]) {
-				out[table][row][col] = null
-				if (![undefined, null, 'xxx'].includes(data[table][row][col]))
-					out[table][row][col] = data[table][row][col].toFixed(2)
-			}
-		}
-	}
-	for (let cl in out)
-		diagonalX(out[cl])
-	return out
-}
+
 
 export function calculateDistanceMatrix(locationList, info = {}) {
 	info.locationsByPatient = groupByPatientID(locationList)

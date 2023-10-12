@@ -1,44 +1,59 @@
 
-import { intersection, unique } from './deps.js'
+import { intersection, unique } from '../lib/deps.js'
 
 onmessage = event => {
 	let [LIST, FILTER] = event.data
-	// console.log('hello from FILTER::', LIST, FILTER)
+	console.log('start filter worker', LIST, FILTER)
 	filterAll(LIST, FILTER)
 }
 
 function filterAll(LIST, FILTER) {
 	// let FILTER = getFilterSettings()
 	console.log('FILTER', FILTER)
+	// console.log('pat ids',patientIDs(LIST.typings))
 	dateFilter(LIST, FILTER)
+	// console.log('pat ids',patientIDs(LIST.typings))
 	completenessFilter(LIST, FILTER)
+	// console.log('pat ids',patientIDs(LIST.typings))
 	if (FILTER.hasRoom) {
 		let dropped = roomFilter(LIST.locations)
 		postMessage(['hasRoom', dropped])
 		// $(`#filter #hasRoom .help`).innerHTML = `removed ${dropped} locations`
 	}
+	// console.log('pat ids',patientIDs(LIST.typings))
 	let dropped = patientIntersectionFilter(LIST)
 	postMessage(['matchingPatients', dropped])
+	// console.log("FILTER RESULT", LIST)
+	// return
 	// console.log('matchingPatients',dropped)
 
+	// console.log("FILTER RESULT", LIST)
 	postMessage(['result', LIST])
-	// $(`#filter #matchingPatients .help`).innerHTML = `removed ${dropped.cgmlst} typings and ${dropped.locations} locations`
+	// $(`#filter #matchingPatients .help`).innerHTML = `removed ${dropped.typings} typings and ${dropped.locations} locations`
 }
+
+
+
 function dateFilter(LIST, FILTER) {
-	let a = typeDateFilter(LIST.cgmlst, FILTER)
+	let a = typeDateFilter(LIST.typings, FILTER)
 	let b = locationDateFilter(LIST.locations, FILTER)
 	postMessage(['from', [a.from, b.from]])
 	postMessage(['till', [a.till, b.till]])
 }
 function completenessFilter(LIST, FILTER) {
-	// let total = { rows: Object.values(LIST.cgmlst).length, cols: Object.values(Object.values(LIST.cgmlst)[0]).length }
-	let grid = gridStats(LIST.cgmlst)
+	// let total = { rows: Object.values(LIST.typings).length, cols: Object.values(Object.values(LIST.typings)[0]).length }
+	let grid = gridStats(LIST.typings)
+	// console.log('grid', grid)
+	// console.log('pat ids',patientIDs(LIST.typings))
+
 	postMessage(['grid', grid])
-	let rows = rowFilter(LIST.cgmlst, grid, FILTER)
+	let rows = rowFilter(LIST.typings, grid.rows, FILTER)
 	postMessage(['rows', rows])
+	// console.log('pat ids',patientIDs(LIST.typings))
 	// console.log('rows',rows)
-	let cols = colFilter(LIST.cgmlst, grid, FILTER)
+	let cols = colFilter(LIST.typings, grid.cols, FILTER)
 	postMessage(['cols', cols])
+	// console.log('pat ids',patientIDs(LIST.typings))
 	// console.log(grid, rows, cols)
 	// $(`#filter #rows .help`).innerHTML = `removed ${rows.dropped}/${total.rows} rows that had less than ${rows.cutoffValue}/${rows.maxEntries} values`
 	// $(`#filter #cols .help`).innerHTML = `removed ${cols.dropped}/${total.cols} columns that had less than ${cols.cutoffValue}/${cols.maxEntries} values`
@@ -46,7 +61,7 @@ function completenessFilter(LIST, FILTER) {
 
 // export function filter(DATA, FILTER) {
 // 	let STATS = {}
-// 	STATS.cgmlst = typingFilter(DATA.cgmlst, FILTER)
+// 	STATS.typings = typingFilter(DATA.typings, FILTER)
 // 	STATS.locations = locationFilter(DATA.locations, FILTER)
 // 	STATS.patientIntersection = patientIntersectionFilter(DATA)
 // 	STATS.otherStats = otherStats(DATA)
@@ -119,15 +134,18 @@ export function locationDateFilter(DATA, FILTER) {
 export function gridStats(DATA) {
 	let stat = { rows: {}, cols: {} }
 	for (let row in DATA) {
+		stat.rows[row] ??= { count: 0 }
 		for (let col in DATA[row]) {
 			if (col == 'patientID') continue
 			if (col == 'typingDate') continue
-			if (!DATA[row][col]) continue
-			stat.rows[row] ??= { count: 0 }
-			stat.rows[row].count++
 			stat.cols[col] ??= { count: 0 }
+			if (!DATA[row][col]) continue
+			stat.rows[row].count++
 			stat.cols[col].count++
 		}
+		// if (row == '71438935') {
+		// 	console.log('row stat', stat.rows[row])
+		// }
 	}
 	return stat
 }
@@ -140,15 +158,15 @@ export function rowFilter(DATA, STAT, FILTER) {
 	let cutoffValue = Math.round(maxEntries * cutoffPercentage / 100)
 	// console.log('\nrowFilter...items:', items, 'max entries: ', maxEntries, 'cutoff: ', cutoffValue)
 
-	for (let id in STAT.rows) {
-		if (STAT.rows[id].count < cutoffValue) {
+	for (let id in STAT) {
+		if (STAT[id].count < cutoffValue) {
 			// console.log('delete row', id, STAT.rows[id].count, '<', cutoffValue)
 			delete DATA[id]
 			dropped++
 		}
 	}
 	// items.after = items.before - items.dropped
-	return { cutoffPercentage, maxEntries, cutoffValue, dropped }
+	return { cutoffPercentage, maxEntries, cutoffValue, dropped, stats: STAT }
 }
 
 
@@ -161,8 +179,8 @@ export function colFilter(DATA, STAT, FILTER) {
 	let cutoffValue = Math.round(maxEntries * cutoffPercentage / 100)
 	// console.log('\ncolFilter...items:', items, 'max entries: ', maxEntries, 'cutoff: ', cutoffValue)
 
-	for (let col in STAT.cols) {
-		if (STAT.cols[col].count < cutoffValue) {
+	for (let col in STAT) {
+		if (STAT[col].count < cutoffValue) {
 			// console.log('delete column', col, STAT.cols[col].count, '<', cutoffValue)
 			for (let row in DATA)
 				delete DATA[row][col]
@@ -170,7 +188,7 @@ export function colFilter(DATA, STAT, FILTER) {
 		}
 	}
 	// items.after = items.before - items.dropped
-	return { cutoffPercentage, maxEntries, cutoffValue, dropped }
+	return { cutoffPercentage, maxEntries, cutoffValue, dropped, stats: STAT }
 	// return { items, maxEntries, cutoffValue, cutoffPercentage }
 }
 
@@ -216,16 +234,18 @@ export function locationFilter(DATA, FILTER) {
 export const patientIDs = DATA => unique(Object.values(DATA).map(x => x.patientID))
 
 export function patientIntersectionFilter(DATA) {
-	let cgmlstPatientIDs = patientIDs(DATA.cgmlst)
+	// console.log('intersection',JSON.stringify(DATA.typings))
+	let typingPatientIDs = patientIDs(DATA.typings)
 	let locationPatientIDs = patientIDs(DATA.locations)
-	let IS = intersection(cgmlstPatientIDs, locationPatientIDs)
-	for (let x of ['cgmlst', 'locations'])
+	let IS = intersection(typingPatientIDs, locationPatientIDs)
+	// console.log('intersection filter', cgmlstPatientIDs.length, locationPatientIDs.length, IS.length)
+	for (let x of ['typings', 'locations'])
 		for (let id in DATA[x])
 			if (!IS.includes(DATA[x][id].patientID))
 				delete DATA[x][id]
 
 	return {
-		cgmlst: cgmlstPatientIDs.length - patientIDs(DATA.cgmlst).length,
+		typings: typingPatientIDs.length - patientIDs(DATA.typings).length,
 		locations: locationPatientIDs.length - patientIDs(DATA.locations).length,
 	}
 }

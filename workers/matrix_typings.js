@@ -1,6 +1,7 @@
-import { matrixToList, rowsAndCols, diagonalX } from './matrix.js'
+import { matrixToList, rowsAndCols, diagonalX } from '../lib/matrix.js'
 
 onmessage = event => {
+	console.log('start typings worker')
 	let list = event.data
 	// console.log('hello from type matrix::', message)
 	calculateDistanceMatrix(list)
@@ -18,6 +19,12 @@ export function calculateDistanceMatrix(input = {}) {
 			// if (id1 == id2) output[id1][id2] = null
 			if (id1 <= id2) continue
 			let dist = calculateDistanceBetweenTwoSequences(input[id1], input[id2])
+			// if (dist == 0) {
+			if (id1 == '71438935') {
+				// console.log('s1', id1, input[id1].slice(30))
+				// console.log('s2', id2, input[id2].slice(30))
+			}
+
 			output[id1][id2] = dist
 		}
 		postMessage(['progress', [ids.indexOf(id1) + 1, ids.length]])
@@ -44,6 +51,10 @@ function convertToTypedArrays(list) {
 			int.push(list[id][key] * 1)
 		}
 		out[id] = new Uint16Array(int)
+		if (id == '71438935') {
+			console.log('src', list[id])
+			console.log('tgt', out[id])
+		}
 		// let x = Object.entries(list[id])
 		// 	.filter(x => !['patientID', 'typingDate'].includes(x[0])) // remove meta-data
 		// 	.sort((a, b) => a[0] < b[0]) // sort by allele-key

@@ -1,0 +1,13 @@
+!! x
+
+<table class="stats">
+	! for(let typ in x){
+	<tr id="${typ}">
+		<td> ${typ} </td>
+		<td class="patient-count">${x[typ].patients} patients</td>
+		<td class="entry-count">${x[typ].entries} entries</td>
+		<td class="relation">${(x[typ].entries/x[typ].patients).toFixed(2)} entries/patient</td>
+		<td class="download"> <a>download</a> </td>
+	</tr>
+	! }
+</table>
