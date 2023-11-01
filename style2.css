@@ -1,0 +1,214 @@
+* {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	font-weight: 300;
+}
+
+#source a {
+	display: block;
+}
+
+legend {
+	font-size: 20px;
+	/* color: gray; */
+}
+
+.help {
+	color: gray;
+	font-size: 12px;
+}
+
+div.chart {
+	border: 1px solid black;
+}
+
+a.selected {
+	color: red !important;
+}
+
+.download,
+a.chart {
+	color: #658a6e;
+	font-size: 12px;
+	display: inline-block;
+	margin: auto 1rem;
+}
+
+.stats td {
+	padding-right: 2rem;
+}
+table{
+	border-collapse: collapse;
+}
+.patient-count,
+.entry-count {}
+.info .box{
+	background: transparent;
+	color: gray;
+	font-size: 12px;
+}
+a {
+	color: cornflowerblue;
+	text-decoration: none;
+}
+.stats td{
+	border: 1px solid silver;
+}
+/* fieldset,
+.chart-box,
+.table-box {
+	margin-bottom: 5em;
+} */
+
+/* .box {
+	margin-bottom: 5em;
+	border: 1px solid black;
+} */
+
+.box {
+	margin: 1em;
+	padding: 1em;
+	background: #eee;
+	border-radius: 10px;
+}
+
+.table-box, .chart-box {
+	margin: 5em 1em;
+	/* border: 1px solid black; */
+}
+
+h2 {
+	margin-top: 5rem;
+	margin-left: 1em;
+}
+
+.box>h2 {
+	text-align: center;
+}
+
+fieldset i {
+	color: gray;
+	font-size: 12px;
+}
+.inline-block{
+	display: inline-block;
+}
+h5 {
+	font-weight: bold;
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	cursor: pointer;
+	/* color: blue; */
+	/* text-decoration: underline; */
+}
+
+a:hover {
+	color: skyblue;
+}
+
+#correlationResult {
+	display: none;
+}
+
+table caption {
+	color: gray;
+	font-size: 11px;
+	white-space: pre;
+}
+
+#correlationTables>div {
+	margin-bottom: 0.5rem;
+}
+
+#correlationTables table {
+	border-collapse: collapse;
+	/* margin-bottom: 0.5rem; */
+	caption-side: bottom;
+	width: 100%;
+}
+
+th {
+	font-weight: bold;
+}
+
+#correlationTables td,
+#correlationTables th {
+	border: 1px solid silver;
+	text-align: right;
+	font-size: 11px;
+	padding: 0.1rem 0.3rem;
+}
+
+#correlationTables th:first-child {
+	text-align: left;
+}
+
+#correlationDownload {
+	display: block;
+	text-align: center;
+	margin-bottom: 2rem;
+}
+
+a.remove {
+	display: block;
+	margin: auto;
+	text-align: center;
+	text-decoration: none;
+	font-size: 11px;
+	color: red;
+}
+
+.flex-between {
+	display: flex;
+	justify-content: space-between;
+}
+
+.flex-start {
+	display: flex;
+	justify-content: flex-start;
+}
+
+.flex-between h3 {
+	margin: 0;
+}
+
+ul.box,
+ol.box {
+	padding-left: 2em;
+}
+
+ol,
+ul {
+	/* list-style-position: inside; */
+	/* padding-left: 0; */
+	padding-left: 1rem;
+}
+
+.stats li {
+	color: gray;
+	font-size: 12px;
+}
+
+#source .origin {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+#source .origin tr:first-child td {
+	color: gray;
+	/* font-weight: 300; */
+	/* text-align: left; */
+	/* font */
+}
+
+#source .origin>*>*>td:first-child {
+	border-right: 1px solid gray;
+
+}
+
+hr {
+	border: 0;
+	border-top: 1px solid silver;
+}

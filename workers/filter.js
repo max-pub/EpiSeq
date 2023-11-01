@@ -1,5 +1,6 @@
 
 import { intersection, unique } from '../lib/deps.js'
+import { getPatientAndEntryCounts } from '../lib/stats.js'
 
 onmessage = event => {
 	let [LIST, FILTER] = event.data
@@ -8,6 +9,7 @@ onmessage = event => {
 }
 
 function filterAll(LIST, FILTER) {
+	postMessage(['start'])
 	// let FILTER = getFilterSettings()
 	console.log('FILTER', FILTER)
 	// console.log('pat ids',patientIDs(LIST.typings))
@@ -29,6 +31,14 @@ function filterAll(LIST, FILTER) {
 
 	// console.log("FILTER RESULT", LIST)
 	postMessage(['result', LIST])
+
+	// postMessage(['stat', 'typings', getPatientAndEntryCounts(LIST.typings)])
+	// postMessage(['stat', ƒ'locations', getPatientAndEntryCounts(LIST.locations)])
+
+	postMessage(['stat',{
+		typings: getPatientAndEntryCounts(LIST.typings),
+		locations: getPatientAndEntryCounts(LIST.locations),
+	}])
 	// $(`#filter #matchingPatients .help`).innerHTML = `removed ${dropped.typings} typings and ${dropped.locations} locations`
 }
 
@@ -138,15 +148,18 @@ export function gridStats(DATA) {
 		for (let col in DATA[row]) {
 			if (col == 'patientID') continue
 			if (col == 'typingDate') continue
-			stat.cols[col] ??= { count: 0 }
+			stat.cols[col] ??= { count: 0, distinctValues: new Set() }
 			if (!DATA[row][col]) continue
 			stat.rows[row].count++
 			stat.cols[col].count++
+			stat.cols[col].distinctValues.add(DATA[row][col])
 		}
 		// if (row == '71438935') {
 		// 	console.log('row stat', stat.rows[row])
 		// }
 	}
+	for (let col in stat.cols)
+		stat.cols[col].distinctValues = stat.cols[col].distinctValues.size
 	return stat
 }
 

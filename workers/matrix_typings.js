@@ -33,7 +33,12 @@ export function calculateDistanceMatrix(input = {}) {
 	// console.log('total time', (Date.now() - t0) + 'ms')
 	diagonalX(output)
 	postMessage(['result', output])
-	return output
+	postMessage(['stats', {
+		patients: Object.keys(output).length,
+		entries: matrixToList(output).length,
+		time: ((Date.now() - t0) / 1000).toFixed(1)
+	}])
+	// return output
 }
 
 

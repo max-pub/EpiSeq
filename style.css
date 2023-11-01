@@ -1,0 +1,127 @@
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-weight: 300;
+}
+
+h2 {
+  margin-top: 8rem;
+  margin-left: 1em;
+}
+
+h5 {
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: cornflowerblue;
+  text-decoration: none;
+  cursor: pointer;
+}
+a:hover {
+  color: blue;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid silver;
+}
+
+table {
+  border-collapse: collapse;
+  caption-side: bottom;
+}
+table th {
+  font-weight: bold;
+}
+table td {
+  padding: 0.2rem 0.6rem;
+}
+table caption {
+  color: gray;
+  font-size: 11px;
+  white-space: pre;
+}
+
+table.info {
+  margin: 1em;
+}
+table.info td {
+  border: 1px solid silver;
+}
+
+ul.info {
+  margin: 1em;
+  padding-left: 1em;
+}
+ul.info li {
+  color: gray;
+  font-size: 0.8em;
+}
+
+.box {
+  margin: 1em;
+  padding: 1em;
+  background: #eee;
+  border-radius: 10px;
+}
+
+.chart {
+  border: 1px solid black;
+}
+
+.chart-box {
+  margin: 3em 1em;
+}
+.chart-box .options a {
+  padding-right: 1em;
+}
+.chart-box .export a {
+  padding-left: 1em;
+}
+
+form ul {
+  padding-left: 1em;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.flex-start {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+#correlation form td:first-child {
+  font-weight: 500;
+}
+
+.help {
+  color: gray;
+}
+
+#correlationTables table {
+  width: 100%;
+}
+#correlationTables table th, #correlationTables table td {
+  border: 1px solid silver;
+  font-size: 0.8rem;
+  text-align: right;
+  font-size: 11px;
+  padding: 0.1rem 0.3rem;
+}
+#correlationTables a.remove {
+  display: block;
+  margin: auto;
+  text-align: center;
+  text-decoration: none;
+  font-size: 11px;
+  color: red;
+}

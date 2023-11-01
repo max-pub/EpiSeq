@@ -6,6 +6,7 @@ import { matrixToList, rowsAndCols, diagonalX } from '../lib/matrix.js'
 onmessage = event => {
 	let [LIST, DIST, OPTIONS] = event.data
 	// console.log('hello from CORREL matrix::', LIST)
+	postMessage(['start'])
 	reduce(LIST, DIST, OPTIONS)
 }
 

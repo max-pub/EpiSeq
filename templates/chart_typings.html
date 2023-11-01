@@ -1,12 +1,16 @@
-!! x
-<hr />
+!! selection
+<!-- <hr /> -->
+<div class="chart"></div>
 <div class="flex-between">
-	<h3>Distribution of Typing Distances</h3>
-	<a class="download">download</a>
-	<div>
-		<a class='chart' id="100">100</a>
-		<a class='chart' id="500">500</a>
-		<a class='chart' id="5000">full</a>
+	<!-- <h3>Distribution of Typing Distances</h3> -->
+	<div class="options">
+		<a class=' ${selection=="100"?"selected":""}' id="100">100</a>
+		<a class=' ${selection=="500"?"selected":""}' id="500">500</a>
+		<a class=' ${selection=="full"?"selected":""}' id="5000">full</a>
+	</div>
+	<div class="export">
+		<a >tsv</a>
+		<a >svg</a>
+		<a >png</a>
 	</div>
 </div>
-<div class="chart"></div>

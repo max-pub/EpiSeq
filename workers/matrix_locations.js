@@ -120,6 +120,7 @@ export function distanceTreeToDistanceMatrix(data, options = {}) {
 
 
 export function calculateDistanceMatrix(locationList, info = {}) {
+	let t0 = Date.now()
 	info.locationsByPatient = groupByPatientID(locationList)
 	parseDateStrings(info.locationsByPatient)
 	info.locationDistanceTree = calculateDistanceTree(info.locationsByPatient)
@@ -131,7 +132,13 @@ export function calculateDistanceMatrix(locationList, info = {}) {
 	diagonalX(output.any)
 
 	postMessage(['result', output])
-	return output
+	// postMessage(['time', Date.now() - t0])
+	postMessage(['stats', {
+		patients: Object.keys(output.any).length,
+		entries: matrixToList(output.any).length,
+		time: ((Date.now() - t0)/1000).toFixed(1)
+	}])
+	// return output
 }
 
 

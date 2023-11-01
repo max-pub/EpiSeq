@@ -1,11 +1,16 @@
-<hr />
+!! selection
+<!-- <hr /> -->
+<div class="chart"></div>
 <div class="flex-between">
-	<h3>Distribution of Location Entries</h3>
-	<a class='download'>download</a>
-	<div>
-		<a class='chart'>clinic</a>
-		<a class='chart'>ward</a>
-		<a class='chart'>room</a>
+	<!-- <h3>Distribution of Location Entries</h3> -->
+	<div class="options">
+		<a class='${selection=="clinic"?"selected":""}'>clinic</a>
+		<a class='${selection=="ward"?"selected":""}'>ward</a>
+		<a class='${selection=="room"?"selected":""}'>room</a>
+	</div>
+	<div class="export">
+		<a >tsv</a>
+		<a >svg</a>
+		<a >png</a>
 	</div>
 </div>
-<div class="chart"></div>

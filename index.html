@@ -6,436 +6,239 @@
 
 <!-- <div class="ct-chart ct-perfect-fourth"></div> -->
 <meta charset="UTF-8">
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script> -->
+<script src="./lib/apexcharts.js"></script>
 
-<h1>Correlation of MDRO-Typings and Patient Movement Data</h1>
-<h3>Developed at the <a href="https://www.ukm.de/institute/hygiene" target="_blank">institute for hygiene</a> at the <a
-		href="https://www.ukm.de" target="_blank">university hospital of Münster</a></h3>
-<h5>source code on <a href="https://github.com/max-pub/mro-epi" target="_blank">github</a></h5>
-<h5>you can find the related academic paper <a href="https://pubmed.ncbi.nlm.nih.gov/35370082/" target="_blank">here</a>
-</h5>
-<!-- <a onclick="document.location.reload(true)">reload</a> -->
-<br />
-<br />
-<br />
 
-<fieldset id="source">
-	<legend>load source data</legend>
-	<i>upload your source data files</i>
-	<table>
-		<tr id="typings">
-			<td> typings </td>
-			<!-- <td> <input type="file" onchange="loadFile(event,'cgmlst')" /> </td> -->
-			<td> <input type="file" /> </td>
-			<td class="help">
-				accepting TSV-files with the following headers: <br />
-				<i>sequenceID, patientID, typingDate, allele1,..., alleleX</i>
-			</td>
-		</tr>
-		<tr id="locations">
-			<td> locations </td>
-			<td> <input type="file" /> </td>
-			<td class="help"> accepting TSV-files with the following headers: <br /><i>locationID, patientID, clinic,
-					ward,
-					room, from, till</i> </td>
-		</tr>
-	</table>
-	<!-- <br /> -->
-	<hr />
-	<i>or use our hospital's demo files instead</i>
-	<!-- <a onclick="loadDemo()">load demo files instead</a> -->
-	<a id="loadDemo1">load E. coli demo</a>
-	<a id="loadDemo2">load MRSA demo</a>
-	<div class="output">
-		<!-- <hr />
-		<table>
-			<tr id="typings">
-				<td> typings </td>
-				<td class="help"></td>
-				<td> <a hidden>download</a> </td>
-			</tr>
-			<tr id="locations">
-				<td> locations </td>
-				<td class="help"></td>
-				<td> <a hidden>download</a> </td>
-			</tr>
-		</table> -->
+<div style="margin-left:1em">
+	<h1>Correlation of MDRO-Typings and Patient Movement Data</h1>
+	<h3>Developed at the <a href="https://www.ukm.de/institute/hygiene" target="_blank">institute for hygiene</a> at the
+		<a href="https://www.ukm.de" target="_blank">university hospital of Münster</a>
+	</h3>
+	<h5>source code on <a href="https://github.com/max-pub/mro-epi" target="_blank">github</a></h5>
+	<h5>related academic paper on <a href="https://pubmed.ncbi.nlm.nih.gov/35370082/" target="_blank">pubmed</a>
+	</h5>
+	<!-- <a onclick="document.location.reload(true)">reload</a> -->
+</div>
+
+
+
+
+
+<h2>source data</h2>
+
+<div id="source">
+
+	<div class="flex-start">
+		<form id="demo" class="box">
+			<h5>UKM Münster demo data</h5>
+			<ul>
+				<li> <a demo="coli"> E. coli </a> </li>
+				<li> <a demo="mrsa"> MRSA </a> </li>
+				<li> <a demo="vre"> VRE </a> </li>
+			</ul>
+		</form>
+
+		<form id="upload" class="box">
+			<h5>upload your own data</h5>
+			<br />
+			<!-- <form> -->
+			<table>
+				<tr class="typings">
+					<td> typings </td>
+					<td> <input type="file" /> </td>
+				</tr>
+				<tr class="locations">
+					<td> locations </td>
+					<td> <input type="file" /> </td>
+				</tr>
+			</table>
+			<br />
+			<a href="https://github.com/max-pub/mro-epi" target="_blank">required file structure</a>
+			<!-- </form> -->
+		</form>
 	</div>
-	<!-- <hr /> -->
-	<!-- <div id="loadResult"></div> -->
-</fieldset>
+
+	<ul class="info"></ul>
+
+	<table class="info"></table>
+
+</div>
 
 
 
+<h2>filter & options</h2>
 
 
+<div id="filter">
+	<form class="box inline-block">
+		<table>
+			<tr id="from">
+				<td> from </td>
+				<td> <input type="date" value="2015-01-01" /> </td>
+				<td class="help"> remove all entries <i>before</i> the given date </td>
+			</tr>
 
+			<tr id="till">
+				<td> till </td>
+				<td> <input type="date" value="2016-01-01" /> </td>
+				<td class="help"> remove all entries <i>after</i> the given date </td>
+			</tr>
 
+			<tr id="rows">
+				<td> rows </td>
+				<td> <input type="number" value="90" min="0" max="100" size="3" />% </td>
+				<td class="help"> minimal percentage of correct alleles </td>
+				<td class="download"></td>
+			</tr>
 
+			<tr id="cols">
+				<td> columns </td>
+				<td> <input type="number" value="0" min="0" max="100" size="3" />% </td>
+				<td class="help"> minimal percentage of correct alleles </td>
+				<td class="download"></td>
+			</tr>
 
-<fieldset>
-	<legend>filter & options</legend>
-	<table id="filter">
-		<tr id="from">
-			<td> from </td>
-			<td> <input type="date" value="2020-01-01" /> </td>
-			<td class="help"> remove all entries <i>before</i> the given date </td>
-		</tr>
-
-		<tr id="till">
-			<td> till </td>
-			<td> <input type="date" value="2025-01-01" /> </td>
-			<td class="help"> remove all entries <i>after</i> the given date </td>
-		</tr>
-
-		<tr id="rows">
-			<td> rows </td>
-			<td> <input type="number" value="90" min="0" max="100" size="3" />% </td>
-			<td class="help"> minimal percentage of correct alleles </td>
-			<td class="download"></td>
-		</tr>
-
-		<tr id="cols">
-			<td> columns </td>
-			<td> <input type="number" value="0" min="0" max="100" size="3" />% </td>
-			<td class="help"> minimal percentage of correct alleles </td>
-			<td class="download"></td>
-		</tr>
-
-		<tr id="hasRoom">
-			<td> room data required </td>
-			<td> <input type="checkbox" checked> </td>
-			<td class="help"> keep only patients that have at least one room entry </td>
-		</tr>
-		<tr id="matchingPatients">
+			<tr id="hasRoom">
+				<td> room data required </td>
+				<td> <input type="checkbox" checked> </td>
+				<td class="help"> keep only patients that have at least one room entry </td>
+			</tr>
+			<!-- <tr id="matchingPatients">
 			<td> typing & location </td>
 			<td></td>
 			<td class="help"> keep only patients that have both typing and location records</td>
-		</tr>
-		<!-- <tr>
+		</tr> -->
+			<!-- <tr>
 			<td colspan="4">
 				<hr />
 			</td>
 		</tr> -->
 
-		<tr id="pseudonymize">
-			<td> pseudonymize </td>
-			<td> <input type="checkbox"> </td>
-			<td class="help"> replace identifiers in input data with random strings </td>
-			<td class="download"></td>
-		</tr>
+			<tr id="pseudonymize">
+				<td> pseudonymize </td>
+				<td> <input type="checkbox" checked> </td>
+				<td class="help"> replace identifiers in input data with random strings </td>
+				<td class="download"></td>
+			</tr>
 
-		<!-- <tr>
+			<!-- <tr>
 			<td> counting </td>
 			<td> <input type="checkbox"> </td>
 			<td class="help"> count unresolved alleles as difference </td>
 		</tr> -->
-	</table>
+		</table>
+	</form>
 
-	<div id="filter-stats"></div>
+	<ul class="info"></ul>
 
+	<table class="info"></table>
 
-	<div id="location-chart"></div>
-
-	<!-- <hr />
-	<table id="filterResults">
-		<tr id="typings">
-			<td> cgMLST </td>
-			<td class="help"></td>
-			<td> <a hidden>download</a> </td>
-		</tr>
-		<tr id="locations">
-			<td> locations </td>
-			<td class="help"></td>
-			<td> <a hidden>download</a> </td>
-		</tr>
-	</table> -->
-
-</fieldset>
-
-
-
-
-
-
-
-
-
-
-<fieldset>
-	<legend>calculate distance matrices</legend>
-	<table id="distance">
-		<!-- <tr>
-			<td> counting </td>
-			<td> <input type="checkbox"> </td>
-			<td class="help"> count unresolved alleles as difference </td>
-		</tr> -->
-		<tr id="typings">
-			<td> typings </td>
-			<td> <progress value="0" max="100"> </progress> </td>
-			<!-- <td class="current"></td> -->
-			<!-- <td>/</td> -->
-			<!-- <td class="total"></td> -->
-			<td hidden> <a class="download">download</a> </td>
-			<td class="help"></td>
-		</tr>
-		<tr id="locations">
-			<td> locations </td>
-			<td> <progress value="0" max="100"> </progress> </td>
-			<!-- <td class="current"></td> -->
-			<!-- <td>/</td> -->
-			<!-- <td class="total"></td> -->
-			<td hidden> <a class="download">download</a> </td>
-			<td class="help"></td>
-		</tr>
-	</table>
-
-	<div id="distance-chart"></div>
-</fieldset>
-
-<!-- < fieldset >
-		<legend>show cgmlst statistics</legend>
-</fieldset > -->
-
-
-
-
-
-
-
-
-<fieldset>
-	<legend>correlation of typing and location data</legend>
-	<table id="correlation">
-		<tr id="td">
-			<!-- <td> TD </td> -->
-			<!-- <td class="help1"> [TypingDistance] </td> -->
-			<td colspan='2'>max. Typing-Distance</td>
-			<td> <input type="number" value="20" min="0" max="3000" size="4" /> </td>
-			<td class="help"> upper limit of allowed cgmlst - distances between two typings</td>
-		</tr>
-
-		<tr>
-			<td colspan="4">
-				<hr />
-			</td>
-		</tr>
-		<tr id="ti">
-			<td> TI </td>
-			<td class="help1"> [TypingInterval] </td>
-			<td> <input type="number" value="365" min="0" max="9999" size="4" /> </td>
-			<td class="help"> time period between typings in days (use "0" for "unlimited") /TP </td>
-		</tr>
-		<tr id="cl">
-			<td> CL </td>
-			<td class="help1"> [ContactLevel] </td>
-			<td>
-				<select>
-					<option>room</option>
-					<option>ward</option>
-					<option>clinic</option>
-					<option selected="selected">any</option>
-				</select>
-			</td>
-			<td class="help"> adminstrative level of contact-comparisons: room, ward, clinic or any of the
-				aforementioned </td>
-		</tr>
-		<tr id="ci">
-			<td> CI </td>
-			<td class="help1"> [ContactInterval] </td>
-			<td> <input type="number" value="-7" min="-100" max="100" size="4" /> </td>
-			<td class="help"> lower limit of accepted time interval between contacts in days<br />negative numbers
-				indicate non-overlapping time-distance, positive numbers indicate strict overlap /TI </td>
-		</tr>
-		<tr id="cd">
-			<td> CD </td>
-			<td class="help1"> [ContactDepth] </td>
-			<td> <input type="number" value="0" min="0" max="5" size="4" /> </td>
-			<td class="help"> allowed amount of intermediary contacts between two patients, "0" means direct contact
-			</td>
-		</tr>
-	</table>
-
-	<!-- <hr /> -->
-
-	<table id="correlationResult">
-		<!-- <tr>
-			<td> counting </td>
-			<td> <input type="checkbox"> </td>
-			<td class="help"> count unresolved alleles as difference </td>
-		</tr> -->
-		<tr id="typings">
-			<td> cgMLST </td>
-			<td> <progress value="0" max="100"> </progress> </td>
-			<td class="count"></td>
-			<!-- <td>/</td> -->
-			<!-- <td class="total"></td> -->
-			<td> <a hidden>download</a> </td>
-			<td class="help"></td>
-		</tr>
-		<tr id="locations">
-			<td> locations </td>
-			<td> <progress value="0" max="100"> </progress> </td>
-			<td class="count"></td>
-			<!-- <td>/</td> -->
-			<!-- <td class="total"></td> -->
-			<td> <a hidden>download</a> </td>
-			<td class="help"></td>
-		</tr>
-	</table>
-
-	<hr />
-	<a id="correlationDownload" class="download">download all correlation tables</a>
-	<div id="correlationTables">
-
-	</div>
-
-	<div id="correlationChart">
-
-	</div>
-</fieldset>
-
-
-
-
-
-
-
-
-
-
-<style>
-	* {
-		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-		font-weight: 300;
-	}
-
-	legend {
-		font-size: 20px;
-		color: gray;
-	}
-
-	.help {
-		color: gray;
-		font-size: 12px;
-	}
-
-	.download,
-	a.chart {
-		color: #658a6e;
-		font-size: 12px;
-		display: inline-block;
-		margin: auto 1rem;
-	}
-
-	.stats td {
-		padding-right: 2rem;
-	}
-
-	.patient-count,
-	.entry-count {}
-
-	fieldset {
-		margin-bottom: 5em;
-	}
-
-	fieldset i {
-		color: gray;
-		font-size: 12px;
-	}
-
-
-	a {
-		cursor: pointer;
-		/* color: blue; */
-		/* text-decoration: underline; */
-	}
-
-	a:hover {
-		color: skyblue;
-	}
-
-	#correlationResult {
-		display: none;
-	}
-
-	table caption {
-		color: gray;
-		font-size: 11px;
-		white-space: pre;
-	}
-
-	#correlationTables>div {
-		margin-bottom: 0.5rem;
-	}
-
-	#correlationTables table {
-		border-collapse: collapse;
-		/* margin-bottom: 0.5rem; */
-		caption-side: bottom;
-		width: 100%;
-	}
-
-	th {
-		font-weight: bold;
-	}
-
-	#correlationTables td,
-	#correlationTables th {
-		border: 1px solid silver;
-		text-align: right;
-		font-size: 11px;
-		padding: 0.1rem 0.3rem;
-	}
-
-	#correlationTables th:first-child {
-		text-align: left;
-	}
-
-	#correlationDownload {
-		display: block;
-		text-align: center;
-		margin-bottom: 2rem;
-	}
-
-	a.remove {
-		display: block;
-		margin: auto;
-		text-align: center;
-		text-decoration: none;
-		font-size: 11px;
-		color: red;
-	}
-
-	.flex-between {
-		display: flex;
-		justify-content: space-between;
-	}
-
-	.flex-between h3 {
-		margin: 0;
-	}
-</style>
-
-
-
-
-
-
-
-<!-- < script type = "module" src = "deps.js" ></script > -->
-<script type="module">
-	// import * as fs from './lib/fs.js'
-	// import { TALI } from './lib/deps.js'
-	// import { gridStats, colFilter, rowFilter } from './lib/filter.js'
-	// import { roomFilter, patientIntersectionFilter } from './lib/filter.js'
-	// import { $, $$, download } from './helper.js'
-	// const FS = new Worker("./lib/fs.js");
-	// import { start } from './flow.js'
-
-	import './ui/events.js'
-
-
-
-
-</script>
+	<!-- <div id="filter-stats" class="inline-block log-list"></div> -->
+	<!-- <div id="filter-state" class="stats"></div> -->
+
+</div>
+
+
+
+
+<div id="location-chart" class="chart-box"></div>
+
+
+
+
+
+
+
+<h2>calculate distance matrices</h2>
+<div id="distance">
+	<table class="info"></table>
+</div>
+
+<div id="distance-chart" class="chart-box"></div>
+
+
+
+<h2>correlation of typing and location data</h2>
+<div id="correlation">
+	<form class="box inline-block">
+		<table>
+			<tr id="td">
+				<!-- <td> TD </td> -->
+				<!-- <td class="help1"> [TypingDistance] </td> -->
+				<td colspan='2'>max. Typing-Distance</td>
+				<td> <input type="number" value="20" min="0" max="3000" size="4" /> </td>
+				<td class="help"> upper limit of allowed cgmlst - distances between two typings</td>
+			</tr>
+
+			<tr>
+				<td colspan="4">
+					<hr />
+				</td>
+			</tr>
+			<tr id="ti">
+				<td> TI </td>
+				<td class="help1"> Typing Interval </td>
+				<td> <input type="number" value="365" min="0" max="9999" size="4" /> </td>
+				<td class="help"> time period between typings in days (use "0" for "unlimited") /TP </td>
+			</tr>
+			<tr id="cl">
+				<td> CL </td>
+				<td class="help1"> Contact Level </td>
+				<td>
+					<select>
+						<option>room</option>
+						<option>ward</option>
+						<option>clinic</option>
+						<option selected="selected">any</option>
+					</select>
+				</td>
+				<td class="help"> adminstrative level of contact-comparisons: room, ward, clinic or any of the
+					aforementioned </td>
+			</tr>
+			<tr id="ci">
+				<td> CI </td>
+				<td class="help1"> Contact Interval </td>
+				<td> <input type="number" value="-7" min="-100" max="100" size="4" /> </td>
+				<td class="help"> lower limit of accepted time interval between contacts in days<br />negative numbers
+					indicate non-overlapping time-distance, positive numbers indicate strict overlap /TI </td>
+			</tr>
+			<tr id="cd">
+				<td> CD </td>
+				<td class="help1"> Contact Depth </td>
+				<td> <input type="number" value="0" min="0" max="5" size="4" /> </td>
+				<td class="help"> allowed amount of intermediary contacts between two patients, "0" means direct contact
+				</td>
+			</tr>
+		</table>
+	</form>
+
+	<ul class="info"></ul>
+</div>
+
+
+
+<div id="correlationTables" class="info"></div>
+
+
+
+<div id="correlation-chart" class="chart-box"> </div>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css">
+
+<script type="module" src="./ui/events.js"></script>
+
+
+
+
+
+
+
