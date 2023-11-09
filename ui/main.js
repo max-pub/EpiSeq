@@ -15,7 +15,8 @@ export let DATA = {
 	pseudonymizationStats: {},
 	distanceMatrix: {},
 	correlation: {},
-	LIST: {}, DIST: {}, CORR: {}, STAT: {}, PSEUDO: {}, filterStats: {}
+	// LIST: {}, DIST: {}, CORR: {}, STAT: {}, PSEUDO: {}, 
+	filterStats: {}
 }
 let TIMER = {}
 
@@ -44,44 +45,14 @@ export function startFilter() {
 
 
 
-export function startCrossMatch() {
-	console.log('startCrossMatch')
-	// $('#filter-stats .rows .download').addEventListener('click', () => download(`typing.rows.tsv`, TALI.grid.stringify({ '': DATA.filterStats.rows }, { sortCol: 'count', pretty: 4 })))
-	// $('#filter-stats .cols .download').addEventListener('click', () => download(`typing.cols.tsv`, TALI.grid.stringify({ '': DATA.filterStats.cols }, { sortCol: 'count', pretty: 4 })))
-
-	// $('#location-chart').innerHTML = TEMPLATE.chart_locations()
-	// $$('#location-chart a.chart').map(node => node.addEventListener('click', event => showLocationChart(event.target.textContent.trim())))
-	// console.log('links', $$('#location-chart a.chart'))
-	showLocationChart()
-	$('#distance .info').innerHTML = ''
-	for (let type of ['typings','locations'])
-		$('#distance .info').innerHTML += `<tr id="${type}"> <td> ${type} </td> <td> <progress value="0" max="100"> </progress> </td> </tr>`
-	DATA.distanceMatrix = {}
-	console.log('start matrix workers')
-	WORKER.matrix_typings.postMessage(DATA.filtered.typings)
-	WORKER.matrix_locations.postMessage(DATA.filtered.locations)
-	console.log('done matrix workers')
-}
 
 
-
-
-export function startCorrelation() {
-	if (!(DATA.distanceMatrix.typings && DATA.distanceMatrix.locations)) return
-	// $('#distance-chart').innerHTML = TEMPLATE.chart_typings()
-	// $$('#distance-chart a.chart').map(x => x.addEventListener('click', event => showTypeChart(event.target.id)))
-
-	showTypeChart(100)
-	console.log('start correlation', DATA, getCorrelationSettings())
-	// DATA.CORR = {}
-	WORKER.correlation.postMessage([DATA.filtered, DATA.distanceMatrix, getCorrelationSettings()])
-}
 
 
 
 export function showCorrelationTables() {
-	let tables = TALI.grid.stringify(DATA.CORR, { flip: true, format: 'html', caption: true })
-	tables = tables.replaceAll('<table>', '<div><table>').replaceAll('</table>', `</table><a class='remove'>remove</a> </div>`)
+	let tables = TALI.grid.stringify(DATA.correlation, { flip: true, format: 'html', caption: true })
+	tables = tables.replaceAll('<table>', '<div class="wrap"><table>').replaceAll('</table>', `</table><a class='remove'>remove</a> </div>`)
 	$('#correlationTables').innerHTML = tables
 	$$(`#correlationTables a.remove`).map(a => a.addEventListener('click', e => removeCorrelation(e)))
 }
@@ -90,7 +61,7 @@ export function removeCorrelation(event) {
 	let caption = event.target.closest('div').querySelector('caption')
 	let id = caption.textContent
 	console.log('remove', id)
-	delete DATA.CORR[id]
+	delete DATA.correlation[id]
 	showCorrelationTables()
 	showCorrelationChart()
 }

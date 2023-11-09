@@ -1,6 +1,6 @@
 
 import { $, $$, download } from './dom.js'
-import { DATA, startCorrelation, startFilter, WORKER } from './main.js'
+import { DATA, startFilter, WORKER } from './main.js'
 // import { showTypeChart } from './chart.js'
 // import { download } from './io.js'
 import { TALI } from '../lib/deps.js'
@@ -11,6 +11,7 @@ import { TALI } from '../lib/deps.js'
 
 // function loadFile(key, event) { WORKER.input.postMessage(['file', event.target.files[0]]) }
 import * as clear from './clear.js'
+import { startCorrelation } from './flow.js'
 
 function loadDemo(mro) {
 	console.log('loadDemo', mro)
@@ -19,7 +20,7 @@ function loadDemo(mro) {
 	WORKER.input.postMessage(['url', 'typings', window.location.href + `demo/${mro}/cgmlst.tsv`])
 	WORKER.input.postMessage(['url', 'locations', window.location.href + `demo/${mro}/locations.tsv`])
 }
-loadDemo('coli')
+// loadDemo('coli')
 
 
 $$('[demo]').forEach(node => node.addEventListener('click', () => loadDemo(node.getAttribute('demo'))))
@@ -52,13 +53,13 @@ $('#correlation #ti input').addEventListener('change', () => startCorrelation())
 $('#correlation #cl select').addEventListener('change', () => startCorrelation())
 $('#correlation #ci input').addEventListener('change', () => startCorrelation())
 
-// $('#correlationDownload').addEventListener('click', () => download('correlation.tsv', TALI.grid.stringify(DATA.CORR, { flip: true, pretty: 1 })))
+// $('#correlationDownload').addEventListener('click', () => download('correlation.tsv', TALI.grid.stringify(DATA.correlation, { flip: true, pretty: 1 })))
 
 
 
 // DOWNLOADS
-$('#correlationResult #typings a').addEventListener('click', () => download(`cgmlst.corr.tsv`, TALI.grid.stringify({ cgmlst: DATA.CORR.typings }, { sortRows: true, sortCols: true, pretty: 1 })))
-$('#correlationResult #locations a').addEventListener('click', () => download(`locations.corr.tsv`, TALI.grid.stringify({ location: DATA.CORR.locations }, { sortRows: true, sortCols: true, pretty: 1 })))
+// $('#correlationResult #typings a').addEventListener('click', () => download(`cgmlst.corr.tsv`, TALI.grid.stringify({ cgmlst: DATA.correlation.typings }, { sortRows: true, sortCols: true, pretty: 1 })))
+// $('#correlationResult #locations a').addEventListener('click', () => download(`locations.corr.tsv`, TALI.grid.stringify({ location: DATA.correlation.locations }, { sortRows: true, sortCols: true, pretty: 1 })))
 
 
 

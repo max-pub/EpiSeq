@@ -1,17 +1,20 @@
+import { mapValues } from '../lib/deps.js'
 import { matrixToList, rowsAndCols, diagonalX } from '../lib/matrix.js'
+import { groupDistanceMatrixByPatientID } from '../lib/stats.js'
 
 onmessage = event => {
-	console.log('start typings worker')
+	// console.log('start typings worker')
 	let list = event.data
 	// console.log('hello from type matrix::', message)
 	calculateDistanceMatrix(list)
 }
 
 
-export function calculateDistanceMatrix(input = {}) {
+export function calculateDistanceMatrix(input1 = {}) {
+	postMessage(['start'])
 	let t0 = Date.now()
 	let output = {}
-	input = convertToTypedArrays(input)
+	let input = convertToTypedArrays(input1)
 	let ids = Object.keys(input).sort()
 	for (let id1 of ids) {
 		output[id1] ??= {}
@@ -27,17 +30,29 @@ export function calculateDistanceMatrix(input = {}) {
 
 			output[id1][id2] = dist
 		}
-		postMessage(['progress', [ids.indexOf(id1) + 1, ids.length]])
+		postMessage(['progress', ids.indexOf(id1) + 1, ids.length])
 		// console.log('cgmlst distance', id1, ids.indexOf(id1), '/', ids.length, (Date.now() - t0) + 'ms')
 	}
 	// console.log('total time', (Date.now() - t0) + 'ms')
 	diagonalX(output)
-	postMessage(['result', output])
-	postMessage(['stats', {
-		patients: Object.keys(output).length,
-		entries: matrixToList(output).length,
-		time: ((Date.now() - t0) / 1000).toFixed(1)
-	}])
+	let patients = groupDistanceMatrixByPatientID(output, input1)
+	diagonalX(patients)
+	let result = { sequences: output, patients }
+	postMessage(['result', result])
+	// console.log('parients', patients, output, input1)
+	let stats = mapValues(result, v => ({
+		patients: Object.keys(v).length,
+		entries: matrixToList(v).length,
+	}))
+	// let stats = Object.entries(result).map()
+	postMessage(['stats', stats])
+	// 	postMessage(['stats', {
+	// 		patients: Object.keys(patients).length,
+	// 	entries: matrixToList(patients).length,
+	// 	// time: ((Date.now() - t0) / 1000).toFixed(1)
+	// }])
+	postMessage(['time', ((Date.now() - t0) / 1000).toFixed(1)])
+	postMessage(['done'])
 	// return output
 }
 

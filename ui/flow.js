@@ -1,7 +1,7 @@
 import { TALI } from "../lib/deps.js"
-import { showCorrelationChart } from "./chart.js"
+import { showCorrelationChart, showLocationChart, showTypeChart } from "./chart.js"
 import { $, $$, download, getCorrelationSettings, getCorrelationString, getFilterSettings, show } from "./dom.js"
-import { DATA, TEMPLATE, WORKER, cleanNumbers, showCorrelationTables, startCorrelation, startCrossMatch, startFilter } from "./main.js"
+import { DATA, TEMPLATE, WORKER, cleanNumbers, showCorrelationTables, startFilter } from "./main.js"
 let TIMER = {}
 
 
@@ -14,7 +14,7 @@ export const input = new class {
 		$('#source>table').innerHTML = `<tr class='typings'></tr> <tr class='locations'></tr>`
 	}
 	name(key, name) {
-		console.log('add', key, name)
+		// console.log('add', key, name)
 		$(`#source>ul`).innerHTML += `<li class="${key} loading">loading ${name}... </li>`
 	}
 	keys(count) {
@@ -75,7 +75,7 @@ export const filter = new class {
 		DATA.filterStats.cols = data.stats
 		$(`#filter>ul`).innerHTML += `<li class='cols'>removed ${data.dropped}/${columnCount} type-columns that had less than ${data.cutoffPercentage}% or ${data.cutoffValue}/${data.maxEntries} values <a class='download'>tsv</a></li>`
 		$('#filter .cols a').addEventListener('click', () => download(`typing.cols.tsv`, TALI.grid.stringify({ '': DATA.filterStats.cols }, { sortCol: 'count', pretty: 4 })))
-		console.log('filter COLS', $('#filter .cols a'))
+		// console.log('filter COLS', $('#filter .cols a'))
 	}
 	hasRoom(data) {
 		$(`#filter>ul`).innerHTML += `<li>removed ${data} locations from patients without room-entries</li>`
@@ -84,9 +84,9 @@ export const filter = new class {
 		$(`#filter>ul`).innerHTML += `<li>removed ${data.typings} typings and ${data.locations} locations that didnt have corresponding patient-ids</li>`
 	}
 	stat(data) {
-		console.log('-------stat', data)
-		for (let key in data)
-			console.log("KEYYY", key,)
+		// console.log('-------stat', data)
+		// for (let key in data)
+		// 	console.log("KEYYY", key,)
 		for (let key in data)
 			$(`#filter>table .${key}`).innerHTML = TEMPLATE.stat_list(key, data[key]) //+ 		`<hr/>` + TEMPLATE.listStats(getAllPatientAndEntryCounts(DATA.parsed))
 		for (let key in data)
@@ -132,41 +132,115 @@ export const pseudonymize = new class {
 
 
 
+export function startCrossMatch() {
+	// console.log('startCrossMatch')
+	// $('#filter-stats .rows .download').addEventListener('click', () => download(`typing.rows.tsv`, TALI.grid.stringify({ '': DATA.filterStats.rows }, { sortCol: 'count', pretty: 4 })))
+	// $('#filter-stats .cols .download').addEventListener('click', () => download(`typing.cols.tsv`, TALI.grid.stringify({ '': DATA.filterStats.cols }, { sortCol: 'count', pretty: 4 })))
+
+	// $('#location-chart').innerHTML = TEMPLATE.chart_locations()
+	// $$('#location-chart a.chart').map(node => node.addEventListener('click', event => showLocationChart(event.target.textContent.trim())))
+	// console.log('links', $$('#location-chart a.chart'))
+	showLocationChart()
+	$$('#distance>*').map(node => node.innerHTML = '')
+	// $('#distance').innerHTML = '<table class="info typings"></table> <table class="info locations"></table>'
+	// for (let type of ['typings', 'locations'])
+	// $('#distance .info').innerHTML += `<tr id="${type}"> <td> ${type} </td> <td> <progress value="0" max="100"> </progress> </td> </tr>`
+	for (let type of ['typings', 'locations'])
+		$('#distance ul').innerHTML += `<li id="${type}"> ${type}  <progress value="0" max="100"> </progress> </li>`
+	DATA.distanceMatrix = {}
+	// console.log('start matrix workers')
+	WORKER.matrix_typings.postMessage(DATA.filtered.typings)
+	WORKER.matrix_locations.postMessage(DATA.filtered.locations)
+	// console.log('done matrix workers')
+}
+
+
 
 
 class Matrix {
-	constructor(name) {
-		this.name = name
-	}
-	start() {
+	// constructor(name) {
+	// 	this.name = name
+	// }
+	// start() {
 
-	}
-	progress(data) {
-		let [current, total] = data
-		$(`#distance #${this.name} progress`).value = current
-		$(`#distance #${this.name} progress`).max = total
+	// }
+	progress(current, total) {
+		// let [current, total] = data
+		$(`#distance li#${this.name} progress`).value = current
+		$(`#distance li#${this.name} progress`).max = total
 	}
 	result(data) {
 		DATA.distanceMatrix[this.name] = data
 		console.log('matrix', this.name, data)
+	}
+	// stats(data) {
+	// 	// console.log('distance stats', this.name, data)
+	// 	$(`#distance #${this.name}`).innerHTML = TEMPLATE.stat_dist(this.name, data)
+	// 	if (this.name == 'typings')
+	// 		$(`#distance #${this.name} a`).addEventListener('click', () => download(`${this.name}.matrix.tsv`, TALI.grid.stringify({ [this.name]: DATA.distanceMatrix[this.name] }, { sortRows: true, sortCols: true })))
+	// 	else
+	// 		$(`#distance #${this.name} a`).addEventListener('click', () => download(`${this.name}.matrix.tsv`, TALI.grid.stringify(cleanNumbers(DATA.distanceMatrix[this.name]), { sortRows: true, sortCols: true })))
+
+	// 	// console.log('clean', cleanNumbers(DATA.distanceMatrix.locations))
+	// }
+	addDownload(data){
+		for(let key in data)
+			$(`#distance table.${this.name} tr.${key} a`).addEventListener('click', () => download(`${this.name}.${key}.matrix.tsv`, TALI.grid.stringify({ [key]: DATA.distanceMatrix[this.name][key] }, { sortRows: true, sortCols: true })))
+	}
+	time(time){
+		$(`#distance li#${this.name}`).innerHTML = this.name + ` processed in ${time} seconds`
+	}
+	done() {
 		startCorrelation()
 	}
+}
+class TypingMatrix extends Matrix {
+	name = 'typings'
+	modifier(matrix){
+		return matrix
+	}
 	stats(data) {
-		console.log('distance stats', this.name, data)
-		$(`#distance #${this.name}`).innerHTML = TEMPLATE.stat_dist(this.name, data)
-		if (this.name == 'typings')
-			$(`#distance #${this.name} a`).addEventListener('click', () => download(`${this.name}.matrix.tsv`, TALI.grid.stringify({ [this.name]: DATA.distanceMatrix[this.name] }, { sortRows: true, sortCols: true })))
-		else
-			$(`#distance #${this.name} a`).addEventListener('click', () => download(`${this.name}.matrix.tsv`, TALI.grid.stringify(cleanNumbers(DATA.distanceMatrix[this.name]), { sortRows: true, sortCols: true })))
-		
-		console.log('clean', cleanNumbers(DATA.distanceMatrix.locations))
+		for (let key in data) {
+			let x = data[key]
+			// $(`#distance table.${this.name}`).innerHTML += TEMPLATE.stat_dist(key, data[key])
+			$(`#distance table.${this.name}`).innerHTML += `<tr class='${key}'> <td>${x.patients} ${key}</td> <td>${x.entries} entries</td> <td><a>tsv</a></td> </tr>`
+			// $(`#distance table.${this.name} a`).addEventListener('click', () => download(`${this.name}.matrix.tsv`, TALI.grid.stringify({ [this.name]: DATA.distanceMatrix[this.name] }, { sortRows: true, sortCols: true })))
+		}
+		this.addDownload(data)
 	}
 }
-export const matrix_typings = new Matrix('typings')
-export const matrix_locations = new Matrix('locations')
+class LocationMatrix extends Matrix {
+	name = 'locations'
+	modifier(matrix){
+		return matrix
+	}
+	stats(data) {
+		for (let key in data) {
+			let x = data[key]
+			// $(`#distance table.${this.name}`).innerHTML += TEMPLATE.stat_dist(key, data[key])
+			$(`#distance table.${this.name}`).innerHTML += `<tr class='${key}'> <td>${key}</td> <td>${x.patients} patients</td> <td>${x.entries} entries</td> <td><a>tsv</a></td> </tr>`
+			// $(`#distance table.${this.name} a`).addEventListener('click', () => download(`${this.name}.matrix.tsv`, TALI.grid.stringify({ [this.name]: DATA.distanceMatrix[this.name] }, { sortRows: true, sortCols: true })))
+		}
+		this.addDownload(data)
+		// $(`#distance #${this.name}`).innerHTML = TEMPLATE.stat_dist(this.name, data)
+		// $(`#distance #${this.name} a`).addEventListener('click', () => download(`${this.name}.matrix.tsv`, TALI.grid.stringify(cleanNumbers(DATA.distanceMatrix[this.name]), { sortRows: true, sortCols: true })))
+	}
+
+}
+export const matrix_typings = new TypingMatrix()
+export const matrix_locations = new LocationMatrix()
 
 
 
+export function startCorrelation() {
+	if (!(DATA.distanceMatrix.typings && DATA.distanceMatrix.locations)) return
+	// $('#distance-chart').innerHTML = TEMPLATE.chart_typings()
+	// $$('#distance-chart a.chart').map(x => x.addEventListener('click', event => showTypeChart(event.target.id)))
+	showTypeChart(20)
+	console.log('start correlation', DATA, getCorrelationSettings())
+	// DATA.correlation = {}
+	WORKER.correlation.postMessage([DATA.filtered, DATA.distanceMatrix, getCorrelationSettings()])
+}
 
 
 
@@ -191,15 +265,16 @@ export const correlation = new class {
 		$(`#correlation>ul`).innerHTML += `<li>not yet implemented</li>`
 	}
 	// cgmlst(data) {
-	// 	show(`#correlationResult #typings [hidden]`)
-	// 	$(`#correlationResult #typings .count`).innerHTML = `${data.count} pairs`
+	// 	console.log('corr cgmlst',data)
+	// 	// show(`#correlationResult #typings [hidden]`)
+	// 	// $(`#correlationResult #typings .count`).innerHTML = `${data.count} pairs`
 	// }
 	// location(data) {
 	// 	show(`#correlationResult #locations [hidden]`)
 	// 	$(`#correlationResult #locations .count`).innerHTML = `${data.count} pairs`
 	// }
 	correlate(data) {
-		DATA.CORR[getCorrelationString()] = data
+		DATA.correlation[getCorrelationString()] = data
 		// for(let dist in data)
 		// data[dist].percentage = data[dist].percentage.toFixed(1) + '%'
 		showCorrelationTables()
@@ -228,21 +303,21 @@ export const correlation = new class {
 // 		$(`#correlation #cd .help`).innerHTML = `not yet implemented`
 
 // 	if (action == 'cgmlst') {
-// 		// DATA.CORR.typings = data.typings
+// 		// DATA.correlation.typings = data.typings
 // 		// console.log('correlation', DATA)
-// 		// console.log('cor mro', DATA.CORR.typings)
-// 		// rowsAndCols(DATA.CORR.typings, 'corr')
+// 		// console.log('cor mro', DATA.correlation.typings)
+// 		// rowsAndCols(DATA.correlation.typings, 'corr')
 // 		show(`#correlationResult #typings [hidden]`)
 // 		$(`#correlationResult #typings .count`).innerHTML = `${data.count} pairs`
 // 	}
 // 	if (action == 'location') {
-// 		// DATA.CORR.location = data.location
+// 		// DATA.correlation.location = data.location
 // 		show(`#correlationResult #locations [hidden]`)
 // 		$(`#correlationResult #locations .count`).innerHTML = `${data.count} pairs`
 // 	}
 // 	if (action == 'correlate') {
 // 		// console.log('correlate22', data)
-// 		DATA.CORR[getCorrelationString()] = data
+// 		DATA.correlation[getCorrelationString()] = data
 // 		// for(let dist in data)
 // 		// data[dist].percentage = data[dist].percentage.toFixed(1) + '%'
 // 		showCorrelationTables()

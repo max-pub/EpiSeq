@@ -1,4 +1,4 @@
-import { $, $$,download } from './dom.js'
+import { $, $$, download } from './dom.js'
 import { typeStats } from '../lib/type.stats.js'
 import { DATA } from './main.js'
 import { locationListStats } from '../lib/stats.js'
@@ -9,7 +9,7 @@ import { TALI, template } from '../lib/deps.js'
 
 const TEMPLATE = Object.fromEntries(await Promise.all(['chart_typings', 'chart_locations', 'chart_correlation'].map(async x => [x, template(await fetch(`./templates/${x}.html`).then(x => x.text()))])))
 
-console.log("TEMPLATE", TEMPLATE)
+// console.log("TEMPLATE", TEMPLATE)
 
 
 export function showLocationChart(type = 'clinic') {
@@ -125,11 +125,14 @@ export function showTypeChart(max) {
 
 	max = max * 1
 	let steps = max / 50
+	if (steps < 1) steps = 1
 	// console.log('show type chart max', max, 'steps', steps)
 	// $("#distance-chart div.chart").innerHTML = ''
+	console.log('type-chart', DATA.distanceMatrix)
 	let stats = typeStats(DATA.filtered, DATA.distanceMatrix)
+	console.log('type chart stats', stats)
 	let data = Object.entries(stats.ABS.cgmlstByPatient)
-	data = data.filter(x => x[0] < max).map(([x, y]) => ({ x: x % steps == 0 ? x : '', y }))
+	data = data.filter(x => x[0] <= max).map(([x, y]) => ({ x: x % steps == 0 ? x : '', y }))
 	// if (max) data = data.filter(x => x[0] < max).map(([x, y]) => ({ x: x % 5 == 0 ? x : '', y }))
 	// else data = data.map(([x, y]) => ({ x: x % 100 == 0 ? x : '', y }))
 	// console.log('typestat', data)
@@ -216,7 +219,7 @@ export function showCorrelationChart() {
 	// data = Object.entries(data).map(x => ({ name: x[0], data: x[1] }))
 	// console.log('dataaa', data)
 	// return
-	let data = Object.entries(DATA.CORR).map(x => ({ name: x[0], data: Object.entries(x[1]).map(y => ({ x: y[0], y: y[1].percentage.slice(0, -1) * 1 })) }))
+	let data = Object.entries(DATA.correlation).map(x => ({ name: x[0], data: Object.entries(x[1]).map(y => ({ x: y[0], y: y[1].percentage.slice(0, -1) * 1 })) }))
 	// console.log('dataaa', data)
 	// $("#correlationChart").innerHTML = ''
 	var options = {
@@ -226,7 +229,7 @@ export function showCorrelationChart() {
 			style: { fontSize: '20px' }
 		},
 		// subtitle:{
-			// text: ``
+		// text: ``
 		// },
 		chart: {
 			toolbar: {
@@ -238,11 +241,11 @@ export function showCorrelationChart() {
 			type: 'line',
 			// background: '#fff',
 			width: '100%',
-			height: '300px',
+			height: '500px',
 		},
 		stroke: {
 			curve: 'smooth',
-			width: 4,
+			width: 2,
 		},
 		markers: {
 			size: 5,
@@ -265,8 +268,10 @@ export function showCorrelationChart() {
 		},
 
 		yaxis: {
-			// forceNiceScale: false,
-			max: 100,
+			forceNiceScale: true,
+			min: 0,
+			// tickAmount: 5,
+			// max: 100,
 			labels: {
 				formatter: (value) => value.toFixed(0) + '%',
 			},
@@ -302,7 +307,7 @@ export function showCorrelationChart() {
 	}, 100)
 
 	chartDownload('#correlation-chart', {
-		tsv: () => download(`correlation.stats.tsv`, TALI.grid.stringify(DATA.CORR, { pretty: 4 })),
+		tsv: () => download(`correlation.stats.tsv`, TALI.grid.stringify(DATA.correlation, { flip: true, pretty: 4 })),
 		svg: () => chart?.exports?.exportToSVG(),
 		png: () => chart?.exports?.exportToPng(),
 	})

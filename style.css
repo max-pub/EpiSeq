@@ -60,13 +60,6 @@ ul.info li {
   font-size: 0.8em;
 }
 
-.box {
-  margin: 1em;
-  padding: 1em;
-  background: #eee;
-  border-radius: 10px;
-}
-
 .chart {
   border: 1px solid black;
 }
@@ -77,12 +70,25 @@ ul.info li {
 .chart-box .options a {
   padding-right: 1em;
 }
+.chart-box .options .selected {
+  font-weight: bold;
+}
 .chart-box .export a {
   padding-left: 1em;
 }
 
+form {
+  margin: 1em;
+  padding: 1em;
+  background: #eee;
+  border-radius: 10px;
+}
 form ul {
   padding-left: 1em;
+}
+form .help {
+  color: gray;
+  font-size: 0.9em;
 }
 
 .inline-block {
@@ -103,21 +109,20 @@ form ul {
   font-weight: 500;
 }
 
-.help {
-  color: gray;
+#correlationTables .wrap {
+  margin: 1em;
 }
-
-#correlationTables table {
+#correlationTables .wrap table {
   width: 100%;
 }
-#correlationTables table th, #correlationTables table td {
+#correlationTables .wrap table th, #correlationTables .wrap table td {
   border: 1px solid silver;
   font-size: 0.8rem;
   text-align: right;
   font-size: 11px;
   padding: 0.1rem 0.3rem;
 }
-#correlationTables a.remove {
+#correlationTables .wrap a.remove {
   display: block;
   margin: auto;
   text-align: center;

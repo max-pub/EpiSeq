@@ -81,7 +81,7 @@
 
 			<tr id="till">
 				<td> till </td>
-				<td> <input type="date" value="2016-01-01" /> </td>
+				<td> <input type="date" value="2023-01-01" /> </td>
 				<td class="help"> remove all entries <i>after</i> the given date </td>
 			</tr>
 
@@ -117,7 +117,7 @@
 
 			<tr id="pseudonymize">
 				<td> pseudonymize </td>
-				<td> <input type="checkbox" checked> </td>
+				<td> <input type="checkbox"  > </td>
 				<td class="help"> replace identifiers in input data with random strings </td>
 				<td class="download"></td>
 			</tr>
@@ -152,7 +152,9 @@
 
 <h2>calculate distance matrices</h2>
 <div id="distance">
-	<table class="info"></table>
+	<ul class="info"></ul>
+	<table class="info typings"></table>
+	<table class="info locations"></table>
 </div>
 
 <div id="distance-chart" class="chart-box"></div>
@@ -164,23 +166,23 @@
 	<form class="box inline-block">
 		<table>
 			<tr id="td">
-				<!-- <td> TD </td> -->
-				<!-- <td class="help1"> [TypingDistance] </td> -->
-				<td colspan='2'>max. Typing-Distance</td>
-				<td> <input type="number" value="20" min="0" max="3000" size="4" /> </td>
+				<td> TD </td>
+				<td class="help1"> Typing Distance </td>
+				<!-- <td colspan='2'>max. Typing-Distance</td> -->
+				<td> <input type="number" value="25" min="0" max="3000" size="4" /> </td>
 				<td class="help"> upper limit of allowed cgmlst - distances between two typings</td>
 			</tr>
 
-			<tr>
-				<td colspan="4">
-					<hr />
-				</td>
-			</tr>
 			<tr id="ti">
 				<td> TI </td>
 				<td class="help1"> Typing Interval </td>
 				<td> <input type="number" value="365" min="0" max="9999" size="4" /> </td>
 				<td class="help"> time period between typings in days (use "0" for "unlimited") /TP </td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<hr />
+				</td>
 			</tr>
 			<tr id="cl">
 				<td> CL </td>

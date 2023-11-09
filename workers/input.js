@@ -6,7 +6,7 @@ import { getPatientAndEntryCounts } from '../lib/stats.js'
 
 
 onmessage = event => {
-	console.log('INPUT WORKER', event.data)
+	// console.log('INPUT WORKER', event.data)
 	let [action, key, P] = event.data
 	postMessage(['start'])
 	if (action == 'file')

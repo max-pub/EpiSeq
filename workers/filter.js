@@ -11,7 +11,7 @@ onmessage = event => {
 function filterAll(LIST, FILTER) {
 	postMessage(['start'])
 	// let FILTER = getFilterSettings()
-	console.log('FILTER', FILTER)
+	// console.log('FILTER', FILTER)
 	// console.log('pat ids',patientIDs(LIST.typings))
 	dateFilter(LIST, FILTER)
 	// console.log('pat ids',patientIDs(LIST.typings))

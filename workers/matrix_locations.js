@@ -1,9 +1,9 @@
-import { select } from '../lib/deps.js'
+import { mapValues, select } from '../lib/deps.js'
 import { matrixToList, rowsAndCols, diagonalX } from '../lib/matrix.js'
 
 
 onmessage = event => {
-	console.log('start location worker')
+	// console.log('start location worker')
 	let list = event.data
 	// console.log('hello from LOCATION matrix::', list)
 	calculateDistanceMatrix(list)
@@ -69,7 +69,7 @@ export function calculateDistanceTree(tree) {
 			if (Object.keys(result).length == 0) continue
 			output[id1][id2] = result
 		}
-		postMessage(['progress', [ids.indexOf(id1) + 1, ids.length]])
+		postMessage(['progress', ids.indexOf(id1) + 1, ids.length])
 		// console.log('locations distance', id1, ids.indexOf(id1), '/', ids.length, (Date.now() - t0) + 'ms')
 	}
 	// postMessage(['result', output])
@@ -118,7 +118,6 @@ export function distanceTreeToDistanceMatrix(data, options = {}) {
 }
 
 
-
 export function calculateDistanceMatrix(locationList, info = {}) {
 	let t0 = Date.now()
 	info.locationsByPatient = groupByPatientID(locationList)
@@ -127,17 +126,32 @@ export function calculateDistanceMatrix(locationList, info = {}) {
 	let output = distanceTreeToDistanceMatrix(info.locationDistanceTree, { maxDays: 50 })
 	// cleanNumbers(output)
 	for (let cl in output)
-		diagonalX(output[cl])
+		for (let pid in info.locationsByPatient)
+			output[cl][pid] ??= {}
 	addAnyLocation(output)
-	diagonalX(output.any)
+	for (let cl in output)
+		diagonalX(output[cl])
+	// diagonalX(output.any)
 
 	postMessage(['result', output])
 	// postMessage(['time', Date.now() - t0])
-	postMessage(['stats', {
-		patients: Object.keys(output.any).length,
-		entries: matrixToList(output.any).length,
-		time: ((Date.now() - t0)/1000).toFixed(1)
-	}])
+
+	// postMessage(['stats', {
+	// 	patients: Object.keys(output.any).length,
+	// 	entries: matrixToList(output.any).length,
+	// 	time: ((Date.now() - t0) / 1000).toFixed(1)
+	// }])
+
+	let stats = mapValues(output, v => ({
+		patients: Object.keys(v).length,
+		entries: matrixToList(v).length,
+	}))
+	// let stats = Object.entries(result).map()
+	postMessage(['stats', stats])
+
+	postMessage(['time', ((Date.now() - t0) / 1000).toFixed(1)])
+	postMessage(['done'])
+
 	// return output
 }
 
@@ -168,8 +182,8 @@ export function parseDateStrings(tree) {
 function addAnyLocation(DIST) {
 	// let t0 = Date.now()
 	// console.log('add ANY location...')
-	console.log('clinic', matrixToList(DIST.clinic).length)
-	console.log('ward', matrixToList(DIST.ward).length)
+	// console.log('clinic', matrixToList(DIST.clinic).length)
+	// console.log('ward', matrixToList(DIST.ward).length)
 	// console.log('ward', matrixToList(DIST.ward))
 	let patientIDs = [...new Set([...Object.keys(DIST.clinic), ...Object.keys(DIST.ward)])]
 	DIST.any = {}
@@ -185,7 +199,7 @@ function addAnyLocation(DIST) {
 				DIST.any[id1][id2] = val[0]
 		}
 	}
-	console.log('any', matrixToList(DIST.any).length)
+	// console.log('any', matrixToList(DIST.any).length)
 	// console.log('any', matrixToList(DIST.any))
 
 	// console.log('...done in ', (Date.now() - t0), 'ms')

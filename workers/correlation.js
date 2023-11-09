@@ -1,7 +1,7 @@
-import { mapValues } from '../lib/deps.js'
+import { TALI, mapValues } from '../lib/deps.js'
 import { groupDistanceMatrixByPatientID, groupDistanceMatrixByDistance, matrixFilter } from '../lib/stats.js'
 import { matrixToList, rowsAndCols, diagonalX } from '../lib/matrix.js'
-// import { TALI } from './deps.js'
+import { typeStats } from '../lib/type.stats.js'
 
 onmessage = event => {
 	let [LIST, DIST, OPTIONS] = event.data
@@ -9,34 +9,65 @@ onmessage = event => {
 	postMessage(['start'])
 	reduce(LIST, DIST, OPTIONS)
 }
+function printDistance(matrix, distance, name) {
+	for (let id1 in matrix)
+		for (let id2 in matrix[id1])
+			if (matrix[id1][id2] == distance)
+				console.log('matrix distance', name, id1, id2, matrix[id1][id2])
 
-
+}
 function reduce(LIST, DIST, OPTIONS) {
-	console.log("reduce", OPTIONS)
+	console.log("correlate reduce", OPTIONS)
 	// let typingDates = getTypingDates(LIST.typings)
 
-	let seq = DIST.typings
+	let seq = DIST.typings.sequences
 
 	let seqCount1 = matrixToList(seq).length
 
-	seq = matrixDistanceFilter(seq, { maxDistance: OPTIONS.TD })
+	if (OPTIONS.TD)
+		seq = matrixDistanceFilter(seq, { maxDistance: OPTIONS.TD })
 	// rowsAndCols(seq, 'after date')
 	let seqCount2 = matrixToList(seq).length
 	postMessage(['TD', { dropped: seqCount1 - seqCount2 }])
+	// let s1 = JSON.stringify(seq)
+	// let s1 = TALI.grid.stringify({ seq }, { sortRows: true, sortCols: true })
 
-	seq = OPTIONS.TI ? matrixDateFilter(seq, LIST.typings, OPTIONS.TI) : DIST.typings // TI==0 -> no filter
+	if (OPTIONS.TI)
+		seq = matrixDateFilter(seq, LIST.typings, OPTIONS.TI)
+	// seq = OPTIONS.TI ? matrixDateFilter(seq, LIST.typings, OPTIONS.TI) : seq // TI==0 -> no filter
 	let seqCount3 = matrixToList(seq).length
 	postMessage(['TI', { dropped: seqCount2 - seqCount3 }])
-
+	// let s2 = JSON.stringify(seq)
+	// let s2 = TALI.grid.stringify({ seq }, { sortRows: true, sortCols: true })
+	// console.log('equalll', s1 == s2)
+	// console.log('s1', s1)
+	// console.log('s2', s2)
 	// console.log('group sequence matrix ...')
+	// let pat = groupDistanceMatrixByPatientID(seq, LIST.typings)
 	let pat = groupDistanceMatrixByPatientID(seq, LIST.typings)
-	diagonalX(seq)
-	diagonalX(pat)
+
+	// printDistance(seq, 2, 'seq')
+	// printDistance(pat, 2, 'pat')
+
+	// diagonalX(seq)
+	// diagonalX(pat)
+	// let s3 = TALI.grid.stringify({ seq }, { sortRows: true, sortCols: true })
+	// console.log('s3', s3)
+	// let p1 = TALI.grid.stringify({ pat }, { sortRows: true, sortCols: true })
+	// console.log('p1', p1)
+
 	// console.log('seq', seq)
-	// console.log('pat', pat)
+	// console.log('corr pat', pat)
 
+	// let stats = typeStats(LIST, { typings: { sequences: seq } })
+	// console.log('correlation stats', stats.ABS)
 
-	console.log('seq count', seqCount1, seqCount2, seqCount3)
+	// for (let pid1 in pat)
+	// for (let pid2 in pat)
+	// if (pat[pid1][pid2] == 2)
+	// console.log('pidd', pid1, pid2)
+
+	// console.log('seq count', seqCount1, seqCount2, seqCount3)
 	postMessage(['cgmlst', { cgmlst: pat, count: matrixToList(pat).length }])
 
 	let loc = DIST.locations[OPTIONS.CL]
@@ -48,14 +79,16 @@ function reduce(LIST, DIST, OPTIONS) {
 	postMessage(['CI', { dropped: locCount1 - locCount2 }])
 
 	postMessage(['CD', { dropped: locCount1 - locCount2 }])
-	console.log('loc count ', locCount1, locCount2)
+	// console.log('loc count ', locCount1, locCount2)
 
 	diagonalX(loc)
 	// console.log('loc', loc)
 	postMessage(['location', { location: loc, count: matrixToList(loc).length }])
 
+	console.log('correlation pairs')
 	let pairs = groupDistanceMatrixByDistance(pat, OPTIONS.TD)
-	// console.log('pairs', pairs)
+	console.log('pairs', pairs)
+
 	let data = correlate(pairs, loc)
 	postMessage(['correlate', data])
 
@@ -65,6 +98,9 @@ function reduce(LIST, DIST, OPTIONS) {
 
 
 export function matrixDateFilter(DIST, LIST, days) {
+	console.log('date-filter 1', DIST)
+	// diagonalX(DIST)
+	let t1 = TALI.grid.stringify({ x: DIST }, { sortRows: true, sortCols: true })
 	// let typingDates = getTypingDates(LIST)
 	let typingDates = mapValues(LIST, x => Date.parse(x.typingDate) / 1000 / 60 / 60 / 24)
 	// console.log('typingDates', typingDates)
@@ -82,6 +118,8 @@ export function matrixDateFilter(DIST, LIST, days) {
 			// let ddd = dd / 1000 / 60 / 60 / 24 // date difference in days
 			// console.log('diff', days, ddd, ddd < days)
 			if (dd <= days) {
+				// if (DIST[id1][id2] == 2)
+				// console.log('date filter rr', id1, id2, '-', dd, 'max', days, d1, d2)
 				out[id1] ??= {}
 				out[id1][id2] = DIST[id1][id2]
 			} //else dropped++
@@ -90,6 +128,10 @@ export function matrixDateFilter(DIST, LIST, days) {
 	}
 	// console.log('message TI', dropped)
 	// postMessage(['TI', { dropped }])
+	console.log('date-filter 2', out)
+	diagonalX(out)
+	let t2 = TALI.grid.stringify({ x: out }, { sortRows: true, sortCols: true })
+	console.log('date-filter 3', t1 == t2)
 	return out
 }
 
