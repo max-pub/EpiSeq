@@ -236,7 +236,7 @@ export function startCorrelation() {
 	if (!(DATA.distanceMatrix.typings && DATA.distanceMatrix.locations)) return
 	// $('#distance-chart').innerHTML = TEMPLATE.chart_typings()
 	// $$('#distance-chart a.chart').map(x => x.addEventListener('click', event => showTypeChart(event.target.id)))
-	showTypeChart(20)
+	showTypeChart(100)
 	console.log('start correlation', DATA, getCorrelationSettings())
 	// DATA.correlation = {}
 	WORKER.correlation.postMessage([DATA.filtered, DATA.distanceMatrix, getCorrelationSettings()])
