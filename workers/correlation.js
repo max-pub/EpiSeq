@@ -17,7 +17,7 @@ function printDistance(matrix, distance, name) {
 
 }
 function reduce(LIST, DIST, OPTIONS) {
-	console.log("correlate reduce", OPTIONS)
+	// console.log("correlate reduce", OPTIONS)
 	// let typingDates = getTypingDates(LIST.typings)
 
 	let seq = DIST.typings.sequences
@@ -85,9 +85,9 @@ function reduce(LIST, DIST, OPTIONS) {
 	// console.log('loc', loc)
 	postMessage(['location', { location: loc, count: matrixToList(loc).length }])
 
-	console.log('correlation pairs')
+	// console.log('correlation pairs')
 	let pairs = groupDistanceMatrixByDistance(pat, OPTIONS.TD)
-	console.log('pairs', pairs)
+	// console.log('pairs', pairs)
 
 	let data = correlate(pairs, loc)
 	postMessage(['correlate', data])
@@ -98,7 +98,7 @@ function reduce(LIST, DIST, OPTIONS) {
 
 
 export function matrixDateFilter(DIST, LIST, days) {
-	console.log('date-filter 1', DIST)
+	// console.log('date-filter 1', DIST)
 	// diagonalX(DIST)
 	let t1 = TALI.grid.stringify({ x: DIST }, { sortRows: true, sortCols: true })
 	// let typingDates = getTypingDates(LIST)
@@ -128,10 +128,10 @@ export function matrixDateFilter(DIST, LIST, days) {
 	}
 	// console.log('message TI', dropped)
 	// postMessage(['TI', { dropped }])
-	console.log('date-filter 2', out)
+	// console.log('date-filter 2', out)
 	diagonalX(out)
 	let t2 = TALI.grid.stringify({ x: out }, { sortRows: true, sortCols: true })
-	console.log('date-filter 3', t1 == t2)
+	// console.log('date-filter 3', t1 == t2)
 	return out
 }
 

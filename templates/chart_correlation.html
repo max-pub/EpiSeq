@@ -3,11 +3,13 @@
 <div class="chart"></div>
 <div class="flex-between">
 	<!-- <h3>Distribution of Location Entries</h3> -->
-	<div>
-		<!-- <a class='chart ${selection=="clinic"?"selected":""}'>clinic</a> -->
-		<!-- <a class='chart ${selection=="ward"?"selected":""}'>ward</a> -->
+	<div class="options">
+		! for(let x of [100,80,60,'auto'])
+			<a class='${selection==x?"selected":""}'>${x}</a>
+		<!-- <a class='${selection=="auto"?"selected":""}'>auto</a> -->
 		<!-- <a class='chart ${selection=="room"?"selected":""}'>room</a> -->
 	</div>
+	<!-- <div>(${selection} -- ${selection=="100"})</div> -->
 	<div class="export">
 		<a >tsv</a>
 		<a >svg</a>

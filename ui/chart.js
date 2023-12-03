@@ -213,8 +213,11 @@ export function showTypeChart(max) {
 
 
 
-export function showCorrelationChart() {
-	$('#correlation-chart').innerHTML = TEMPLATE.chart_correlation()
+export function showCorrelationChart(height = '100') {
+	$('#correlation-chart').innerHTML = TEMPLATE.chart_correlation(height)
+	$$('#correlation-chart .options a').map(x => x.addEventListener('click', event => showCorrelationChart(event.target.textContent.trim())))
+	let yMax = height == 'auto' ? undefined : height * 1
+	console.log("CORR height", yMax)
 	// $$('#correlation-chart a.chart').map(x => x.addEventListener('click', event => showTypeChart(event.target.id)))
 	// data = Object.entries(data).map(x => ({ name: x[0], data: x[1] }))
 	// console.log('dataaa', data)
@@ -238,10 +241,11 @@ export function showCorrelationChart() {
 			animations: {
 				enabled: false,
 			},
-			type: 'line',
+			type: 'bar',
+			// type: 'line',
 			// background: '#fff',
 			width: '100%',
-			height: '500px',
+			height: '300px',
 		},
 		stroke: {
 			curve: 'smooth',
@@ -268,10 +272,10 @@ export function showCorrelationChart() {
 		},
 
 		yaxis: {
-			forceNiceScale: true,
+			// forceNiceScale: true,
 			min: 0,
 			// tickAmount: 5,
-			// max: 100,
+			max: yMax,
 			labels: {
 				formatter: (value) => value.toFixed(0) + '%',
 			},
@@ -291,7 +295,7 @@ export function showCorrelationChart() {
 			}
 		},
 		dataLabels: {
-			// enabled: false,
+			enabled: false,
 		},
 		tooltip: {
 			// enabled: false,
@@ -315,6 +319,119 @@ export function showCorrelationChart() {
 }
 
 
+
+
+
+export function showCorrelationChart2(key, height = '100') {
+	let id = key.replace(/\W/gmi,'')
+	// console.log('find::',`#correlation-results #${id} .chart-box`)
+	$(`#correlationResults #${id} .chart-box`).innerHTML = TEMPLATE.chart_correlation(height)
+	$$(`#correlationResults #${id} .chart-box .options a`).map(x => x.addEventListener('click', event => showCorrelationChart2(key, event.target.textContent.trim())))
+	let yMax = height == 'auto' ? undefined : height * 1
+	// console.log("CORR height", yMax)
+	// $$('#correlation-chart a.chart').map(x => x.addEventListener('click', event => showTypeChart(event.target.id)))
+	// data = Object.entries(data).map(x => ({ name: x[0], data: x[1] }))
+	// console.log('dataaa', data)
+	// return
+
+	let data = [{  data: Object.entries(DATA.correlation[key]).map(y => ({ x: y[0], y: y[1].percentage.slice(0, -1) * 1 })) }]
+	// console.log('corr data',data)
+	// let data = Object.entries(DATA.correlation).map(x => ({ name: x[0], data: Object.entries(x[1]).map(y => ({ x: y[0], y: y[1].percentage.slice(0, -1) * 1 })) }))
+	// console.log('dataaa', data)
+	// $("#correlationChart").innerHTML = ''
+	var options = {
+		title: {
+			text: key,
+			// text: `Correlation of Typing Distance and Movement Data`,
+			align: 'center',
+			style: { fontSize: '20px' }
+		},
+		// subtitle:{
+		// text: ``
+		// },
+		chart: {
+			toolbar: {
+				show: false
+			},
+			animations: {
+				enabled: false,
+			},
+			type: 'bar',
+			// type: 'line',
+			// background: '#fff',
+			width: '100%',
+			height: '300px',
+		},
+		// stroke: {
+		// 	curve: 'smooth',
+		// 	width: 2,
+		// },
+		// markers: {
+		// 	size: 5,
+		// },
+		xaxis: {
+			// show: false,
+			labels: {
+				rotate: 0,
+				//   show: false
+			},
+			axisBorder: {
+				show: false
+			},
+			axisTicks: {
+				show: false
+			},
+			title: {
+				text: `typing - distance`,
+			}
+		},
+
+		yaxis: {
+			// forceNiceScale: true,
+			min: 0,
+			// tickAmount: 5,
+			max: yMax,
+			labels: {
+				formatter: (value) => value.toFixed(0) + '%',
+			},
+			title: {
+				text: `percentage of pairs with epidemiological contact`,
+			}
+		},
+		plotOptions: {
+			// bar: {
+			// barHeight: '90%',
+			// }
+
+			// line: {
+			// 	markers: {
+			// 		size: 3,
+			// 	},
+			// }
+		},
+		dataLabels: {
+			enabled: false,
+		},
+		tooltip: {
+			// enabled: false,
+		},
+		series: data,
+	}
+
+	var chart = new ApexCharts($(`#correlationResults #${id} .chart-box .chart`), options);
+
+	chart.render();
+	setTimeout(() => {
+		chart.render();
+	}, 100)
+
+	chartDownload(`#correlationResults #${id}`, {
+		tsv: () => download(`correlation.stats.tsv`, TALI.grid.stringify(DATA.correlation, { flip: true, pretty: 4 })),
+		svg: () => chart?.exports?.exportToSVG(),
+		png: () => chart?.exports?.exportToPng(),
+	})
+
+}
 
 
 

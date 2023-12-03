@@ -1,7 +1,7 @@
 import { TALI } from "../lib/deps.js"
 import { showCorrelationChart, showLocationChart, showTypeChart } from "./chart.js"
 import { $, $$, download, getCorrelationSettings, getCorrelationString, getFilterSettings, show } from "./dom.js"
-import { DATA, TEMPLATE, WORKER, cleanNumbers, showCorrelationTables, startFilter } from "./main.js"
+import { DATA, TEMPLATE, WORKER, cleanNumbers, showCorrelationResults, showCorrelationTables, startFilter } from "./main.js"
 let TIMER = {}
 
 
@@ -145,8 +145,10 @@ export function startCrossMatch() {
 	// $('#distance').innerHTML = '<table class="info typings"></table> <table class="info locations"></table>'
 	// for (let type of ['typings', 'locations'])
 	// $('#distance .info').innerHTML += `<tr id="${type}"> <td> ${type} </td> <td> <progress value="0" max="100"> </progress> </td> </tr>`
-	for (let type of ['typings', 'locations'])
+	for (let type of ['typings', 'locations']){
 		$('#distance ul').innerHTML += `<li id="${type}"> ${type}  <progress value="0" max="100"> </progress> </li>`
+		$(`#distance table.${type}`).innerHTML+= `<caption>${type}</caption>`
+	}
 	DATA.distanceMatrix = {}
 	// console.log('start matrix workers')
 	WORKER.matrix_typings.postMessage(DATA.filtered.typings)
@@ -208,6 +210,10 @@ class TypingMatrix extends Matrix {
 		}
 		this.addDownload(data)
 	}
+	done() {
+		showTypeChart(100)
+		startCorrelation()
+	}
 }
 class LocationMatrix extends Matrix {
 	name = 'locations'
@@ -236,7 +242,6 @@ export function startCorrelation() {
 	if (!(DATA.distanceMatrix.typings && DATA.distanceMatrix.locations)) return
 	// $('#distance-chart').innerHTML = TEMPLATE.chart_typings()
 	// $$('#distance-chart a.chart').map(x => x.addEventListener('click', event => showTypeChart(event.target.id)))
-	showTypeChart(100)
 	console.log('start correlation', DATA, getCorrelationSettings())
 	// DATA.correlation = {}
 	WORKER.correlation.postMessage([DATA.filtered, DATA.distanceMatrix, getCorrelationSettings()])
@@ -275,13 +280,19 @@ export const correlation = new class {
 	// }
 	correlate(data) {
 		DATA.correlation[getCorrelationString()] = data
+		console.log("CORR",DATA.correlation)
 		// for(let dist in data)
 		// data[dist].percentage = data[dist].percentage.toFixed(1) + '%'
-		showCorrelationTables()
-		showCorrelationChart()
+		// showCorrelationTables()
+		// showCorrelationChart()
+		showCorrelationResults()
 	}
 
+
+
 }
+
+
 
 
 

@@ -1,7 +1,7 @@
 import { $, $$, download, getCorrelationSettings, getFilterSettings } from './dom.js'
 // import { unique } from '../lib/deps.js'
 import { TALI, template } from '../lib/deps.js'
-import { showCorrelationChart, showLocationChart, showTypeChart } from './chart.js'
+import { showCorrelationChart, showCorrelationChart2, showLocationChart, showTypeChart } from './chart.js'
 // import * as clear from './clear.js'
 
 import * as FLOW from './flow.js'
@@ -48,6 +48,27 @@ export function startFilter() {
 
 
 
+
+
+export function showCorrelationResults() {
+	let results = []
+	for (let key in DATA.correlation) {
+
+		let html = `<div id="${key.replace(/\W/gmi, '')}" class="wrap">`
+		// html += `<h3>${key}</h3>`
+		html += `<div class='chart-box'>chart</div>`
+		html += TALI.grid.stringify({ [key]: DATA.correlation[key] }, { flip: true, format: 'html', caption: true })
+		// .replace('<table>', `<div id="${key}" class="wrap">  <div class="chart" style="border:2px solid red;"></div> <table>`)
+		// .replace('</table>', `</table><a class='remove'>remove</a> </div>`)
+		html += "</div>"
+		results.push(html)
+	}
+	$('#correlationResults').innerHTML = results.join('\n\n')
+	for (let key in DATA.correlation) {
+		showCorrelationChart2(key)
+	}
+	// $$(`#correlationTables a.remove`).map(a => a.addEventListener('click', e => removeCorrelation(e)))
+}
 
 
 export function showCorrelationTables() {
