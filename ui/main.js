@@ -1,28 +1,18 @@
-import { $, $$, download, getCorrelationSettings, getFilterSettings } from './dom.js'
+// import { $, $$, download } from './dom.js'
 // import { unique } from '../lib/deps.js'
 import { TALI, template } from '../lib/deps.js'
 import { showCorrelationChart, showCorrelationChart2, showLocationChart, showTypeChart } from './chart.js'
-// import * as clear from './clear.js'
+import * as FORM from './forms.js'
 
 import * as FLOW from './flow.js'
 import { diagonalX } from '../lib/matrix.js'
 
-export let DATA = {
-	// source: {},
-	parsed: {},
-	filtered: {},
-	filterStats: {},
-	pseudonymizationStats: {},
-	distanceMatrix: {},
-	correlation: {},
-	// LIST: {}, DIST: {}, CORR: {}, STAT: {}, PSEUDO: {}, 
-	filterStats: {}
-}
-let TIMER = {}
+
 
 export const TEMPLATE = Object.fromEntries(await Promise.all(['stat_list', 'stat_dist'].map(async x => [x, template(await fetch(`./templates/${x}.html`).then(x => x.text()))])))
 
-export const WORKER = Object.fromEntries(['input', 'matrix_typings', 'matrix_locations', 'filter', 'pseudonymize', 'correlation'].map(worker => [worker, new Worker(`./workers/${worker}.js`, { type: "module" })]))
+// export const WORKER = Object.fromEntries(['source', 'matrix_typings', 'matrix_locations', 'filter', 'pseudonymize', 'correlation'].map(worker => [worker, new Worker(`./workers/${worker}.js`, { type: "module" })]))
+export const WORKER = Object.fromEntries(['1_source', '2_source_filter', '2_pseudonymize', '3_typing_distance', '4_typing_filter', '5_location_contacts', '6_location_filter', '7_correlation'].map(worker => [worker.slice(2), new Worker(`./workers/${worker}.js`, { type: "module" })]))
 
 
 for (let name in WORKER)
@@ -34,58 +24,42 @@ for (let name in WORKER)
 
 
 
-export function startFilter() {
-	// console.log('start filter', DATA.parsed)
-	// $('#filter').innerHTML = ''
-	// $('#filter-state').innerHTML = ''
-	// $$('#filter .help').map(x => x.innerHTML = '')
-	WORKER.filter.postMessage([DATA.parsed, getFilterSettings()])
+export let DATA = {
+	source: {},
+	source_filter: {},
+	typing_distance: {},
+	typing_filter: {},
+	location_contacts: {},
+	// location_filter: {},
+	// correlation: {},
+}
+export let STATS = {
+	source_filter: {},
+	pseudonymization: {},
 }
 
 
+export const dataOrder = ['source', 'source_filter', 'typing_distance', 'typing_filter', 'location_contacts', 'location_filter', 'correlation']
 
+export function clear(index) {
+	// console.log('clear',list)
+	for (let key of dataOrder.slice(index))
+		DATA[key] = {}
+	updateState()
+}
 
-
-
-
-
-
-export function showCorrelationResults() {
-	let results = []
-	for (let key in DATA.correlation) {
-
-		let html = `<div id="${key.replace(/\W/gmi, '')}" class="wrap">`
-		// html += `<h3>${key}</h3>`
-		html += `<div class='chart-box'>chart</div>`
-		html += TALI.grid.stringify({ [key]: DATA.correlation[key] }, { flip: true, format: 'html', caption: true })
-		// .replace('<table>', `<div id="${key}" class="wrap">  <div class="chart" style="border:2px solid red;"></div> <table>`)
-		// .replace('</table>', `</table><a class='remove'>remove</a> </div>`)
-		html += "</div>"
-		results.push(html)
+export function updateState() {
+	// console.log('update state',DATA)
+	for (let key in DATA) {
+		// console.log('update', key)
+		FORM[key].updateState()
 	}
-	$('#correlationResults').innerHTML = results.join('\n\n')
-	for (let key in DATA.correlation) {
-		showCorrelationChart2(key)
-	}
-	// $$(`#correlationTables a.remove`).map(a => a.addEventListener('click', e => removeCorrelation(e)))
+	// if (Object.keys(DATA[key]).length == 0)
+	// 	FORM[key].clear()
 }
 
 
-export function showCorrelationTables() {
-	let tables = TALI.grid.stringify(DATA.correlation, { flip: true, format: 'html', caption: true })
-	tables = tables.replaceAll('<table>', '<div class="wrap"><table>').replaceAll('</table>', `</table><a class='remove'>remove</a> </div>`)
-	$('#correlationTables').innerHTML = tables
-	$$(`#correlationTables a.remove`).map(a => a.addEventListener('click', e => removeCorrelation(e)))
-}
 
-export function removeCorrelation(event) {
-	let caption = event.target.closest('div').querySelector('caption')
-	let id = caption.textContent
-	console.log('remove', id)
-	delete DATA.correlation[id]
-	showCorrelationTables()
-	showCorrelationChart()
-}
 
 
 export function cleanNumbers(data) {
@@ -109,67 +83,6 @@ export function cleanNumbers(data) {
 
 
 
-// let getCorrelationID = () => Object.entries(getCorrelationSettings()).map(x => `${x[0]}_${x[1]}`).join('__')
-
-
-// function showEntriesAndPatients(grid) {
-// 	let entries = Object.keys(grid).length
-// 	let patients = unique(Object.values(grid).map(x => x.patientID)).length
-// 	return `${patients} patients (${entries} entries)`
-// }
-
-// function getAllPatientAndEntryCounts(list) {
-// 	return {
-// 		typings: getPatientAndEntryCounts(list.typings),
-// 		locations: getPatientAndEntryCounts(list.locations),
-// 	}
-// }
-// function getPatientAndEntryCounts(list) {
-// 	return {
-// 		patients: unique(Object.values(list).map(x => x.patientID)).length,
-// 		entries: Object.keys(list).length
-// 	}
-// }
 
 
 
-// import { templates } from '../templates/mod.js'
-// import { workers } from '../workers/mod.js'
-// let workers = {}
-// for (let worker of ['matrix_typings', 'matrix_locations', 'filter', 'pseudonymize', 'correlation'])
-// 	workers[worker] = new Worker(`./workers/${worker}.js`, { type: "module" })
-
-
-
-// export function start() {
-// 	console.log('start', DATA.source)
-// 	for (let type of TYPES) {
-// 		// if (!DATA.source[type]) return // input data not yet fully available
-// 		// $(`#source .paths .${type}`).innerHTML = DATA.source[type].url.toString()
-// 	}
-// 	console.log('start parsing', DATA.source)
-// 	for (let type of TYPES)
-// 		WORKER.io.postMessage(['parse', type, DATA.source[type]])
-// 	// show('#source .output')
-// 	// for (let type of types) { // parse TSV
-// 	// 	// let bytes = DATA.filtered[x].length
-// 	// 	// let mb = (bytes / 1024 / 1024).toFixed(1)
-// 	// 	DATA.parse[type] = parseTSV(DATA.source[type].text)
-// 	// 	// console.log(x, DATA.filtered[x])
-// 	// 	// $(`#source .output #${x} .help`).innerHTML = showEntriesAndPatients(DATA.filtered[x]) + `, ${mb} MB`
-// 	// }
-// 	// $('#source').innerHTML = `<legend>source data</legend>` + TEMPLATE.stat_list(getAllPatientAndEntryCounts(DATA.parsed))
-// 	// $('#source .output').innerHTML = `<hr/>` + TEMPLATE.stat_list(getAllPatientAndEntryCounts(DATA.parsed))
-// 	// startFilter()
-// }
-
-
-// const workers = Object.fromEntries(['matrix_typings', 'matrix_locations', 'filter', 'pseudonymize', 'correlation'].map(worker => [worker, new Worker(`./workers/${worker}.js`, { type: "module" })]))
-// const templates = Object.fromEntries(await Promise.all(['stat_list'].map(async x => [x, template(await fetch(`./templates/${x}.html`).then(x => x.text()))])))
-
-
-// import { locationListStats } from '../lib/stats.js'
-// import { rowsAndCols } from '../lib/matrix.js'
-// import {  download } from './io.js'
-
-// import { typeDateFilter, locationDateFilter } from '../workers/filter.js'

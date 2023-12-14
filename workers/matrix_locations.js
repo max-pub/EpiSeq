@@ -119,6 +119,7 @@ export function distanceTreeToDistanceMatrix(data, options = {}) {
 
 
 export function calculateDistanceMatrix(locationList, info = {}) {
+	postMessage(['started'])
 	let t0 = Date.now()
 	info.locationsByPatient = groupByPatientID(locationList)
 	parseDateStrings(info.locationsByPatient)
@@ -150,7 +151,7 @@ export function calculateDistanceMatrix(locationList, info = {}) {
 	postMessage(['stats', stats])
 
 	postMessage(['time', ((Date.now() - t0) / 1000).toFixed(1)])
-	postMessage(['done'])
+	postMessage(['finished'])
 
 	// return output
 }

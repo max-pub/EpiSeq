@@ -3,15 +3,21 @@
   font-weight: 300;
 }
 
-h2 {
-  margin-top: 8rem;
-  margin-left: 1em;
+section {
+  margin-bottom: 5rem;
+}
+
+body {
+  padding: 1rem;
+}
+
+p {
+  margin: 0;
+  color: gray;
 }
 
 h5 {
-  font-weight: bold;
-  margin: 0;
-  padding: 0;
+  margin: 0.5rem 0;
 }
 
 a {
@@ -60,6 +66,18 @@ ul.info li {
   font-size: 0.8em;
 }
 
+button {
+  display: block;
+  margin-top: 1em;
+  background: cornflowerblue;
+  border: none;
+  color: white;
+  padding: 0.5rem;
+}
+button[disabled] {
+  background: silver;
+}
+
 .chart {
   border: 1px solid black;
 }
@@ -78,7 +96,7 @@ ul.info li {
 }
 
 form {
-  margin: 1em;
+  margin: 1em 0;
   padding: 1em;
   background: #eee;
   border-radius: 10px;
@@ -105,38 +123,29 @@ form .help {
   justify-content: space-between;
 }
 
+.milliseconds {
+  color: silver;
+  padding-left: 0.5rem;
+}
+
+.loader {
+  height: 40px;
+}
+
+#source form {
+  margin: 1em 2em 1em 0;
+}
+
 #correlation form td:first-child {
   font-weight: 500;
 }
-
-#correlationResults .chart-box {
-  margin: 0;
-}
-#correlationResults .wrap {
-  margin: 7em 1em;
-}
-#correlationResults .wrap h3 {
-  white-space: pre;
-  text-align: center;
-}
-#correlationResults .wrap table {
+#correlation .table table {
   width: 100%;
 }
-#correlationResults .wrap table th, #correlationResults .wrap table td {
+#correlation .table table th, #correlation .table table td {
   border: 1px solid silver;
   font-size: 0.8rem;
   text-align: right;
   font-size: 11px;
   padding: 0.1rem 0.3rem;
-}
-#correlationResults .wrap table caption {
-  display: none;
-}
-#correlationResults .wrap a.remove {
-  display: block;
-  margin: auto;
-  text-align: center;
-  text-decoration: none;
-  font-size: 11px;
-  color: red;
 }

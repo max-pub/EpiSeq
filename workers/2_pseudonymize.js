@@ -62,6 +62,7 @@ function anonymizeTypings(DATA, MAP) {
 
 
 export function anonymize(DATA) {
+	postMessage(['started'])
 	let MAP = { clinic: {}, ward: {}, room: {}, patientID: {}, locationID: {}, sequenceID: {}, alleleID: {}, }
 	DATA.typings = anonymizeTypings(DATA.typings, MAP)
 	DATA.locations = anonymizeLocations(DATA.locations, MAP)

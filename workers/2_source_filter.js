@@ -4,12 +4,12 @@ import { getPatientAndEntryCounts } from '../lib/stats.js'
 
 onmessage = event => {
 	let [LIST, FILTER] = event.data
-	console.log('start filter worker', LIST, FILTER)
+	// console.log('start filter worker', LIST, FILTER)
 	filterAll(LIST, FILTER)
 }
 
 function filterAll(LIST, FILTER) {
-	postMessage(['start'])
+	postMessage(['started'])
 	// let FILTER = getFilterSettings()
 	// console.log('FILTER', FILTER)
 	// console.log('pat ids',patientIDs(LIST.typings))
@@ -40,6 +40,7 @@ function filterAll(LIST, FILTER) {
 		locations: getPatientAndEntryCounts(LIST.locations),
 	}])
 	// $(`#filter #matchingPatients .help`).innerHTML = `removed ${dropped.typings} typings and ${dropped.locations} locations`
+	postMessage(['finished'])
 }
 
 
