@@ -16,8 +16,13 @@ export function download(filename, text) {
 
 
 
-export function show(path) {
-	try {
-		$(path).hidden = false
-	} catch { }
-}
+// export function show(path) {
+// 	try {
+// 		$(path).hidden = false
+// 	} catch { }
+// }
+// export function hide(path) {
+// 	try {
+// 		$(path).hidden = false
+// 	} catch { }
+// }

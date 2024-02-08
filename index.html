@@ -23,10 +23,11 @@
 	<h4>related academic paper on <a href="https://pubmed.ncbi.nlm.nih.gov/35370082/" target="_blank">pubmed</a></h4>
 	<!-- <a onclick="document.location.reload(true)">reload</a> -->
 	<!-- <br/> -->
+	<br /><br />
 	<p>
-		this application correlates MDRO-typing data with patient-location data <br/>
+		this application correlates MDRO-typing data with patient-location data <br /><br />
 		it consists of 7 consecutive sections, you'll be guided through them, one by one.<br />
-		buttons will turn blue when they become usable (data from the previous step has finished processing)
+		(buttons will turn blue when once data from the previous step has finished processing)
 	</p>
 </section>
 
@@ -40,10 +41,10 @@
 <section id="source">
 	<h2>1. source data</h2>
 	<p>
-		we need typing-data and location-data for this application.<br />
+		you'll need typing-data and location-data for this application.<br /><br />
 		<!-- please supply those as tab-separated values (<a href="https://github.com/max-pub/mro-epi" target="_blank">see required file structure</a>)<br /> -->
-		you can also use data from our hospital (<a demo="mrsa"> MRSA </a>, <a demo="vre"> VRE </a>, <a demo="coli"> E. coli </a>) <br/>
-		or use your own data in the form below<br/>
+		you can use pseudonymized sample data from our hospital (<a demo="mrsa"> MRSA </a>, <a demo="vre"> VRE </a>, <a demo="coli"> E. coli </a>) <br />
+		or use your own data in the form below<br />
 		all data is processed locally in the browser, nothing will ever be uploaded anywhere. <br />
 	</p>
 	<!-- <br /> -->
@@ -57,38 +58,43 @@
 				<li> <a demo="vre"> VRE </a> </li>
 			</ul>
 		</form> -->
-		
+
 		<form class="box">
 			<!-- <h5>use your own data</h5> -->
 			<!-- <br /> -->
 			<table>
 				<tr class="title">
 					<td> title </td>
-					<td> <input type="text"/> </td>
+					<td> <input type="text" /> </td>
 					<td class="help"> to be shown on graphs </td>
 				</tr>
 				<tr class="typings">
 					<td> typings </td>
 					<td> <input type="file" /> </td>
-					<td class="help"> <a href="https://github.com/max-pub/mro-epi" target="_blank">see required file structure</a> </td>
+					<td class="help"> <a href="https://github.com/max-pub/mro-epi#typing-data" target="_blank">see required file structure</a> </td>
 				</tr>
 				<tr class="locations">
 					<td> locations </td>
 					<td> <input type="file" /> </td>
-					<td class="help"> <a href="https://github.com/max-pub/mro-epi" target="_blank">see required file structure</a> </td>
+					<td class="help"> <a href="https://github.com/max-pub/mro-epi#location-data" target="_blank">see required file structure</a> </td>
 				</tr>
 			</table>
 			<button type="submit">load files</button>
 			<!-- <img class='loader' src="loader1.css.svg"/> -->
 		</form>
 	</div>
-
+<!-- 
 	<ul class="info"></ul>
 
 	<table class="info">
 		<tr class="typings"></tr>
 		<tr class="locations"></tr>
-	</table>
+	</table> -->
+
+
+	<div class="done"></div>
+	<progress hidden></progress>
+	<div class="downloads"></div>
 </section>
 
 
@@ -106,26 +112,26 @@
 		<table>
 			<tr id="from">
 				<td> from </td>
-				<td> <input type="date" value="2020-01-01" /> </td>
+				<td> <input type="date" value="2015-01-01" /> </td>
 				<td class="help"> remove all entries <i>before</i> the given date </td>
 			</tr>
 
 			<tr id="till">
 				<td> till </td>
-				<td> <input type="date" value="2025-01-01" /> </td>
+				<td> <input type="date" value="2016-01-01" /> </td>
 				<td class="help"> remove all entries <i>after</i> the given date </td>
 			</tr>
 
 			<tr id="rows">
 				<td> rows </td>
-				<td> <input type="number" value="95" min="0" max="100" size="3" />% </td>
+				<td> <input type="number" value="90" min="0" max="100" size="3" />% </td>
 				<td class="help"> min. percentage of correctly decoded alleles in any given row (<a href="https://github.com/max-pub/mro-epi#rows" target="_blank">help</a>)</td>
 				<td class="download"></td>
 			</tr>
 
 			<tr id="cols">
 				<td> columns </td>
-				<td> <input type="number" value="95" min="0" max="100" size="3" />% </td>
+				<td> <input type="number" value="0" min="0" max="100" size="3" />% </td>
 				<td class="help"> min. percentage of correctly decoded alleles in any given column (<a href="https://github.com/max-pub/mro-epi#columns" target="_blank">help</a>)</td>
 				<td class="download"></td>
 			</tr>
@@ -138,7 +144,7 @@
 
 			<tr id="pseudonymize">
 				<td> pseudonymize </td>
-				<td> <input type="checkbox" > </td>
+				<td> <input type="checkbox" checked> </td>
 				<td class="help"> replace identifiers in input data with random strings </td>
 				<td class="download"></td>
 			</tr>
@@ -147,15 +153,22 @@
 		<button type="submit">apply filters</button>
 	</form>
 
-	<ul class="info"></ul>
+	<!-- <ul class="info"></ul> -->
 
-	<table class="info">
+	<!-- <table class="info"> -->
 		<!-- <tr class="typings"></tr> -->
 		<!-- <tr class="locations"></tr> -->
-	</table>
+	<!-- </table> -->
+
+	<div class="done"></div>
+	<progress hidden></progress>
+	<div class="downloads"></div>
+
 
 	<div class="chart-box"></div>
-
+	<!-- <p>
+		the chart above shows the distribution of locations in the source data
+	</p> -->
 </section>
 
 
@@ -185,9 +198,13 @@
 		<button type="submit">calculate distances</button>
 	</form>
 
-	<ul class="info"></ul>
-	<table class="info"></table>
-	<!-- <table class="info locations"></table> -->
+	<!-- <ul class="info"></ul> -->
+	<!-- <table class="info"></table> -->
+
+
+	<div class="done"></div>
+	<progress hidden></progress>
+	<div class="downloads"></div>
 
 	<div class="chart-box"></div>
 </section>
@@ -203,7 +220,7 @@
 <section id="typing_filter">
 	<h2>4. filter the typing distance matrix </h2>
 	<p>
-		the following parameters are setting up the typing-distance-matrix for correlation with location-data
+		the following two parameters can be employed to filter the distance-matrix by max. allowed typing-distance and max. allowed time-interval between to sequences.
 	</p>
 	<form class="box inline-block">
 		<table>
@@ -218,7 +235,7 @@
 			<tr id="ti">
 				<td> TI </td>
 				<td class="help1"> Typing Interval </td>
-				<td> <input type="number" value="180" min="0" max="9999" size="4" /> </td>
+				<td> <input type="number" value="365" min="0" max="9999" size="4" /> </td>
 				<td class="help"> max. time period between typings in days (use "0" for "unlimited") </td>
 			</tr>
 			<!-- <tr>
@@ -230,9 +247,14 @@
 		<button type="submit">apply typing parameters</button>
 	</form>
 
-	<ul class="info"></ul>
+	<!-- <ul class="info"></ul> -->
 
-	<table class="info"></table>
+	<!-- <table class="info"></table> -->
+
+	<div class="done"></div>
+	<progress hidden></progress>
+	<div class="downloads"></div>
+
 </section>
 
 
@@ -245,9 +267,13 @@
 	<p>
 		contacts between patients will appear for download after the calculation finished
 	</p>
-	<ul class="info"></ul>
 
-	<table class="info"></table>
+	<!-- <ul class="info"></ul> -->
+	<!-- <table class="info"></table> -->
+
+	<div class="done"></div>
+	<progress hidden></progress>
+	<div class="downloads"></div>
 </section>
 
 
@@ -280,23 +306,27 @@
 				<td> CI </td>
 				<td class="help1"> Contact Interval </td>
 				<td> <input type="number" value="-7" min="-100" max="100" size="4" /> </td>
-				<td class="help"> lower limit of accepted time interval between contacts in days<br />negative numbers
-					indicate non-overlapping time-distance, positive numbers indicate strict overlap </td>
+				<td class="help"> lower limit of accepted time interval between contacts in days<br />
+					negative numbers indicate non-overlapping time-distance,<br />
+					positive numbers indicate strict overlap </td>
 			</tr>
-			<!-- <tr id="cd">
+			<tr id="cd">
 				<td> CD </td>
 				<td class="help1"> Contact Depth </td>
-				<td> <input type="number" value="0" min="0" max="5" size="4" /> </td>
+				<td> <input type="number" value="1" min="0" max="2" size="4" /> </td>
 				<td class="help"> allowed amount of intermediary contacts between two patients, "0" means direct contact
 				</td>
-			</tr> -->
+			</tr>
 		</table>
 		<button type="submit">start correlation</button>
 	</form>
 
-	<ul class="info"></ul>
+	<!-- <ul class="info"></ul> -->
+	<!-- <table class="info"></table> -->
 
-	<table class="info"></table>
+	<div class="done"></div>
+	<progress hidden></progress>
+	<div class="downloads"></div>
 
 	<div class="chart-box"></div>
 
@@ -314,10 +344,14 @@
 	<p>
 		the results of the correlation between typing-data and location-data will appear below after they are fully calculated
 	</p>
-	<ul class="info"></ul>
+	<!-- <ul class="info"></ul> -->
 
+	<div class="done"></div>
+	<progress hidden></progress>
+	<div class="downloads"></div>
+	<br/>
+	<br/>
 	<div class="table"></div>
-
 	<div class="chart-box"></div>
 
 </section>

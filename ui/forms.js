@@ -15,7 +15,12 @@ class Base {
 	reset() {
 		this.find('form').reset()
 	}
-
+	done(){
+		return this.find('.done')
+	}
+	downloads(){
+		return this.find('.downloads')
+	}
 	updateState() {
 		this.updateContent()
 		this.updateActivation()
@@ -34,7 +39,10 @@ class Base {
 
 }
 
-
+export function title_(){
+	let input = source.find('form .title input')
+	return input.value.replaceAll(/[^a-z0-9]/gi, '')
+}
 
 export function title(v) {
 	let input = source.find('form .title input')
@@ -52,10 +60,12 @@ export const source = new class extends Base {
 		}
 	}
 	clear() {
-		this.find('ul.info').innerHTML = ''
+		this.done().innerHTML = ''
+		this.downloads().innerHTML = ''
+		// this.find('ul.info').innerHTML = ''
 		// this.find('table.info').innerHTML = `<tr class='typings'></tr> <tr class='locations'></tr>`
-		this.find('table.info .typings').innerHTML = ''
-		this.find('table.info .locations').innerHTML = ''
+		// this.find('table.info .typings').innerHTML = ''
+		// this.find('table.info .locations').innerHTML = ''
 	}
 
 	updateActivation() {
@@ -79,9 +89,14 @@ export const source_filter = new class extends Base {
 			pseudonymize: this.find('#pseudonymize input').checked,
 		}
 	}
+	string_() {
+		return `row${this.data().requiredRowCompleteness}_col${this.data().requiredColumnCompleteness}`
+	}
 	clear() {
-		this.find('ul.info').innerHTML = ''
-		this.find('table.info').innerHTML = ''
+		this.done().innerHTML = ''
+		this.downloads().innerHTML = ''
+		// this.find('ul.info').innerHTML = ''
+		// this.find('table.info').innerHTML = ''
 		// this.find('table.info .typings').innerHTML = ''
 		// this.find('table.info .locations').innerHTML = ''
 		this.find('.chart-box').innerHTML = ''
@@ -100,9 +115,12 @@ export const typing_distance = new class extends Base {
 		}
 	}
 	clear() {
-		this.find('ul.info').innerHTML = ''
+		this.done().innerHTML = ''
+		this.downloads().innerHTML = ''
+
+		// this.find('ul.info').innerHTML = ''
 		// this.find('table.info').innerHTML = ''
-		this.find('table.info').innerHTML = ''
+		// this.find('table.info').innerHTML = ''
 		// this.find('table.info.locations').innerHTML = ''
 		this.find('.chart-box').innerHTML = ''
 	}
@@ -126,10 +144,15 @@ export const typing_filter = new class extends Base {
 	string() {
 		return Object.entries(this.data()).filter(x => x[0] != 'TD').map(x => `${x[0]} = ${x[1]}`).join('     ')
 	}
+	string_() {
+		return Object.entries(this.data()).map(x => `${x[0]}${x[1]}`).join('_')
+	}
 
 	clear() {
-		this.find('ul.info').innerHTML = ''
-		this.find('table.info').innerHTML = ''
+		this.done().innerHTML = ''
+		this.downloads().innerHTML = ''
+		// this.find('ul.info').innerHTML = ''
+		// this.find('table.info').innerHTML = ''
 		// this.find('.chart-box').innerHTML = ''
 	}
 }
@@ -142,8 +165,10 @@ export const location_contacts = new class extends Base {
 	enabled(bool) {}
 	reset() {}
 	clear() {
-		this.find('ul.info').innerHTML = ''
-		this.find('table.info').innerHTML = ''
+		this.done().innerHTML = ''
+		this.downloads().innerHTML = ''
+		// this.find('ul.info').innerHTML = ''
+		// this.find('table.info').innerHTML = ''
 		// this.find('.chart-box').innerHTML = ''
 	}
 }
@@ -157,17 +182,22 @@ export const location_filter = new class extends Base {
 		return {
 			CL: this.find('#cl select').value,
 			CI: this.find('#ci input').value * 1,
-			// CD: this.find('#cd input').value * 1,
+			CD: this.find('#cd input').value * 1,
 		}
 	}
 
 	string() {
 		return Object.entries(this.data()).filter(x => x[0] != 'TD').map(x => `${x[0]} = ${x[1]}`).join('   ')
 	}
+	string_() {
+		return Object.entries(this.data()).map(x => `${x[0]}${x[1]}`).join('_')
+	}
 
 	clear() {
-		this.find('ul.info').innerHTML = ''
-		this.find('table.info').innerHTML = ''
+		this.done().innerHTML = ''
+		this.downloads().innerHTML = ''
+		// this.find('ul.info').innerHTML = ''
+		// this.find('table.info').innerHTML = ''
 		this.find('.chart-box').innerHTML = ''
 	}
 }
@@ -179,8 +209,10 @@ export const correlation = new class extends Base {
 	enabled(bool) {}
 	reset() {}
 	clear() {
-		this.find('ul.info').innerHTML = ''
-		this.find('div.table').innerHTML = ''
+		this.done().innerHTML = ''
+		this.downloads().innerHTML = ''
+		// this.find('ul.info').innerHTML = ''
+		// this.find('div.table').innerHTML = ''
 		this.find('.chart-box').innerHTML = ''
 	}
 }

@@ -28,10 +28,22 @@ a {
 a:hover {
   color: blue;
 }
+a.passive {
+  color: gray;
+}
+
+b {
+  font-weight: 400;
+}
 
 hr {
   border: 0;
   border-top: 1px solid silver;
+}
+
+progress {
+  width: 300px;
+  height: 30px;
 }
 
 table {
@@ -48,6 +60,11 @@ table caption {
   color: gray;
   font-size: 11px;
   white-space: pre;
+}
+
+info {
+  font-size: 0.7em;
+  color: gray;
 }
 
 table.info {
@@ -78,6 +95,10 @@ button[disabled] {
   background: silver;
 }
 
+.downloads {
+  margin-top: 1rem;
+}
+
 .chart {
   border: 1px solid black;
 }
@@ -85,14 +106,11 @@ button[disabled] {
 .chart-box {
   margin: 3em 1em;
 }
-.chart-box .options a {
-  padding-right: 1em;
+.chart-box div a {
+  padding: 0 0.5em;
 }
-.chart-box .options .selected {
+.chart-box .selected {
   font-weight: bold;
-}
-.chart-box .export a {
-  padding-left: 1em;
 }
 
 form {
@@ -107,6 +125,9 @@ form ul {
 form .help {
   color: gray;
   font-size: 0.9em;
+}
+form .help1 {
+  white-space: nowrap;
 }
 
 .inline-block {
@@ -124,6 +145,7 @@ form .help {
 }
 
 .milliseconds {
+  font-size: 0.7rem;
   color: silver;
   padding-left: 0.5rem;
 }

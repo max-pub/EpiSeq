@@ -13,8 +13,8 @@ onmessage = event => {
 
 function stats(v) {
 	return {
-		patients: Object.keys(v).length,
-		entries: matrixToList(v).length,
+		keys: Object.keys(v).length,
+		values: matrixToList(v).length,
 	}
 }
 export function calculateDistanceMatrix(input1 = {}, options = {}) {
@@ -33,8 +33,8 @@ export function calculateDistanceMatrix(input1 = {}, options = {}) {
 			let dist = calculateDistanceBetweenTwoSequences(input[id1], input[id2])
 			// if (dist == 0) {
 			// if (id1 == '71438935') {
-				// console.log('s1', id1, input[id1].slice(30))
-				// console.log('s2', id2, input[id2].slice(30))
+			// console.log('s1', id1, input[id1].slice(30))
+			// console.log('s2', id2, input[id2].slice(30))
 			// }
 
 			output[id1][id2] = dist
@@ -87,10 +87,10 @@ function convertToTypedArrays(list) {
 			int.push(list[id][key] * 1)
 		}
 		out[id] = new Uint16Array(int)
-		if (id == '71438935') {
-			console.log('src', list[id])
-			console.log('tgt', out[id])
-		}
+		// if (id == '71438935') {
+		// 	console.log('src', list[id])
+		// 	console.log('tgt', out[id])
+		// }
 		// let x = Object.entries(list[id])
 		// 	.filter(x => !['patientID', 'typingDate'].includes(x[0])) // remove meta-data
 		// 	.sort((a, b) => a[0] < b[0]) // sort by allele-key
@@ -104,9 +104,11 @@ function convertToTypedArrays(list) {
 function calculateDistanceBetweenTwoSequences1(s1, s2) {
 	// let t0 = new Date()
 	let diff = 0
-	for (let pos = 0, len = s1.length; pos < len; pos++)
+	for (let pos = 0, len = s1.length; pos < len; pos++) {
 		if (s1[pos] != s2[pos] && s1[pos] && s2[pos])
 			diff += 1
+		// if (diff > 50) return 9999
+	}
 	// console.log('diff', new Date() - t0)
 	return diff
 }

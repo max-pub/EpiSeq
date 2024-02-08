@@ -25,10 +25,19 @@ a
 	cursor: pointer
 	&:hover
 		color: blue
+	&.passive
+		color: gray
+
+b
+	font-weight: 400
 
 hr
 	border: 0
 	border-top: 1px solid silver
+
+progress
+	width: 300px
+	height: 30px
 
 table
 	border-collapse: collapse
@@ -42,6 +51,9 @@ table
 		font-size: 11px
 		white-space: pre
 
+info
+	font-size:0.7em
+	color: gray
 
 table.info
 	margin: 1em
@@ -66,20 +78,25 @@ button
 		background: silver
 
 
+.downloads
+	margin-top: 1rem
+
 .chart
 	border: 1px solid black
 
 .chart-box
 	margin: 3em 1em
-	.options
+	div
 		a
-			padding-right: 1em
-		.selected
-			font-weight: bold
-	.export
-		a
-			padding-left: 1em
-
+			padding: 0 0.5em
+	// .options
+		// a
+			// padding-right: 1em
+	.selected
+		font-weight: bold
+	// .export
+		// a
+			// padding-left: 1em
 
 
 form
@@ -92,7 +109,8 @@ form
 	.help
 		color: gray
 		font-size: 0.9em
-
+	.help1
+		white-space: nowrap
 
 	
 
@@ -108,6 +126,7 @@ form
 	justify-content: space-between
 
 .milliseconds
+	font-size: 0.7rem
 	color: silver
 	padding-left:0.5rem
 

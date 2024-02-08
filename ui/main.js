@@ -1,7 +1,7 @@
 // import { $, $$, download } from './dom.js'
 // import { unique } from '../lib/deps.js'
 import { TALI, template } from '../lib/deps.js'
-import { showCorrelationChart, showCorrelationChart2, showLocationChart, showTypeChart } from './chart.js'
+// import { showCorrelationChart, showCorrelationChart2, showLocationChart, showTypeChart } from './chart.js'
 import * as FORM from './forms.js'
 
 import * as FLOW from './flow.js'

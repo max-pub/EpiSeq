@@ -11,7 +11,7 @@ onmessage = event => {
 function filterAll(LIST, FILTER) {
 	postMessage(['started'])
 	// let FILTER = getFilterSettings()
-	// console.log('FILTER', FILTER)
+	// console.log('SOURCE FILTER', FILTER)
 	// console.log('pat ids',patientIDs(LIST.typings))
 	dateFilter(LIST, FILTER)
 	// console.log('pat ids',patientIDs(LIST.typings))
@@ -35,10 +35,15 @@ function filterAll(LIST, FILTER) {
 	// postMessage(['stat', 'typings', getPatientAndEntryCounts(LIST.typings)])
 	// postMessage(['stat', ƒ'locations', getPatientAndEntryCounts(LIST.locations)])
 
-	postMessage(['stat',{
+	postMessage(['stat', {
 		typings: getPatientAndEntryCounts(LIST.typings),
 		locations: getPatientAndEntryCounts(LIST.locations),
 	}])
+
+	if (FILTER.pseudonymize)
+		pseudonymizeData(LIST)
+
+	pseudonymize()
 	// $(`#filter #matchingPatients .help`).innerHTML = `removed ${dropped.typings} typings and ${dropped.locations} locations`
 	postMessage(['finished'])
 }
@@ -262,4 +267,65 @@ export function patientIntersectionFilter(DATA) {
 		typings: typingPatientIDs.length - patientIDs(DATA.typings).length,
 		locations: locationPatientIDs.length - patientIDs(DATA.locations).length,
 	}
+}
+
+
+
+
+
+
+
+// ==================
+// PSEUDONYMIZATION
+// ==================
+
+import { pseudonymize, pseudoMAP } from "../lib/deps.js"
+// import { pseudo } from "../lib/deps.js"
+
+function pseudonymizeLocations(DATA, MAP) {
+	let t0 = Date.now()
+	// console.log('anonymize location data...')
+	let NEW = {}
+	let ids = Object.keys(DATA).sort()
+	for (let id of ids) {
+		let val = DATA[id]
+		NEW[pseudonymize(id, { bucket: 'locations', prefix: 'location_' })] = {
+			patientID: pseudonymize(val.patientID, { bucket: 'patients', prefix: 'patient_', length: 4 }),
+			from: val.from,
+			till: val.till,
+			clinic: pseudonymize(val.clinic, { bucket: 'clinics', prefix: 'clinic_', length: 3 }),
+			ward: pseudonymize(val.ward, { bucket: 'wards', prefix: 'ward_', length: 3 }),
+			room: pseudonymize(val.room, { bucket: 'rooms', prefix: 'room_', length: 4 }),
+		}
+		postMessage(['progress', ids.indexOf(id) + 1, ids.length])
+	}
+	// console.log('...done', Date.now() - t0, 'ms')
+	return NEW
+}
+
+function pseudonymizeTypings(DATA, MAP) {
+	// let t0 = Date.now()
+	// console.log('pseudonymize typing data...')
+	let NEW = {}
+	let ids = Object.keys(DATA).sort()
+	for (let id of ids) {
+		let val = DATA[id]
+		val.patientID = pseudonymize(val.patientID, { bucket: 'patients', prefix: 'patient_', length: 4 })
+		NEW[pseudonymize(id, { bucket: 'sequences', prefix: 'sequence_', length: 5 })] = val
+		postMessage(['progress', ids.indexOf(id) + 1, ids.length])
+	}
+	// console.log('...done', Date.now() - t0, 'ms')
+	return NEW
+}
+
+
+export function pseudonymizeData(DATA) {
+	// console.log("PSEUDO NOW", DATA)
+	// postMessage(['started'])
+	let MAP = { clinic: {}, ward: {}, room: {}, patientID: {}, locationID: {}, sequenceID: {}, alleleID: {}, }
+	DATA.typings = pseudonymizeTypings(DATA.typings, MAP)
+	DATA.locations = pseudonymizeLocations(DATA.locations, MAP)
+	// console.log('map', pseudoMAP)
+	postMessage(['pseudoMap', DATA, pseudoMAP])
+	return MAP
 }

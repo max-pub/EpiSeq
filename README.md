@@ -5,7 +5,7 @@ to evaluate the connection between these data-sets
 
 
 
-## required source data structure
+## source data 
 please use tsv-files (tab separated values) with the following structure
 
 ### typing data
@@ -38,7 +38,8 @@ in the typing-data-example above, "sequence 3" has only 50% correctly decoded al
 it would be filtered out by a "row = 51%" setting or above.
 
 ### columns
-"allele 2" as only 33% correctly deciphered values, "column = 34%" would remove that column
+"allele 2" as only 33% correctly decoded values, "column = 34%" would remove that column
+from further processing
 
 
 

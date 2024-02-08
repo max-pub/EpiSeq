@@ -12,8 +12,8 @@ onmessage = event => {
 
 function stats(v) {
 	return {
-		patients: Object.keys(v).length,
-		entries: matrixToList(v).length,
+		keys: Object.keys(v).length,
+		values: matrixToList(v).length,
 	}
 }
 
@@ -54,7 +54,7 @@ function run(LIST, DIST, OPTIONS) {
 export function matrixDateFilter(DIST, LIST, days) {
 	// console.log('date-filter 1', DIST)
 	// diagonalX(DIST)
-	let t1 = TALI.grid.stringify({ x: DIST }, { sortRows: true, sortCols: true })
+	// let t1 = TALI.grid.stringify({ x: DIST }, { sortRows: true, sortCols: true })
 	// let typingDates = getTypingDates(LIST)
 	let typingDates = mapValues(LIST, x => Date.parse(x.typingDate) / 1000 / 60 / 60 / 24)
 	// console.log('typingDates', typingDates)
@@ -84,7 +84,7 @@ export function matrixDateFilter(DIST, LIST, days) {
 	// postMessage(['TI', { dropped }])
 	// console.log('date-filter 2', out)
 	diagonalX(out)
-	let t2 = TALI.grid.stringify({ x: out }, { sortRows: true, sortCols: true })
+	// let t2 = TALI.grid.stringify({ x: out }, { sortRows: true, sortCols: true })
 	// console.log('date-filter 3', t1 == t2)
 	return out
 }
