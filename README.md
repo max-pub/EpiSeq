@@ -16,12 +16,12 @@ https://mdro-correlation.uni-muenster.de/2506/
 ## Application Modes
 you can either supply your own data for analysis. This will start the application with step 1.  
 you can alternatively use the data from our publication, which is preprocessed for data-safety reasons and will thus start from step 5 (Typing Filter)  
-The following sections describe each step in the application in detail.
+The following sections describe each step of the application in detail.
 
 
 
 # Part 1
-Filtering raw data and calculation of distance matrices.   
+Supplying and filtering of raw data and calculation of distance matrices.   
 This is necessary if you supply you own data.  
 
 ## 1. Source Data 
@@ -84,7 +84,7 @@ There are no adjustable parameters for this step
 
 
 # Part 2
-Filtering distance matrices by the parameters as described in our publication and correlating the filtered matrices to derive transmission thresholds.  
+Filtering typing and location distance matrices by the parameters described in our publication and correlating the filtered matrices to derive transmission thresholds.  
 if you use the preprocessed data from our publication, the web-application starts here.
 
 
