@@ -1,0 +1,22 @@
+!! xLimit, scaleType
+<!-- <hr /> -->
+<div class="chart"></div>
+<div class="flex-between">
+	<!-- <h3>Distribution of Typing Distances</h3> -->
+	<div class="options">
+		<a class=' ${xLimit=="20"?"selected":""}' id="20">20</a>
+		<a class=' ${xLimit=="100"?"selected":""}' id="100">100</a>
+		<a class=' ${xLimit=="500"?"selected":""}' id="500">500</a>
+		<a class=' ${xLimit=="full"?"selected":""}' id="full">full</a>
+	</div>
+	<div class="scale-type">
+		<a class="${scaleType == 'linear' ? 'selected' : ''}">linear</a>
+		<a class="${scaleType == 'logarithmic' ? 'selected' : ''}">logarithmic</a>
+	</div>
+
+	<div class="export">
+		<a >tsv</a>
+		<a >svg</a>
+		<a >png</a>
+	</div>
+</div>

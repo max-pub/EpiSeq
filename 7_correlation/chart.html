@@ -1,0 +1,49 @@
+!! height,CD,type,info
+<!-- <hr /> -->
+<div class="chart"></div>
+
+<div class="flex-between">
+	<!-- <h3>Distribution of Location Entries</h3> -->
+	<div class="height">
+		! for(let x of [100,80,60])
+			<a class='${height==x?"selected":""}'>${x}</a>
+		<!-- <a class='${height=="auto"?"selected":""}'>auto</a> -->
+		<!-- <a class='chart ${height=="room"?"selected":""}'>room</a> -->
+	</div>
+	<!-- <div>(${height} -- ${height=="100"})</div> -->
+
+	<div class="type">
+		<a class='${type=='med'?"selected":""}'>med</a>
+		<a class='${type=='MAD'?"selected":""}'>MAD</a>
+		<a class='${type=='SD'?"selected":""}'>SD</a>
+	</div> 
+
+	<div class="export">
+		<a >tsv</a>
+		<a >svg</a>
+		<a >png</a>
+	</div>
+</div>
+
+<div>
+	! if(type=='SD'){
+		Threshold calculated as <i>arithmetic mean</i> + (2 * <i>standard deviation</i>)
+	! }
+	! if(type=='MAD'){
+		Threshold calculated as <i>median</i> + (20 * <i>median absolute deviation</i>)
+	! }
+	! if(type=='med'){
+		Threshold calculated as <i>median</i> * 10
+	! }
+</div>
+
+<table class="info">
+	! for(let cd in info){
+		<tr>
+			<td>contact depth ${cd}</td>
+			! for(let key in info[cd])
+				<td>${key}: ${key=='cutoff' ? info[cd][key] : info[cd][key].toFixed(2)}</td>
+			
+		</tr>
+	! }
+</table>

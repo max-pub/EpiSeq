@@ -1,0 +1,67 @@
+<!-- <h2>Contact Distribution</h2>
+<div class="table"></div>
+ -->
+
+<h2>Contact Filter</h2>
+<p>
+	the following parameters filter the patient-contact-matrix temporally and spacially
+</p>
+<form>
+	<table>
+		<tr id="cs">
+			<td> CS </td>
+			<td class="help1"> spacial </td>
+			<td>
+				<select>
+					<option>room</option>
+					<option>ward</option>
+					<option>clinic</option>
+					<option selected="selected">any</option>
+				</select>
+			</td>
+			<td class="help"> adminstrative level of contact-comparisons: room, ward, clinic or any of the
+				aforementioned </td>
+		</tr>
+		<tr id="ct">
+			<td> CT </td>
+			<td class="help1"> temporal </td>
+			<td> <input type="number" value="-3" min="-100" max="100" size="4" /> </td>
+			<td class="help"> 
+				negative numbers mean number of days between non-overlapping stays <br />
+				positive numbers mean number of days of overlapping stay 
+			</td>
+		</tr>
+		<!-- <tr id="cd">
+			<td> CD </td>
+			<td class="help1"> Contact Depth </td>
+			<td> <input type="number" value="0" min="0" max="3" size="4" /> </td>
+			<td class="help"> allowed amount of intermediary contacts between two patients, "0" means direct contact
+			</td>
+		</tr>
+		<tr id="cm">
+			<td> CM </td>
+			<td class="help1"> Depth Max  </td>
+			<td> <input type="number" value="5" min="0" max="50" size="4" /> </td>
+			<td class="help"> 
+			</td>
+		</tr> -->
+	</table>
+	<button type="submit">apply filters</button>
+</form>
+
+
+<div class="done"></div>
+
+<div hidden>
+	<progress></progress>
+	<label></label>
+</div>
+
+
+<div class="downloads"></div>
+
+
+<div class="chart-box a"></div>
+<div class="chart-box b"></div>
+
+

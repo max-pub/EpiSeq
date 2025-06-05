@@ -1,0 +1,53 @@
+<h2>Correlation Between Typing And Location Data </h2>
+<!-- <p> -->
+	<!-- the results of the correlation between typing-data and location-data will appear below after they are fully calculated -->
+<!-- </p> -->
+<!-- <ul class="info"></ul> -->
+<form class="box inline-block">
+	<table>
+		<tr id="td">
+			<td> TD </td>
+			<td class="help1"> Typing Distance </td>
+			<td> <input type="number" value="100" min="0" max="3000" size="4" /> </td>
+			<td class="help"> upper limit of typing - distances to be correlated </td>
+		</tr>
+		<tr id="cd">
+			<td> CD </td>
+			<td class="help1"> Contact Depth  </td>
+			<td> <input type="number" value="1" min="0" max="2" size="4" /> </td>
+			<td class="help"> 
+				number of allowed intermediary contacts between two patients <br/>
+				0 = direct contact
+				 </td>
+		</tr>
+		<tr id="mr">
+			<td> MR </td>
+			<td class="help1"> Mutation Rate  </td>
+			<td> <input type="number" value="2" min="0" max="50" size="2" /> </td>
+			<td class="help"> 
+				max. allowed typing addition for links to intermediate contacts<br/>
+				used for indirect contacts only (CD > 0) <br/>
+				e.g: Patients A & B with TypingDistance=3. MutationRate=2 allows for PatientLink of "A-X-B" to have "A-X" and "X-B" distance of up to 5.
+			</td>
+		</tr>
+	</table>
+	<button type="submit">start correlation</button>
+</form>
+
+<div class="done"></div>
+
+<div hidden>
+	<progress></progress>
+	<label></label>
+</div>
+
+<div class="downloads"></div>
+<!-- <br /> -->
+<!-- <br /> -->
+<div class="chart-box"></div>
+
+<div class="table"></div>
+<!-- <br/> -->
+<!-- <div class="table2"></div> -->
+<!-- <br/> -->
+<!-- <div class="table3"></div> -->
