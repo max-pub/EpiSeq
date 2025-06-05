@@ -35,7 +35,6 @@ please use tab-separated-values (tsv) with the following structure
 | sequence 3  | patient 2  | 2022-07-05 | 32       | ?        | ?        | 17       | ... |
 | ...         | ...        | ...        | ...      | ...      | ...      | ...      | ... |
 
-
 #### 1.2. Location Data
 | locationID | patientID | from | till | clinic | ward | room |
 | ---------- | --------- | ---- | ---- | ------ | ---- | ---- |  
@@ -61,7 +60,6 @@ The following filters can be applied to the source - data
 
 ## 3. Calculate Typing Distance Matrix
 All pairs of typing data will be compared to each other for number of different alleles and the result will be stored in a distance-matrix of size n * (n-1) / 2. A sample-date-distance distance matrix of the same size is also calculated to allow for filtering in a later step (5.)
-
 **null** values or "undeciphered" values can be made to count or discarded. 
 if "null"-values are set to "count", sequence 2 and 3 in the example above (1.1) will result in a distance of 2.
 if "null-values are set to *not* "count", sequence 2 and 3 in the example above (1.1) will result in a distance of 0.
