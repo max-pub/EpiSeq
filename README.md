@@ -136,3 +136,25 @@ Correlation between cgMLST-typing-matrix and contact-matrix happens in this step
 | **CT** | Contact Temporal | Temporal gap between stays | -3 days |
 | **CD** | Contact Depth | Number of intermediary contacts allowed | 0 (direct only) |
 | **MR** | Mutation Rate | Allowed deviation for intermediary contacts | 2 |
+
+
+
+# Legal Notice
+
+### Responsible Entity:
+Institut für Hygiene  
+Robert-Koch-Straße 41  
+48149 Münster  
+www.ukm.de/institute/hygiene
+
+### Head of the Institute:
+Univ.-Prof. Dr. med. Alexander Mellmann  
+alexander.mellmann@ukmuenster.de
+
+### Application Development:
+Dr. med. univ. Maximilian Fechner  
+max.fechner@uni-muenster.de
+
+### Raw Data Extraction:
+Dr. med. Hauke Tönnies  
+hauke.toennies@ukmuenster.de
