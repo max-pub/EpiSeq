@@ -103,6 +103,6 @@ Correlation between cgMLST-typing-matrix and contact-matrix happens in this step
 |-----------|-----------|-------------|---------|
 | **TT** | Typing Temporal | Maximum days between samples | 365 days |
 | **CS** | Contact Spatial | Spatial granularity level | room, ward, clinic |
-| **CT** | Contact Temporal | Temporal gap between stays | e.g., -3 days |
+| **CT** | Contact Temporal | Temporal gap between stays | -3 days |
 | **CD** | Contact Depth | Number of intermediary contacts allowed | 0 (direct only) |
-| **MR** | Mutation Rate | Allowed deviation for intermediary contacts | - |
+| **MR** | Mutation Rate | Allowed deviation for intermediary contacts | 2 |
