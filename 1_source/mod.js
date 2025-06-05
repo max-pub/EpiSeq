@@ -1,8 +1,8 @@
 import { Base } from '../lib/mod.base.js'
-import { download } from '../lib/deps.js'
+import { download, prettyNumber } from '../lib/deps.js'
 import { TALI } from "../lib/deps.js"
 import { locationDistance, sourceFilter, sourceInput, typeDist, typeFilter } from '../lib/mod.js'
-import { ddLog } from '../lib/matrix.js';
+import { ddCount, ddLog } from '../lib/matrix.js';
 import { countBothIDs, infoTable } from '../2_source_filter/worker.js'
 
 // Node.prototype.$$ = (x)=>[...this.querySelectorAll(x)]
@@ -158,12 +158,14 @@ export default new class extends Base {
 			}
 		}
 		if (type == 'dist') {
-			this.addDone(`${this.title} ${key} data loaded`)
+			this.addDone(`${this.title} ${key} matrices loaded`)
 			this.done.add(key)
 			if (this.done.size == 2) {
 				// console.log('typeDist data', typeDist.data)
-				this.addCount(`${Object.keys(typeDist.data.typingMatrix).length} typing patients and ${Object.keys(locationDistance.data.clinic).length} typing patients and `)
+				// this.addCount(`${Object.keys(typeDist.data.typingMatrix).length} typing-pairs and ${Object.keys(locationDistance.data.clinic).length} location-pairs `)
+				this.addCount(`${prettyNumber(ddCount(typeDist.data.typingMatrix))} typing-pairs, ${prettyNumber(ddCount(locationDistance.data.clinic))} clinic-contacts, ${prettyNumber(ddCount(locationDistance.data.ward))} ward-contacts, ${prettyNumber(ddCount(locationDistance.data.room))} room-contacts  `)
 				typeFilter.initAndRun()
+				
 			}
 		}
 	}
