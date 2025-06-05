@@ -3,7 +3,6 @@ this application correlates MDRO-typing-data and patient-location-data
 to evaluate the connection between these data-sets
 and derive reproducible transmission thresholds per species
 
-
 🔒 Local data processing — no uploads, privacy guaranteed  
 ⚙️ Customizable parameters for spatial and temporal analysis  
 🧫 Supports any cgMLST-typed bacterial species  
@@ -12,14 +11,20 @@ and derive reproducible transmission thresholds per species
 You can find the application here: 
 https://mdro-correlation.uni-muenster.de/2506/  
 
+The following:  
+
+
+
 
 ## Application Modes
-you can either supply your own data for analysis. This will start the application with step 1.  
-you can alternatively use the data from our publication, which is preprocessed for data-safety reasons and will thus start from step 5 (Typing Filter)  
+you can either supply your own data for analysis. This will start the application with [Part 1](#part-1).  
+you can alternatively use the data from our publication, which is preprocessed for data-safety reasons and will thus start from [Part 2](#part-2)  
 The following sections describe each step of the application in detail.
 
 
+<br><br><br><br>
 
+<a id="part-1"></a>
 # Part 1 - filter raw data and caluclate distance matrices
 Supplying and filtering of raw data and calculation of distance matrices.   
 This is necessary if you supply you own data.  
@@ -83,9 +88,10 @@ All pairs of location data will be compared to each other for spacial and tempor
 There are no adjustable parameters for this step
 
 
+<br><br><br><br>
 
 
-
+<a id="part-2"></a>
 # Part 2 - filter and correlate the distance-matrices
 Filtering typing and location distance matrices by the parameters described in our publication and correlating the filtered matrices to derive transmission thresholds.  
 if you use the preprocessed data from our publication, the web-application starts here.
@@ -101,6 +107,7 @@ The typing-distance-matrix can be filtered by distance of sample-dates.
 
 A histogram showing the distribution of typing distances is also created during this step.  
 
+![image](docs/typeHist.png)
 
 
 
@@ -124,7 +131,11 @@ Correlation between cgMLST-typing-matrix and contact-matrix happens in this step
 
 **Mutation Rate (MR):** sets the upper limit of allowed deviation from the currently calculated typing distance. For example: Patients A & B with TypingDistance=3 and MutationRate=2 allows for PatientLink "A-X-B" to have "A-X" and "X-B" distances of up to 5. This is used for indirect contacts only.
 
+![image](docs/pairConn.png)
 
+
+
+<br><br><br><br>
 
 
 
@@ -137,6 +148,10 @@ Correlation between cgMLST-typing-matrix and contact-matrix happens in this step
 | **CD** | Contact Depth | Number of intermediary contacts allowed | 0 (direct only) |
 | **MR** | Mutation Rate | Allowed deviation for intermediary contacts | 2 |
 
+  
+   
+
+<br><br><br><br>
 
 
 # Legal Notice
