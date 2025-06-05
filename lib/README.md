@@ -20,7 +20,7 @@ The following sections describe each step of the application in detail.
 
 
 
-# Part 1
+# Part 1 - filter raw data and caluclate distance matrices
 Supplying and filtering of raw data and calculation of distance matrices.   
 This is necessary if you supply you own data.  
 
@@ -47,24 +47,15 @@ please use tab-separated-values (tsv) with the following structure
 
 
 ## 2. Source Filter
-The following filters can be applied to the source - data 
-
-### 2.1. Date-Filter
-all typing-data and location-data outside the range of "from" and "till" values will be removed from the data-set
-
-### 2.2. Row-Filter
-filter out rows that have less than a given percentage of correctly decoded alleles.  
-in the typing-data-example above (1.1), "sequence 3" has only 50% correctly decoded alleles, 
-it would be filtered out by a "row = 51%" setting or above.
-
-### 2.3. Column-Filter
-filter out columns that have less than a given percentage of correctly decoded alleles.  
-in the typing-data-example above (1.1), "allele 2" as only 33% correctly decoded values, "column = 34%" would remove that column from further processing
-
-
-### 2.4. Location-Filter
-Some location-records might be incomplete, missing ward, room or date-values. Those records can be removed to reach a higher-quality data-set
-
+The following filters can be applied to the source - data   
+**from** all typing and location data **before** that date will be removed  
+**till** all typing and location data **after** that date will be removed  
+**rows** filter out rows that have less than a given percentage of correctly decoded alleles. in the typing-data-example above (1.1), "sequence 3" has only 50% correctly decoded alleles,  it would be filtered out by a "row = 51%" setting or above.   
+**columns** filter out columns that have less than a given percentage of correctly decoded alleles. in the typing-data-example above (1.1), "allele 2" as only 33% correctly decoded values, "column = 34%" would remove that column from further processing  
+**rooms** location records without room-data will be removed  
+**wards** location records without ward-data will be removed  
+**open-ends** location records without **till**-date will be removed  
+**pseudonymize** location-IDs, sequence-IDs, patient-IDs and room,ward,clinic-names will be replaced with random strings  
 
 
 
@@ -83,33 +74,35 @@ All pairs of location data will be compared to each other for spacial and tempor
 There are no adjustable parameters for this step
 
 
-# Part 2
+# Part 2 - filter and correlate the distance-matrices
 Filtering typing and location distance matrices by the parameters described in our publication and correlating the filtered matrices to derive transmission thresholds.  
 if you use the preprocessed data from our publication, the web-application starts here.
 
 
 ## 5. Typing Filter
-The typing-distance-matrix can be filtered by distance of sample-dates. This parameter is called
-"Typing Temporal" (TT) and is set to the upper limit of days between any two samples.
-A histogram showing the distribution of typing distances is also created during this step. 
+The typing-distance-matrix can be filtered by distance of sample-dates.  
+**Typing Temporal (TT)** sets the upper limit of days between any two samples.   
+A histogram showing the distribution of typing distances is also created during this step.  
 
 
 ## 6. Location Filter
-The location-distance-matrix can be filtered spacially and temporally. The "Contact Spacial" (CS) parameter allows filtering of the level of contact (clinic, ward, room or any). The "Contact Temporal" (CT) parameter allows filtering by time of stay between any two patients; negative numbers can be used for distance between non-overlapping stays.
+The location-distance-matrix can be filtered spacially and temporally.  
+**Contact Spacial (CS)** allows filtering of the level of contact (clinic, ward, room or any).  
+**Contact Temporal (CT)** allows filtering by time of stay between any two patients; negative numbers can be used for distance between non-overlapping stays.  
 
 
 ## 7. Correlation
 Correlation between cgMLST-typing-matrix and contact-matrix happens in this step. You have three parameters to adjust the outcome.   
-Typing-Distance (TD) sets the upper limit for calculation and thus also the "width" of the chart. Higher values will obviously lead to longer calculation times.  
-Contact-Depth (CD) sets the amount of allowed intermediary contacts. Calculation of second and third-degree connections will obviously also lead to longer calculation times.  
-Mutation-Rate (MR) sets the upper limit of allowed deviation from the currently calculated typing-distance. e.g: Patients A & B with TypingDistance=3. MutationRate=2 allows for PatientLink of "A-X-B" to have "A-X" and "X-B" distance of up to 5. This is used for indirect contacts only
+**Typing Distance (TD)** sets the upper limit for calculation and thus the "width" of the chart. Higher values will lead to longer calculation times.
+**Contact Depth (CD)** sets the number of allowed intermediary contacts. Calculation of second and third-degree connections will also lead to longer calculation times.
+**Mutation Rate (MR)** sets the upper limit of allowed deviation from the currently calculated typing distance. For example: Patients A & B with TypingDistance=3 and MutationRate=2 allows for PatientLink "A-X-B" to have "A-X" and "X-B" distances of up to 5. This is used for indirect contacts only.
 
 
-
-
-## Overview Of All Available Parameters 
-TT – Typing Temporal window (default: 365 days)  
-CS – Contact Spatial granularity (room, ward, clinic)  
-CT – Contact Temporal gap (e.g., -3 days)  
-CD – Contact Depth (0 = direct contacts only)  
-MR – Mutation Rate for intermediary contacts  
+## Overview of All Available Parameters
+| Parameter | Full Name | Description | Default |
+|-----------|-----------|-------------|---------|
+| **TT** | Typing Temporal | Maximum days between samples | 365 days |
+| **CS** | Contact Spatial | Spatial granularity level | room, ward, clinic |
+| **CT** | Contact Temporal | Temporal gap between stays | e.g., -3 days |
+| **CD** | Contact Depth | Number of intermediary contacts allowed | 0 (direct only) |
+| **MR** | Mutation Rate | Allowed deviation for intermediary contacts | - |
