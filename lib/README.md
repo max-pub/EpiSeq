@@ -27,7 +27,7 @@ This is necessary if you supply you own data.
 ## 1. Source Data 
 please use tab-separated-values (tsv) with the following structure
 
-### 1.1. Typing Data
+#### 1.1. Typing Data
 | sequenceID  | patientID  | sampleDate | allele 1 | allele 2 | allele 3 | allele 4 | ... |
 | ----------- | ---------- | ---------- | -------- | -------- | -------- | -------- | --- |
 | sequence 1  | patient 1  | 2022-07-03 | 47       | ?        | 78       | 65       | ... |
@@ -36,7 +36,7 @@ please use tab-separated-values (tsv) with the following structure
 | ...         | ...        | ...        | ...      | ...      | ...      | ...      | ... |
 
 
-### 1.2. Location Data
+#### 1.2. Location Data
 | locationID | patientID | from | till | clinic | ward | room |
 | ---------- | --------- | ---- | ---- | ------ | ---- | ---- |  
 | location1  | patient1  | 2022-05-02 | 2022-06-14 | Dermatology | Ward B | Room 23 |
@@ -62,7 +62,7 @@ The following filters can be applied to the source - data
 ## 3. Calculate Typing Distance Matrix
 All pairs of typing data will be compared to each other for number of different alleles and the result will be stored in a distance-matrix of size n * (n-1) / 2. A sample-date-distance distance matrix of the same size is also calculated to allow for filtering in a later step (5.)
 
-### 3.1. Count Unknown
+**null** values or "undeciphered" values can be made to count or discarded. 
 if "null"-values are set to "count", sequence 2 and 3 in the example above (1.1) will result in a distance of 2.
 if "null-values are set to *not* "count", sequence 2 and 3 in the example above (1.1) will result in a distance of 0.
 
