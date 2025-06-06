@@ -1,164 +1,166 @@
-# About
-this application correlates MDRO-typing-data and patient-location-data
-to evaluate the connection between these data-sets
-and derive reproducible transmission thresholds per species
+# MDRO Correlation Application
 
-🔒 Local data processing — no uploads, privacy guaranteed  
-⚙️ Customizable parameters for spatial and temporal analysis  
-🧫 Supports any cgMLST-typed bacterial species  
-🔁 Reproducible method used in published study  
+This application analyzes the **correlation between Multi-Drug Resistant Organism (MDRO) typing data and patient location data**. Its primary objective is to assess the relationship between these datasets and derive **reproducible transmission thresholds** per bacterial species.
 
-You can find the application here: 
-https://mdro-correlation.uni-muenster.de/2506/  
+---
 
-The following:  
+**Key Features:**
 
+* **🔒 Local Data Processing:** Ensures strict privacy with no data uploads; all processing occurs locally.
+* **⚙️ Customizable Parameters:** Offers flexible spatial and temporal analysis configurations.
+* **🧫 Broad Species Support:** Compatible with any cgMLST-typed bacterial species.
+* **🔁 Reproducible Methodology:** Implements a method validated and used in a peer-reviewed publication.
 
+---
 
+The application is available at: [https://mdro-correlation.uni-muenster.de/2506/](https://mdro-correlation.uni-muenster.de/2506/)
 
 ## Application Modes
-you can either supply your own data for analysis. This will start the application with [Part 1](#part-1).  
-you can alternatively use the data from our publication, which is preprocessed for data-safety reasons and will thus start from [Part 2](#part-2)  
-The following sections describe each step of the application in detail.
 
+The application offers two distinct operational modes:
+
+1.  **Custom Data Analysis:** Initiate the process with your own raw data, starting at [Part 1](#part-1).
+2.  **Publication Data Analysis:** Utilize pre-processed, anonymized data from our publication, commencing directly at [Part 2](#part-2).
+
+The following sections detail each step of the application workflow.
 
 <br><br><br><br>
 
 <a id="part-1"></a>
-# Part 1 - filter raw data and caluclate distance matrices
-Supplying and filtering of raw data and calculation of distance matrices.   
-This is necessary if you supply you own data.  
+# Part 1: Raw Data Filtering and Distance Matrix Calculation
 
-## 1. Source Data 
-please use tab-separated-values (tsv) with the following structure
+This section covers the submission and filtering of raw data, followed by the calculation of necessary distance matrices. This step is mandatory when providing your own datasets.
+
+## 1. Source Data Requirements
+
+Input data must be provided in **tab-separated values (TSV) format** with the specified structures.
 
 <a id="part-1-1"></a>
 #### 1.1. Typing Data
-| sequenceID  | patientID  | sampleDate | allele 1 | allele 2 | allele 3 | allele 4 | ... |
-| ----------- | ---------- | ---------- | -------- | -------- | -------- | -------- | --- |
-| sequence 1  | patient 1  | 2022-07-03 | 47       | ?        | 78       | 65       | ... |
-| sequence 2  | patient 2  | 2022-07-05 | 32       | 41       | 15       | 17       | ... |
-| sequence 3  | patient 2  | 2022-07-05 | 32       | ?        | ?        | 17       | ... |
-| ...         | ...        | ...        | ...      | ...      | ...      | ...      | ... |
+
+| sequenceID | patientID | sampleDate | allele 1 | allele 2 | allele 3 | allele 4 | ... |
+| ---------- | --------- | ---------- | ---------- | -------- | -------- | -------- | --- |
+| sequence 1 | patient 1 | 2022-07-03 | 47 | ? | 78 | 65 | ... |
+| sequence 2 | patient 2 | 2022-07-05 | 32 | 41 | 15 | 17 | ... |
+| sequence 3 | patient 2 | 2022-07-05 | 32 | ? | ? | 17 | ... |
+| ... | ... | ... | ... | ... | ... | ... | ... |
 
 <a id="part-1-2"></a>
 #### 1.2. Location Data
+
 | locationID | patientID | from | till | clinic | ward | room |
-| ---------- | --------- | ---- | ---- | ------ | ---- | ---- |  
-| location1  | patient1  | 2022-05-02 | 2022-06-14 | Dermatology | Ward B | Room 23 |
-| location2  | patient1  | 2022-06-14 | 2022-07-23 | Dermatology | Ward C | Room 12 |
-| ...        | ...       | ...        | ...        | ...         | ...    | ...     |
+| ---------- | --------- | ---- | ---- | ------ | ---- | ---- |
+| location1 | patient1 | 2022-05-02 | 2022-06-14 | Dermatology | Ward B | Room 23 |
+| location2 | patient1 | 2022-06-14 | 2022-07-23 | Dermatology | Ward C | Room 12 |
+| ... | ... | ... | ... | ... | ... | ... |
 
+---
 
+## 2. Source Data Filtering Options
 
+The following filters can be applied to refine the source data:
 
-## 2. Source Filter
-The following filters can be applied to the source - data   
+* **From:** Excludes all typing and location data recorded **before** the specified date.
+* **Till:** Excludes all typing and location data recorded **after** the specified date.
+* **Rows:** Filters out typing data rows where the percentage of correctly decoded alleles falls below a given threshold. For instance, in the example above ([Part 1.1](#part-1-1)), "sequence 3" has 50% correctly decoded alleles; a setting of "row = 51%" or higher would remove this row.
+* **Columns:** Filters out typing data columns where the percentage of correctly decoded alleles falls below a given threshold. In the example above ([Part 1.1](#part-1-1)), "allele 2" has only 33% correctly decoded values; "column = 34%" would remove this column.
+* **Rooms:** Removes location records lacking room-specific data.
+* **Wards:** Removes location records lacking ward-specific data.
+* **Open-ends:** Removes location records without a specified **till**-date.
+* **Pseudonymize:** Replaces location IDs, sequence IDs, patient IDs, and clinic/ward/room names with random strings to ensure data anonymity.
 
-- **from:** all typing and location data **before** that date will be removed  
-- **till:** all typing and location data **after** that date will be removed  
-- **rows:** filter out rows that have less than a given percentage of correctly decoded alleles. in the typing-data-example above ([Part 1.1](#part-1-1)), "sequence 3" has only 50% correctly decoded alleles,  it would be filtered out by a "row = 51%" setting or above.   
-- **columns:** filter out columns that have less than a given percentage of correctly decoded alleles. in the typing-data-example above ([Part 1.1](#part-1-1)), "allele 2" as only 33% correctly decoded values, "column = 34%" would remove that column from further processing  
-- **rooms:** location records without room-data will be removed  
-- **wards:** location records without ward-data will be removed  
-- **open-ends:** location records without **till**-date will be removed  
-- **pseudonymize:** location-IDs, sequence-IDs, patient-IDs and room,ward,clinic-names will be replaced with random strings  
+---
 
+## 3. Typing Distance Matrix Calculation
 
-## 3. Calculate Typing Distance Matrix
-All pairs of typing data will be compared to each other for number of different alleles and the result will be stored in a distance-matrix of size n * (n-1) / 2. A sample-date-distance distance matrix of the same size is also calculated to allow for filtering in a later step (5.)  
+All pairs of typing data undergo comparison to determine the number of differing alleles. The results are stored in a distance matrix of size $n \times (n-1)/2$. Concurrently, a sample-date distance matrix of the same dimensions is computed for subsequent filtering (Step 5).
 
-- **null:** or "undeciphered" values can be made to count or discarded.  
-if "null"-values are set to "count", sequence 2 and 3 in the example above (1.1) will result in a distance of 2.  
-if "null-values are set to *not* "count", sequence 2 and 3 in the example above (1.1) will result in a distance of 0.  
+* **Null Values:** "Undeciphered" values can either be counted as differences or disregarded:
+    * If "null" values are set to **"count,"** sequence 2 and 3 in the example (1.1) will result in a distance of 2.
+    * If "null" values are set to **"not count,"** sequence 2 and 3 in the example (1.1) will result in a distance of 0.
 
+---
 
+## 4. Location Distance Matrix Calculation
 
-
-
-
-## 4. Calculate Location Distance Matrix
-All pairs of location data will be compared to each other for spacial and temporal distance and the result will be stored in two distance-matrices, each of size n * (n-1) / 2.  
-There are no adjustable parameters for this step
-
+All pairs of location data are compared to calculate their spatial and temporal distances. The results are stored in two separate distance matrices, each of size $n \times (n-1)/2$. This step does not require adjustable parameters.
 
 <br><br><br><br>
 
-
 <a id="part-2"></a>
-# Part 2 - filter and correlate the distance-matrices
-Filtering typing and location distance matrices by the parameters described in our publication and correlating the filtered matrices to derive transmission thresholds.  
-if you use the preprocessed data from our publication, the web-application starts here.
+# Part 2: Distance Matrix Filtering and Correlation
 
+This section focuses on filtering the typing and location distance matrices according to parameters described in our publication, followed by their correlation to derive transmission thresholds. If you use the pre-processed publication data, the web application initiates here.
 
+---
 
+## 5. Typing Distance Filtering
 
+The typing distance matrix can be filtered based on the temporal distance between sample dates.
 
-## 5. Typing Filter
-The typing-distance-matrix can be filtered by distance of sample-dates.  
-- **Typing Temporal (TT):** sets the upper limit of days between any two samples.   
+* **Typing Temporal (TT):** Sets the upper limit for the number of days allowed between any two samples.
 
-The following histogram showing the distribution of typing distances is also created during this step. 
+A histogram illustrating the distribution of typing distances is generated during this step:
 
 ![image](docs/typeHist.png)
 
+---
 
+## 6. Location Distance Filtering
 
-## 6. Location Filter
-The location-distance-matrix can be filtered spacially and temporally.  
-- **Contact Spacial (CS):** allows filtering of the level of contact (clinic, ward, room or any).  
-- **Contact Temporal (CT):** allows filtering by time of stay between any two patients; negative numbers can be used for distance between non-overlapping stays.  
+The location distance matrix can be filtered both spatially and temporally.
 
+* **Contact Spatial (CS):** Allows filtering based on the level of contact granularity (clinic, ward, room, or any).
+* **Contact Temporal (CT):** Allows filtering by the duration of overlap or separation between patient stays. Negative values can be used to define distances between non-overlapping stays.
 
+---
 
+## 7. Correlation Analysis
 
+This step performs the correlation between the cgMLST typing matrix and the contact matrix. Three parameters allow for adjustment of the correlation outcome:
 
-## 7. Correlation
-Correlation between cgMLST-typing-matrix and contact-matrix happens in this step. You have three parameters to adjust the outcome.   
-- **Typing Distance (TD):** sets the upper limit for calculation and thus the "width" of the chart. Higher values will lead to longer calculation times.
-- **Contact Depth (CD):** sets the number of allowed intermediary contacts. Calculation of second and third-degree connections will also lead to longer calculation times.
-- **Mutation Rate (MR):** sets the upper limit of allowed deviation from the currently calculated typing distance. For example: Patients A & B with TypingDistance=3 and MutationRate=2 allows for PatientLink "A-X-B" to have "A-X" and "X-B" distances of up to 5. This is used for indirect contacts only.
+* **Typing Distance (TD):** Defines the upper limit for calculation, influencing the "width" of the resulting chart. Higher values may increase computation time.
+* **Contact Depth (CD):** Specifies the number of allowed intermediary contacts. Calculating second and third-degree connections will also result in longer computation times.
+* **Mutation Rate (MR):** Sets the maximum allowed deviation from the currently calculated typing distance. For example, if Patients A & B have a Typing Distance = 3 and a Mutation Rate = 2, a Patient Link "A-X-B" allows "A-X" and "X-B" distances of up to 5. This parameter is exclusively used for indirect contacts.
 
-The results can then be downloaded as raw data or in a chart like in the example below
+Results can be downloaded as raw data or visualized in a chart, as shown in the example below:
+
 ![image](docs/pairConn.png)
 
-
-
 <br><br><br><br>
 
-
+---
 
 ## Overview of All Available Parameters
-| Parameter | Full Name | Description | Default |
-|-----------|-----------|-------------|---------|
-| **TT** | Typing Temporal | Maximum days between samples | 365 days |
-| **CS** | Contact Spatial | Spatial granularity level | room, ward, clinic |
-| **CT** | Contact Temporal | Temporal gap between stays | -3 days |
-| **CD** | Contact Depth | Number of intermediary contacts allowed | 0 (direct only) |
-| **MR** | Mutation Rate | Allowed deviation for intermediary contacts | 2 |
 
-  
-   
+| Parameter | Full Name          | Description                                                    | Default             |
+| :-------- | :----------------- | :--------------------------------------------------------------- | :------------------ |
+| **TT** | Typing Temporal    | Maximum allowed days between samples                             | 365 days            |
+| **CS** | Contact Spatial    | Spatial granularity level (room, ward, clinic)                 | room, ward, clinic  |
+| **CT** | Contact Temporal   | Temporal gap between stays                                       | -3 days             |
+| **CD** | Contact Depth      | Number of allowed intermediary contacts                          | 0 (direct only)     |
+| **MR** | Mutation Rate      | Allowed deviation for intermediary contacts (applies to indirect contacts only) | 2 |
 
 <br><br><br><br>
 
+---
 
 # Legal Notice
 
 ### Responsible Entity:
-Institut für Hygiene  
-Robert-Koch-Straße 41  
-48149 Münster  
-www.ukm.de/institute/hygiene
+Institut für Hygiene
+Robert-Koch-Straße 41
+48149 Münster
+[www.ukm.de/institute/hygiene](https://www.ukm.de/institute/hygiene)
 
 ### Head of the Institute:
-Univ.-Prof. Dr. med. Alexander Mellmann  
+Univ.-Prof. Dr. med. Alexander Mellmann
 alexander.mellmann@ukmuenster.de
 
 ### Application Development:
-Dr. med. univ. Maximilian Fechner  
+Dr. med. univ. Maximilian Fechner
 max.fechner@uni-muenster.de
 
 ### Raw Data Extraction:
-Dr. med. Hauke Tönnies  
+Dr. med. Hauke Tönnies
 hauke.toennies@ukmuenster.de
