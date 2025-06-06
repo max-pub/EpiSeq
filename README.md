@@ -32,6 +32,7 @@ This is necessary if you supply you own data.
 ## 1. Source Data 
 please use tab-separated-values (tsv) with the following structure
 
+<a id="part-1-1"></a>
 #### 1.1. Typing Data
 | sequenceID  | patientID  | sampleDate | allele 1 | allele 2 | allele 3 | allele 4 | ... |
 | ----------- | ---------- | ---------- | -------- | -------- | -------- | -------- | --- |
@@ -40,6 +41,7 @@ please use tab-separated-values (tsv) with the following structure
 | sequence 3  | patient 2  | 2022-07-05 | 32       | ?        | ?        | 17       | ... |
 | ...         | ...        | ...        | ...      | ...      | ...      | ...      | ... |
 
+<a id="part-1-2"></a>
 #### 1.2. Location Data
 | locationID | patientID | from | till | clinic | ward | room |
 | ---------- | --------- | ---- | ---- | ------ | ---- | ---- |  
@@ -53,28 +55,20 @@ please use tab-separated-values (tsv) with the following structure
 ## 2. Source Filter
 The following filters can be applied to the source - data   
 
-**from:** all typing and location data **before** that date will be removed  
-
-**till:** all typing and location data **after** that date will be removed  
-
-**rows:** filter out rows that have less than a given percentage of correctly decoded alleles. in the typing-data-example above (1.1), "sequence 3" has only 50% correctly decoded alleles,  it would be filtered out by a "row = 51%" setting or above.   
-
-**columns:** filter out columns that have less than a given percentage of correctly decoded alleles. in the typing-data-example above (1.1), "allele 2" as only 33% correctly decoded values, "column = 34%" would remove that column from further processing  
-
-**rooms:** location records without room-data will be removed  
-
-**wards:** location records without ward-data will be removed  
-
-**open-ends:** location records without **till**-date will be removed  
-
-**pseudonymize:** location-IDs, sequence-IDs, patient-IDs and room,ward,clinic-names will be replaced with random strings  
-
+- **from:** all typing and location data **before** that date will be removed  
+- **till:** all typing and location data **after** that date will be removed  
+- **rows:** filter out rows that have less than a given percentage of correctly decoded alleles. in the typing-data-example above ([Part 1.1](#part-1-1)), "sequence 3" has only 50% correctly decoded alleles,  it would be filtered out by a "row = 51%" setting or above.   
+- **columns:** filter out columns that have less than a given percentage of correctly decoded alleles. in the typing-data-example above ([Part 1.1](#part-1-1)), "allele 2" as only 33% correctly decoded values, "column = 34%" would remove that column from further processing  
+- **rooms:** location records without room-data will be removed  
+- **wards:** location records without ward-data will be removed  
+- **open-ends:** location records without **till**-date will be removed  
+- **pseudonymize:** location-IDs, sequence-IDs, patient-IDs and room,ward,clinic-names will be replaced with random strings  
 
 
 ## 3. Calculate Typing Distance Matrix
 All pairs of typing data will be compared to each other for number of different alleles and the result will be stored in a distance-matrix of size n * (n-1) / 2. A sample-date-distance distance matrix of the same size is also calculated to allow for filtering in a later step (5.)  
 
-**null:** or "undeciphered" values can be made to count or discarded.  
+- **null:** or "undeciphered" values can be made to count or discarded.  
 if "null"-values are set to "count", sequence 2 and 3 in the example above (1.1) will result in a distance of 2.  
 if "null-values are set to *not* "count", sequence 2 and 3 in the example above (1.1) will result in a distance of 0.  
 
@@ -102,10 +96,9 @@ if you use the preprocessed data from our publication, the web-application start
 
 ## 5. Typing Filter
 The typing-distance-matrix can be filtered by distance of sample-dates.  
+- **Typing Temporal (TT):** sets the upper limit of days between any two samples.   
 
-**Typing Temporal (TT):** sets the upper limit of days between any two samples.   
-
-A histogram showing the distribution of typing distances is also created during this step.  
+The following histogram showing the distribution of typing distances is also created during this step. 
 
 ![image](docs/typeHist.png)
 
@@ -113,10 +106,8 @@ A histogram showing the distribution of typing distances is also created during 
 
 ## 6. Location Filter
 The location-distance-matrix can be filtered spacially and temporally.  
-
-**Contact Spacial (CS):** allows filtering of the level of contact (clinic, ward, room or any).  
-
-**Contact Temporal (CT):** allows filtering by time of stay between any two patients; negative numbers can be used for distance between non-overlapping stays.  
+- **Contact Spacial (CS):** allows filtering of the level of contact (clinic, ward, room or any).  
+- **Contact Temporal (CT):** allows filtering by time of stay between any two patients; negative numbers can be used for distance between non-overlapping stays.  
 
 
 
@@ -124,13 +115,11 @@ The location-distance-matrix can be filtered spacially and temporally.
 
 ## 7. Correlation
 Correlation between cgMLST-typing-matrix and contact-matrix happens in this step. You have three parameters to adjust the outcome.   
+- **Typing Distance (TD):** sets the upper limit for calculation and thus the "width" of the chart. Higher values will lead to longer calculation times.
+- **Contact Depth (CD):** sets the number of allowed intermediary contacts. Calculation of second and third-degree connections will also lead to longer calculation times.
+- **Mutation Rate (MR):** sets the upper limit of allowed deviation from the currently calculated typing distance. For example: Patients A & B with TypingDistance=3 and MutationRate=2 allows for PatientLink "A-X-B" to have "A-X" and "X-B" distances of up to 5. This is used for indirect contacts only.
 
-**Typing Distance (TD):** sets the upper limit for calculation and thus the "width" of the chart. Higher values will lead to longer calculation times.
-
-**Contact Depth (CD):** sets the number of allowed intermediary contacts. Calculation of second and third-degree connections will also lead to longer calculation times.
-
-**Mutation Rate (MR):** sets the upper limit of allowed deviation from the currently calculated typing distance. For example: Patients A & B with TypingDistance=3 and MutationRate=2 allows for PatientLink "A-X-B" to have "A-X" and "X-B" distances of up to 5. This is used for indirect contacts only.
-
+The results can then be downloaded as raw data or in a chart like in the example below
 ![image](docs/pairConn.png)
 
 
