@@ -2,18 +2,17 @@
 
 This application analyzes the **correlation between Multi-Drug Resistant Organism (MDRO) typing data and patient location data**. Its primary objective is to assess the relationship between these datasets and derive **reproducible transmission thresholds** per bacterial species.
 
----
-
 **Key Features:**
 
-* **🔒 Local Data Processing:** Ensures strict privacy with no data uploads; all processing occurs locally.
-* **⚙️ Customizable Parameters:** Offers flexible spatial and temporal analysis configurations.
-* **🧫 Broad Species Support:** Compatible with any cgMLST-typed bacterial species.
-* **🔁 Reproducible Methodology:** Implements a method validated and used in a peer-reviewed publication.
-
----
+* **Local Data Processing:** Ensures strict privacy with no data uploads; all processing occurs locally.
+* **Customizable Parameters:** Offers flexible spatial and temporal analysis configurations.
+* **Broad Species Support:** Compatible with any cgMLST-typed bacterial species.
+* **Reproducible Methodology:** Implements a method validated and used in a peer-reviewed publication.
 
 The application is available at: [https://mdro-correlation.uni-muenster.de/2506/](https://mdro-correlation.uni-muenster.de/2506/)
+
+
+
 
 ## Application Modes
 
@@ -27,6 +26,7 @@ The following sections detail each step of the application workflow.
 <br><br><br><br>
 
 <a id="part-1"></a>
+
 # Part 1: Raw Data Filtering and Distance Matrix Calculation
 
 This section covers the submission and filtering of raw data, followed by the calculation of necessary distance matrices. This step is mandatory when providing your own datasets.
@@ -54,7 +54,7 @@ Input data must be provided in **tab-separated values (TSV) format** with the sp
 | location2 | patient1 | 2022-06-14 | 2022-07-23 | Dermatology | Ward C | Room 12 |
 | ... | ... | ... | ... | ... | ... | ... |
 
----
+
 
 ## 2. Source Data Filtering Options
 
@@ -69,7 +69,7 @@ The following filters can be applied to refine the source data:
 * **Open-ends:** Removes location records without a specified **till**-date.
 * **Pseudonymize:** Replaces location IDs, sequence IDs, patient IDs, and clinic/ward/room names with random strings to ensure data anonymity.
 
----
+
 
 ## 3. Typing Distance Matrix Calculation
 
@@ -79,49 +79,53 @@ All pairs of typing data undergo comparison to determine the number of differing
     * If "null" values are set to **"count,"** sequence 2 and 3 in the example (1.1) will result in a distance of 2.
     * If "null" values are set to **"not count,"** sequence 2 and 3 in the example (1.1) will result in a distance of 0.
 
----
+
 
 ## 4. Location Distance Matrix Calculation
 
-All pairs of location data are compared to calculate their spatial and temporal distances. The results are stored in two separate distance matrices, each of size $n \times (n-1)/2$. This step does not require adjustable parameters.
+This crucial step systematically quantifies the proximity of all patient pairs based on their recorded movements and stays within the healthcare environment. For every possible combination of two patients, the application computes their **temporal distance** (e.g., overlapping stays or consecutive occupancy) for each granularity level such as **clinic**, **ward**, and **room**, to precisely identify shared locations. Overlapping stays are stored as a positive integers, representing the number of overlapping days. Consecutive stays are stored as negative integers, representing the amount of days between stays. This yields several distinct distance matrices, each containing $n \times (n-1)/2$ entries, where 'n' is the number of patients. 
 
 <br><br><br><br>
 
 <a id="part-2"></a>
+
 # Part 2: Distance Matrix Filtering and Correlation
 
-This section focuses on filtering the typing and location distance matrices according to parameters described in our publication, followed by their correlation to derive transmission thresholds. If you use the pre-processed publication data, the web application initiates here.
+This section focuses on filtering the typing and location distance matrices according to parameters described in our publication, followed by their correlation to derive transmission thresholds. If you use the pre-processed publication data, the web application starts here.
 
----
+
 
 ## 5. Typing Distance Filtering
 
-The typing distance matrix can be filtered based on the temporal distance between sample dates.
+The typing distance matrix can be filtered based on the temporal distance between sample dates. This crucial filtering step ensures that only pairs of isolates collected within a epidemiologically relevant timeframe are included in subsequent analyses.
 
-* **Typing Temporal (TT):** Sets the upper limit for the number of days allowed between any two samples.
+* **Typing Temporal (TT):** This parameter sets the upper limit for the number of days allowed between any two samples when considering them for correlation. For instance, setting TT to 30 days would mean that the analysis only considers pairs of MDRO isolates that were collected from patients within a month of each other. This is particularly important for identifying acute transmission events or outbreaks, as isolates with very distant collection dates are less likely to represent direct transmission within a hospital setting. A larger TT value might capture more prolonged colonization or environmental persistence, while a smaller TT value focuses on very recent acquisition events. The choice of this threshold can significantly impact the observed correlation patterns, allowing researchers to fine-tune the analysis to specific hypotheses regarding the temporality of transmission.
 
-A histogram illustrating the distribution of typing distances is generated during this step:
+A histogram illustrating the distribution of typing distances is also generated after this step. This shows genetic similarity distribution over the whole range of investigated MDROs at a glance.
 
 ![image](docs/typeHist.png)
 
----
+
 
 ## 6. Location Distance Filtering
 
-The location distance matrix can be filtered both spatially and temporally.
+The location distance matrix can be filtered both spatially and temporally for precise analysis of patient interactions.
 
-* **Contact Spatial (CS):** Allows filtering based on the level of contact granularity (clinic, ward, room, or any).
-* **Contact Temporal (CT):** Allows filtering by the duration of overlap or separation between patient stays. Negative values can be used to define distances between non-overlapping stays.
+* **Contact Spatial (CS):** This parameter filters contacts by granularity: shared **clinic**, **ward**, **room**. **any** location allows for contact on any contact-level. This allows flexible assessment, from direct room-level contacts to broader clinic-wide transmission patterns. 
 
----
+* **Contact Temporal (CT):** This filter considers the temporal overlap or separation of patient stays. Positive values indicate concurrent presence (direct co-location). Negative values define a temporal gap between non-overlapping stays (e.g., one patient leaving a location before another arrives), aiding in identifying potential indirect transmission.
+
+
 
 ## 7. Correlation Analysis
 
 This step performs the correlation between the cgMLST typing matrix and the contact matrix. Three parameters allow for adjustment of the correlation outcome:
 
-* **Typing Distance (TD):** Defines the upper limit for calculation, influencing the "width" of the resulting chart. Higher values may increase computation time.
-* **Contact Depth (CD):** Specifies the number of allowed intermediary contacts. Calculating second and third-degree connections will also result in longer computation times.
-* **Mutation Rate (MR):** Sets the maximum allowed deviation from the currently calculated typing distance. For example, if Patients A & B have a Typing Distance = 3 and a Mutation Rate = 2, a Patient Link "A-X-B" allows "A-X" and "X-B" distances of up to 5. This parameter is exclusively used for indirect contacts.
+* **Typing Distance (TD):** This parameter sets the upper limit for genetic distance in correlation analysis, directly influencing the "width" of the resulting chart that visualizes genetic similarity and contact patterns. A higher TD allows for investigating broader transmission dynamics, incorporating more genetically divergent isolates. Increasing this limit processes a wider range of genetic comparisons, leading to increased computation time. 
+
+* **Contact Depth (CD):** This parameter is instrumental in defining the complexity of the transmission pathways that the application considers. It specifies the maximum number of allowed intermediary contacts between patients. For instance, a 'Contact Depth' of 0 focuses exclusively on direct patient-to-patient contacts, meaning only patients who shared a common location at the same time are considered linked. A 'Contact Depth' of 1 allows for one intermediary contact (e.g., Patient A was in contact with Patient X, who was then in contact with Patient B), enabling the identification of second-degree connections. Increasing this depth further, to 2 or 3, allows the analysis to uncover more complex, indirect transmission chains that might not be immediately apparent through direct contact tracing. While invaluable for unraveling intricate epidemiological links, it is important to understand that calculating these second, third, or even higher-degree connections involves a combinatorially larger number of potential pathways to evaluate, which will significantly increase computation time and resource consumption.
+
+* **Mutation Rate (MR):** This parameter is exclusively used for indirect contacts! It sets the maximum allowed deviation from the currently calculated typing distance for intermediary contacts, providing crucial flexibility when assessing potential indirect transmission routes. For example, if Patients A & B have a Typing Distance = 3 and a Mutation Rate = 2, a Patient Link "A-X-B" allows "A-X" and "X-B" distances of up to 5 (i.e., the sum of the direct distance and the mutation rate). 
 
 Results can be downloaded as raw data or visualized in a chart, as shown in the example below:
 
@@ -129,7 +133,7 @@ Results can be downloaded as raw data or visualized in a chart, as shown in the 
 
 <br><br><br><br>
 
----
+
 
 ## Overview of All Available Parameters
 
@@ -143,7 +147,7 @@ Results can be downloaded as raw data or visualized in a chart, as shown in the 
 
 <br><br><br><br>
 
----
+
 
 # Legal Notice
 
