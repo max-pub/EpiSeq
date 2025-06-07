@@ -1,6 +1,8 @@
 # MDRO Correlation Application
 
-This application analyzes the **correlation between Multi-Drug Resistant Organism (MDRO) typing data and patient location data**. Its primary objective is to assess the relationship between these datasets and derive **reproducible transmission thresholds** per bacterial species.
+This application analyzes the relationship between **genomic sequencing** data (of bacteria) and **location data** (of patients).  
+It was specifically created for correlating [cgMLST](https://en.wikipedia.org/wiki/Multilocus_sequence_typing) data of [MDRO](https://en.wikipedia.org/wiki/Multidrug-resistant_bacteria)s with patient location data at our [university hospital](https://www.ukm.de/institute/hygiene).  
+Its primary objective is to assess the relationship between these datasets and derive **reproducible transmission thresholds** per bacterial species that might support clinical **practice**.
 
 **Key Features:**
 
@@ -12,31 +14,39 @@ This application analyzes the **correlation between Multi-Drug Resistant Organis
 The application is available at: [https://mdro-correlation.uni-muenster.de/2506/](https://mdro-correlation.uni-muenster.de/2506/)
 
 
-
-
 ## Application Modes
 
 The application offers two distinct operational modes:
 
-1.  **Custom Data Analysis:** Initiate the process with your own raw data, starting at [Part 1](#part-1).
-2.  **Publication Data Analysis:** Utilize pre-processed, anonymized data from our publication, commencing directly at [Part 2](#part-2).
+1.  **Custom Data Analysis:** Initiate the process with your own raw data, starting at [Section 1](#list-data).
+2.  **Publication Data Analysis:** Utilize pre-processed, anonymized data from our publication, commencing directly at [Section 3](#matrix-filter).
 
 The following sections detail each step of the application workflow.
 
-<br><br><br><br>
 
-<a id="part-1"></a>
 
-# Part 1: Raw Data Filtering and Distance Matrix Calculation
 
-This section covers the submission and filtering of raw data, followed by the calculation of necessary distance matrices. This step is mandatory when providing your own datasets.
 
-## 1. Source Data Requirements
 
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+
+
+<a id="list-data"></a>
+
+# 1. Supplying raw data
+This section covers the submission and adjustment of your self-supplied raw data.
+
+## 1.1 Source Data Requirements
 Input data must be provided in **tab-separated values (TSV) format** with the specified structures.
 
 <a id="part-1-1"></a>
-#### 1.1. Typing Data
+#### 1.1.1 Typing Data
 
 | sequenceID | patientID | sampleDate | allele 1 | allele 2 | allele 3 | allele 4 | ... |
 | ---------- | --------- | ---------- | ---------- | -------- | -------- | -------- | --- |
@@ -46,7 +56,7 @@ Input data must be provided in **tab-separated values (TSV) format** with the sp
 | ... | ... | ... | ... | ... | ... | ... | ... |
 
 <a id="part-1-2"></a>
-#### 1.2. Location Data
+#### 1.1.2 Location Data
 
 | locationID | patientID | from | till | clinic | ward | room |
 | ---------- | --------- | ---- | ---- | ------ | ---- | ---- |
@@ -56,9 +66,8 @@ Input data must be provided in **tab-separated values (TSV) format** with the sp
 
 
 
-## 2. Source Data Filtering Options
-
-The following filters can be applied to refine the source data:
+## 1.2 Source Data Filtering Options
+The following filters can be applied to the source data to improve its quality:
 
 * **From:** Excludes all typing and location data recorded **before** the specified date.
 * **Till:** Excludes all typing and location data recorded **after** the specified date.
@@ -71,7 +80,20 @@ The following filters can be applied to refine the source data:
 
 
 
-## 3. Typing Distance Matrix Calculation
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+
+<a id="matrix-calculation"></a>
+
+# 2. Distance Matrix Calculation
+The adjusted raw data from step 1 will be now be processed pair-wise to create distance-matrices.
+
+## 2.1. Typing Distance Calculation
 
 All pairs of typing data undergo comparison to determine the number of differing alleles. The results are stored in a distance matrix of size $n \times (n-1)/2$. Concurrently, a sample-date distance matrix of the same dimensions is computed for subsequent filtering (Step 5).
 
@@ -81,21 +103,30 @@ All pairs of typing data undergo comparison to determine the number of differing
 
 
 
-## 4. Location Distance Matrix Calculation
+## 2.2. Location Distance Calculation
 
 This crucial step systematically quantifies the proximity of all patient pairs based on their recorded movements and stays within the healthcare environment. For every possible combination of two patients, the application computes their **temporal distance** (e.g., overlapping stays or consecutive occupancy) for each granularity level such as **clinic**, **ward**, and **room**, to precisely identify shared locations. Overlapping stays are stored as a positive integers, representing the number of overlapping days. Consecutive stays are stored as negative integers, representing the amount of days between stays. This yields several distinct distance matrices, each containing $n \times (n-1)/2$ entries, where 'n' is the number of patients. 
 
-<br><br><br><br>
-
-<a id="part-2"></a>
-
-# Part 2: Distance Matrix Filtering and Correlation
-
-This section focuses on filtering the typing and location distance matrices according to parameters described in our publication, followed by their correlation to derive transmission thresholds. If you use the pre-processed publication data, the web application starts here.
 
 
+<br>
+<br>
+<br>
+<br>
+<br>
 
-## 5. Typing Distance Filtering
+
+
+<a id="matrix-filter"></a>
+
+# 3. Distance Matrix Filtering
+
+This section focuses on filtering the typing and location distance matrices according to parameters described in our publication.  
+If you use the pre-processed publication data, the web application starts here.
+
+
+
+## 3.1. Typing Distance Filtering
 
 The typing distance matrix can be filtered based on the temporal distance between sample dates. This crucial filtering step ensures that only pairs of isolates collected within a epidemiologically relevant timeframe are included in subsequent analyses.
 
@@ -107,7 +138,7 @@ A histogram illustrating the distribution of typing distances is also generated 
 
 
 
-## 6. Location Distance Filtering
+## 3.2. Location Distance Filtering
 
 The location distance matrix can be filtered both spatially and temporally for precise analysis of patient interactions.
 
@@ -116,8 +147,15 @@ The location distance matrix can be filtered both spatially and temporally for p
 * **Contact Temporal (CT):** This filter considers the temporal overlap or separation of patient stays. Positive values indicate concurrent presence (direct co-location). Negative values define a temporal gap between non-overlapping stays (e.g., one patient leaving a location before another arrives), aiding in identifying potential indirect transmission.
 
 
+<br>
+<br>
+<br>
+<br>
+<br>
 
-## 7. Correlation Analysis
+
+
+# 4. Matrix Correlation 
 
 This step performs the correlation between the cgMLST typing matrix and the contact matrix. Three parameters allow for adjustment of the correlation outcome:
 
@@ -131,9 +169,18 @@ Results can be downloaded as raw data or visualized in a chart, as shown in the 
 
 ![image](docs/pairConn.png)
 
-<br><br><br><br>
 
 
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+
+
+# 5. Appendix
 
 ## Overview of All Available Parameters
 
@@ -149,7 +196,7 @@ Results can be downloaded as raw data or visualized in a chart, as shown in the 
 
 
 
-# Legal Notice
+## Legal Notice
 
 ### Responsible Entity:
 Institut für Hygiene
