@@ -45,7 +45,7 @@ This section covers the submission and adjustment of your self-supplied raw data
 ## 1.1 Source Data Requirements
 Input data must be provided in **tab-separated values (TSV) format** with the specified structures.
 
-<a id="part-1-1"></a>
+<a id="typing-list"></a>
 #### 1.1.1 Typing Data
 
 | sequenceID | patientID | sampleDate | allele 1 | allele 2 | allele 3 | allele 4 | ... |
@@ -55,7 +55,7 @@ Input data must be provided in **tab-separated values (TSV) format** with the sp
 | sequence 3 | patient 2 | 2022-07-05 | 32 | ? | ? | 17 | ... |
 | ... | ... | ... | ... | ... | ... | ... | ... |
 
-<a id="part-1-2"></a>
+<a id="location-list"></a>
 #### 1.1.2 Location Data
 
 | locationID | patientID | from | till | clinic | ward | room |
@@ -72,8 +72,8 @@ The following filters can be applied to the source data to improve its quality:
 
 * **From:** Excludes all typing and location data recorded **before** the specified date.
 * **Till:** Excludes all typing and location data recorded **after** the specified date.
-* **Rows:** Filters out typing data rows where the percentage of correctly decoded alleles falls below a given threshold. For instance, in the example above ([Part 1.1](#part-1-1)), "sequence 3" has 50% correctly decoded alleles; a setting of "row = 51%" or higher would remove this row.
-* **Columns:** Filters out typing data columns where the percentage of correctly decoded alleles falls below a given threshold. In the example above ([Part 1.1](#part-1-1)), "allele 2" has only 33% correctly decoded values; "column = 34%" would remove this column.
+* **Rows:** Filters out typing data rows where the percentage of correctly decoded alleles falls below a given threshold. For instance, in the example above ([Part 1.1.1](#typing-list)), "sequence 3" has 50% correctly decoded alleles; a setting of "row = 51%" or higher would remove this row.
+* **Columns:** Filters out typing data columns where the percentage of correctly decoded alleles falls below a given threshold. In the example above ([Part 1.1.1](#typing-list)), "allele 2" has only 33% correctly decoded values; "column = 34%" would remove this column.
 * **Rooms:** Removes location records lacking room-specific data.
 * **Wards:** Removes location records lacking ward-specific data.
 * **Open-ends:** Removes location records without a specified **till**-date.
