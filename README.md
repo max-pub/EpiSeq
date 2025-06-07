@@ -1,4 +1,4 @@
-# MDRO Correlation Application
+# EpiSeq
 
 This application analyzes the relationship between **genomic sequencing** data (of bacteria) and **location data** (of patients).  
 It was specifically created for correlating [cgMLST](https://en.wikipedia.org/wiki/Multilocus_sequence_typing) data of [MDRO](https://en.wikipedia.org/wiki/Multidrug-resistant_bacteria)s with patient location data at our [university hospital](https://www.ukm.de/institute/hygiene).  
