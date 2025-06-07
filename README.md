@@ -65,6 +65,7 @@ Input data must be provided in **tab-separated values (TSV) format** with the sp
 | ... | ... | ... | ... | ... | ... | ... |
 
 
+<a id="list-filter"></a>
 
 ## 1.2 Source Data Filtering Options
 The following filters can be applied to the source data to improve its quality:
