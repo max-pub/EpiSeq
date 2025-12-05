@@ -1,3 +1,6 @@
+this README provides an overview of the correlation analysis module, detailing the parameters used for filtering typing and location distance matrices, as well as the methods for correlating these matrices to identify potential epidemiological links between patients based on genetic similarity and contact history.
+
+
 # Parameter Overview
 
 | Parameter | Full Name          | Default             | Description                                                    |

@@ -1,3 +1,5 @@
+this README provides an overview of the data preparation module, detailing the required raw data format, available filtering options, and the methods used to compute distance matrices from the provided typing and location data.
+
 # Raw Data Format
 please supply your data as tab-separated-values (TSV) with the following data-structure.
 
