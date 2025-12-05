@@ -1,0 +1,1 @@
+esbuild deps.js --bundle --format=esm > bundle.js

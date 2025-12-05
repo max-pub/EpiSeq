@@ -1,0 +1,358 @@
+<link rel="stylesheet" href="../style/base.css">
+<link rel="stylesheet" href="../style/form.css">
+<link rel="stylesheet" href="../style/style.css">
+<link rel="stylesheet" href="../style/12.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css"> -->
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.1.1/css/pico.classless.min.css"> -->
+
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous"> -->
+
+<style>
+    td:nth-child(1) {
+        width: 30px;
+    }
+
+    td:nth-child(2) {
+        width: 150px;
+    }
+
+    td:nth-child(3) {
+        width: 100px;
+    }
+
+    td:nth-child(4) {
+        /* width: 500px; */
+    }
+
+    #data td {
+        vertical-align: top;
+        font-weight: normal;
+        width: 320px
+    }
+
+    #data td:first-child {
+        /* border-right: 1px solid gray; */
+    }
+
+    h2 {
+        font-size: 1.2rem;
+    }
+
+    input {
+        width: 70px;
+    }
+
+    body {
+        padding-bottom: 500px;
+    }
+
+    #filename {
+        padding-left: 1rem;
+    }
+
+    #progress td {
+        width: auto
+    }
+
+    #progress .percent {
+        width: 50px;
+        text-align: right;
+    }
+
+    label span {
+        color: silver;
+        font-size: 0.8rem;
+    }
+</style>
+
+
+<h1><a href='../'>&larr;</a> Correlation</h1>
+
+<form>
+
+    <!-- <h2>Data Selection</h2> -->
+    <fieldset>
+        <legend>Select Data Source</legend>
+        <table id="data">
+            <tr>
+                <td>
+                    <label>
+                        <input type="radio" name="data" value="mrsa">
+                        MRSA <span>from ukm.de</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="data" value="vre">
+                        VRE <span>from ukm.de</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="data" value="coli" checked>
+                        MDR E. coli <span>from ukm.de</span>
+                    </label>
+                    <hr />
+                    <label>
+                        <input type="radio" name="data" value="file">
+
+                        <input type="file" name="file" accept=".tsv" />
+                        <span id="filename"></span>
+                        <!-- <input type="file" name="file" accept=".tsv" /> -->
+
+                    </label>
+
+                </td>
+                <td>
+                    <p>
+                        Use pre-processed,<br />
+                        pseudonymized data<br />
+                        from our publication.
+                        <br />
+                        <br />
+                        <br />
+                        or supply your own data<br />
+                        preprocessed from <a href="../1.preparation/index.html">step 1</a>
+                    </p>
+                    <!-- <br/>
+                <input type="file" name="file" accept=".tsv" /> -->
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+
+
+    <!-- <h2>Typing Settings</h2> -->
+    <fieldset>
+        <legend>Typing Parameters</legend>
+
+        <table>
+            <!-- <tr id="td">
+			<td> TG</td>
+			<td class="help1"> genomial </td>
+			<td> <input type="number" value="5000" min="0" max="3000" size="4" /> </td>
+			<td class="help"> upper limit of typing - distances to be correlated </td>
+		</tr> -->
+
+            <tr>
+                <td> TD </td>
+                <td class="help1"> Typing Distance </td>
+                <td> <input type="number" name="TD" value="100" min="0" max="3000" size="4" /> </td>
+                <td class="help"> amount of typing - distances to be correlated </td>
+            </tr>
+
+            <tr>
+                <td> TT </td>
+                <td class="help1"> Typing Temporal </td>
+                <td> <input type="number" name="TT" value="365" min="0" max="9999" size="4" /> </td>
+                <td class="help"> allowed distance between sample-pairs in days
+                    <!-- <br/> ( "0" = "unlimited")  -->
+                </td>
+            </tr>
+
+            <tr>
+                <td> TV </td>
+                <td class="help1"> Typing Variation </td>
+                <td> <input type="number" name="MR" value="2" min="0" max="50" size="2" /> </td>
+                <td class="help">
+                    max. allowed additional typing distance for links to intermediate contacts<br />
+                    used for indirect contacts only (CD > 0) <br />
+                    e.g: Patients A & B with TypingDistance=3. MutationRate=2 allows for PatientLink of "A-X-B" to have
+                    "A-X" and "X-B" distance of up to 5.
+                </td>
+            </tr>        </table>
+
+    </fieldset>
+
+
+    <!-- <h2>Contact Settings</h2> -->
+    <fieldset>
+        <legend>Contact Parameters</legend>
+
+        <table>
+            <!-- <tr class="divider">
+            <td colspan="4">
+                <hr />
+            </td>
+        </tr> -->
+
+            <tr>
+                <td> CS </td>
+                <td class="help1"> Contact Spacial </td>
+                <td>
+                    <!-- <select>
+					<option>room</option>
+					<option>ward</option>
+					<option>clinic</option>
+					<option selected="selected">any</option>
+				</select> -->
+
+                    <label>
+                        <input type="checkbox" name="CS" value="clinic" checked>
+                        clinic
+                    </label>
+                    <label>
+                        <input type="checkbox" name="CS" value="ward" checked>
+                        ward
+                    </label>
+                    <label>
+                        <input type="checkbox" name="CS" value="room" checked>
+                        room
+                    </label>
+
+
+                    <!-- <div class="nowrap">
+                    <input type="checkbox" name="cs" value="room" checked>
+                    <label for="room">room</label>
+                </div>
+
+                <div class="nowrap">
+                    <input type="checkbox" name="cs" value="ward" checked>
+                    <label for="ward">ward</label>
+                </div>
+
+                <div class="nowrap">
+                    <input type="checkbox" name="cs" value="clinic" checked>
+                    <label for="clinic">clinic</label>
+                </div> -->
+                </td>
+                <td class="help"> select the adminstrative level of contacts that you want to be considered for
+                    correlation
+                </td>
+            </tr>
+            <tr>
+                <td> CT </td>
+                <td class="help1"> Contact Temporal </td>
+                <td> <input type="number" name="CT" value="-3" min="-100" max="100" size="4" /> </td>
+                <td class="help">
+                    specify the maximal temporal distance in days that you want to allow between contacts <br />
+                    (CT&lt;0 = non-overlapping stays, the negative value indicates the <i>days between stays</i>) <br />
+                    (CT&gt;0 = overlapping stays, the positive value indicates the <i>days of overlap</i>)
+                    <!-- negative numbers mean number of days between non-overlapping stays, -->
+                    <!-- positive numbers mean number of days of overlapping stay -->
+                </td>
+            </tr>
+            <!-- <tr id="cd">
+			<td> CD </td>
+			<td class="help1"> Contact Depth </td>
+			<td> <input type="number" value="0" min="0" max="3" size="4" /> </td>
+			<td class="help"> allowed amount of intermediary contacts between two patients, "0" means direct contact
+			</td>
+		</tr>
+		<tr id="cm">
+			<td> CM </td>
+			<td class="help1"> Depth Max  </td>
+			<td> <input type="number" value="5" min="0" max="50" size="4" /> </td>
+			<td class="help"> 
+			</td>
+		</tr> -->
+
+            <tr>
+                <td> CD </td>
+                <td class="help1"> Contact Depth </td>
+                <td> <input type="number" name="CD" value="1" min="0" max="2" size="4" /> </td>
+                <td class="help">
+                    number of allowed intermediary contacts between two patients,
+                    0 = direct contact
+                </td>
+            </tr>
+        </table>
+
+    </fieldset>
+
+
+    <!-- <fieldset>
+        <legend>Other Parameters</legend>
+
+
+        <table>
+
+            <tr>
+                <td> MR </td>
+                <td class="help1"> Mutation Rate </td>
+                <td> <input type="number" name="MR" value="2" min="0" max="50" size="2" /> </td>
+                <td class="help">
+                    max. allowed additional typing distance for links to intermediate contacts<br />
+                    used for indirect contacts only (CD > 0) <br />
+                    e.g: Patients A & B with TypingDistance=3. MutationRate=2 allows for PatientLink of "A-X-B" to have
+                    "A-X" and "X-B" distance of up to 5.
+                </td>
+            </tr>
+        </table>
+    </fieldset> -->
+
+    <!-- <br /> -->
+    <!-- <br /> -->
+    <!-- <br /> -->
+    <div class="flex-row">
+
+        <button type="submit">start correlation</button>
+        <div id="progress" class="flex-row hidden">
+            <progress></progress>
+            <span class="percent"></span>
+            <span class="text"></span>
+        </div>
+    </div>
+
+
+    <!-- <table id="progress" >
+        <tr>
+            <td>
+                <button type="submit">start correlation</button>
+            </td>
+            <td><progress hidden></progress></td>
+            <td class="percent"></td>
+            <td class="text"></td>
+        </tr>
+    </table> -->
+
+    <!-- <input type="submit" value="submit" /> -->
+</form>
+
+
+
+
+<output></output>
+<br/>
+<br/>
+<br/>
+
+
+<div id="histogram"></div>
+<br/>
+<br/>
+<br/>
+
+<div id="correlation"></div>
+<!-- 
+<div id="correlation2">
+    <div class="chart"></div>
+    <table>
+        <tr>
+            <td class="height">
+                <a>60</a>
+                <a>80</a>
+                <a>100</a>
+            </td>
+
+            <td class="type">
+                <a>med</a>
+                <a>MAD</a>
+                <a>SD</a>
+            </td>
+
+            <td class="export">
+                <a>tsv</a>
+                <a>svg</a>
+                <a>png</a>
+            </td>
+        </tr>
+    </table>
+</div> -->
+<br/>
+<br/>
+<br/>
+
+<div id="correlation-table"></div>
+<div id="correlation-table2"></div>
+
+<a id="download" class="button hidden">download all calculations</a>
+
+
+<script type="module" src="index.js"></script>

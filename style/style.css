@@ -1,0 +1,175 @@
+input, select {
+  text-align: right;
+}
+
+td:first-child {
+  font-weight: bold;
+}
+
+.selected {
+  font-weight: bold;
+}
+
+table {
+  border-collapse: collapse;
+  caption-side: bottom;
+}
+table th {
+  font-weight: bold;
+}
+table td {
+  padding: 0.2rem 0.6rem;
+}
+table caption {
+  color: gray;
+  font-size: 11px;
+  white-space: pre;
+}
+
+info {
+  font-size: 0.7em;
+  color: gray;
+}
+
+table.info {
+  margin: 1em;
+}
+table.info td {
+  border: 1px solid silver;
+}
+
+.more-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.more-info div {
+  margin: 2rem 0;
+}
+.more-info table td {
+  border: 1px solid silver;
+}
+
+ul.info {
+  margin: 1em;
+  padding-left: 1em;
+}
+ul.info li {
+  color: gray;
+  font-size: 0.8em;
+}
+
+.divider td {
+  height: 10px;
+}
+.divider hr {
+  margin: 0;
+}
+
+.downloads {
+  margin-top: 1rem;
+}
+
+.chart {
+  border: 1px solid black;
+}
+
+.chart-box {
+  margin: 3em 1em;
+}
+.chart-box div a {
+  padding: 0 0.5em;
+}
+.chart-box .selected {
+  font-weight: bold;
+}
+.chart-box .info {
+  margin-top: 1rem;
+  text-align: center;
+}
+.chart-box .info span {
+  display: inline-block;
+  padding: 0 1rem;
+}
+
+.app-mode button {
+  display: inline-block;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.flex-start {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.flex-between {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.flex-around {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-around;
+}
+
+.milliseconds {
+  font-size: 0.7rem;
+  color: silver;
+  padding-left: 0.5rem;
+}
+
+.loader {
+  height: 40px;
+}
+
+#source form {
+  margin: 1em 2em 1em 0;
+}
+
+#source .table, #source_filter .table, #location_chart .table {
+  margin-top: 20px;
+}
+#source .table table th, #source .table table td, #source_filter .table table th, #source_filter .table table td, #location_chart .table table th, #location_chart .table table td {
+  border: 1px solid silver;
+  font-size: 0.8rem;
+  text-align: right;
+  font-size: 11px;
+  padding: 0.1rem 0.3rem;
+}
+
+#correlation form td:first-child {
+  font-weight: 500;
+}
+#correlation .table table, #correlation .table2 table, #correlation .table3 table {
+  width: 100%;
+}
+#correlation .table table th, #correlation .table table td, #correlation .table2 table th, #correlation .table2 table td, #correlation .table3 table th, #correlation .table3 table td {
+  border: 1px solid silver;
+  font-size: 0.8rem;
+  text-align: right;
+  font-size: 11px;
+  padding: 0.1rem 0.3rem;
+}
+
+.info-message {
+  font-size: 10px;
+  color: gray;
+}
+
+.apexcharts-legend-text {
+  white-space: normal !important;
+}/*# sourceMappingURL=style.css.map */

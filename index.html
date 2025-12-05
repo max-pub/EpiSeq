@@ -1,19 +1,24 @@
 <meta charset="UTF-8">
-<script src="./lib/apexcharts.js"></script>
-<!-- <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script> -->
 
-<link rel="stylesheet" href="./lib/style.css">
-
-
-
-<script>
-	Node.prototype.$ = function (o) {
-		return this.querySelector(o)
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css"> -->
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.1.1/css/pico.classless.min.css"> -->
+<link rel="stylesheet" href="./style/base.css">
+<link rel="stylesheet" href="./style/form.css">
+<link rel="stylesheet" href="./style/style.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous"> -->
+<style>
+	li {
+		color: gray;
 	}
-	Node.prototype.$$ = function (o) {
-		return [...this.querySelectorAll(o)]
+
+	b {
+		color: black;
 	}
-</script>
+
+	a:hover * {
+		color: #0492C2 !important;
+	}
+</style>
 
 <section id="header" style="margin:0;">
 	<!-- <h1>Correlation of MDRO-Typings and Patient Movement Data</h1> -->
@@ -22,100 +27,90 @@
 		<a href="https://www.ukm.de" target="_blank">university hospital of Münster</a>
 	</h3>
 	<h4>
-		source code on <a href="https://github.com/max-pub/EpiSeq" target="_blank">github</a>
+		source code and detailed help on <a href="https://github.com/max-pub/EpiSeq" target="_blank">github</a>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<!-- related academic paper on <a href="https://pubmed.ncbi.nlm.nih.gov/35370082/" target="_blank">pubmed</a> -->
+	</h4>
+	
+	<h4>
+		<!-- published on <a href="https://pubmed.ncbi.nlm.nih.gov/35370082/" target="_blank">pubmed</a> -->
 	</h4>
 	<!-- <a onclick="document.location.reload(true)">reload</a> -->
 	<!-- <br/> -->
 	<!-- <br /><br /> -->
-	<p style="font-size: 14px;">
+	<p>
 		this application correlates genomic sequencing data with patient location data <br />
-		to derive reproducible transmission thresholds for a given species <br/>
-		you'll be guided through it, step by step <br />
-		for further help see <a href="https://github.com/max-pub/EpiSeq#EpiSeq" target="_blank">github</a>
+		to derive reproducible transmission thresholds for a given species <br />
 	</p>
-	 <br/>
+
+	<br/>
 	<i style="color: silver; font-size: 11px;">
-tested in may 2025 with the latest versions of Chrome, Firefox, Safari 
+		tested in may 2025 with the latest versions of Chrome, Firefox, Safari
 	</i>
 </section>
 
-<hr style="margin: 3rem 0;"/>
+<!-- <hr style="margin: 3rem 0;"/> -->
 
-
-<!-- <section class="app_mode"></section> -->
-
-<section id="source"></section>
-
-<section id="source_filter"></section>
-
-<section id="typing_distance"></section>
-
-<section id="location_distance"></section>
-
-<section id="typing_filter"></section>
-
-<section id="typing_chart"></section>
-
-<section id="location_filter"></section>
-
-<section id="location_chart"></section>
-
-<section id="correlation"></section>
-
-<!-- <progress value="10" max="50"></progress> <progress></progress> -->
-
-
-<script type="module">
-	import { sourceInput } from './lib/mod.js'
-	await sourceInput.setup()
-</script>
-
-<!-- <br />
 <br />
 <br />
 <br />
+
+<a href="correlation/" class="">
+	<h2>&rarr; Correlation</h2>
+	<ul>
+		<li><b>if you want to reproduce the results of our study, start here</b></li>
+		<li>correlate typing- and location- distance-matrices</li>
+		<li>visualize correlation with charts</li>
+		<li>derive epidemiological thresholds for transmission events</li>
+	</ul>
+</a>
+
+
+<br />
+<br />
+
+<a href="preparation/" class="">
+	<h2>&rarr; Preparation</h2>
+	<ul>
+		<li><b>if you have raw typing and patient movement data, start here</b></li>
+		<li>filter, clean and pseudonymize your raw data</li>
+		<li>calculate distance matrices</li>
+		<li>export prepared data for correlation analysis</li>
+	</ul>
+</a>
+
 <br />
 <br />
 <br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br /> -->
 
 
 
-<hr style="margin: 3rem 0;"/>
+
+<!-- <hr style="margin: 3rem 0;"/> -->
 
 <h2>Legal Notice</h2>
 
 <div>
-	<b>Responsible Entity:</b> <br/>
-	Institut für Hygiene  <br/>
-	Robert-Koch-Straße 41 <br/>
-	48149 Münster <br/>
+	<b>Responsible Entity:</b> <br />
+	Institut für Hygiene <br />
+	Robert-Koch-Straße 41 <br />
+	48149 Münster <br />
 	<a href="https://www.ukm.de/institute/hygiene">www.ukm.de/institute/hygiene</a>
 </div>
-<br/>
+<br />
 <div>
-	<b>Head of the Institute:</b> <br/>
-	Univ.-Prof. Dr. med. Alexander Mellmann <br/>
+	<b>Head of the Institute:</b> <br />
+	Univ.-Prof. Dr. med. Alexander Mellmann <br />
 	<a href="mailto:alexander.mellmann@ukmuenster.de">alexander.mellmann@ukmuenster.de</a>
 </div>
-<br/>
+<br />
 <div>
-	<b>Application Development:</b> <br/>
-	Dr. med. univ. Maximilian Fechner <br/>
+	<b>Application Development:</b> <br />
+	Dr. med. univ. Maximilian Fechner <br />
 	<a href="mailto:max.fechner@uni-muenster.de">max.fechner@uni-muenster.de</a>
 </div>
-<br/>
+<br />
 <div>
-	<b>Raw Data Extraction:</b> <br/>
-	Dr. med. Hauke Tönnies <br/>
+	<b>Data Extraction:</b> <br />
+	Dr. med. Hauke Tönnies <br />
 	<a href="mailto:hauke.toennies@ukmuenster.de">hauke.toennies@ukmuenster.de</a>
 </div>
-

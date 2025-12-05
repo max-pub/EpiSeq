@@ -1,0 +1,12 @@
+table {
+  margin: 1em 0;
+  padding: 1em;
+  border-radius: 10px;
+}
+table ul {
+  padding-left: 1em;
+}
+table .help {
+  color: gray;
+  font-size: 1rem;
+}/*# sourceMappingURL=12.css.map */

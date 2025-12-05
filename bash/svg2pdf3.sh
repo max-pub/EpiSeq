@@ -1,1 +1,0 @@
-rsvg-convert -f pdf -o out.pdf $1 $2 $3
