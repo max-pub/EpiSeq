@@ -15,9 +15,9 @@ please supply your data as tab-separated-values (TSV) with the following data-st
 | ... | ... | ... | ... | ... | ... | ... | ... |
 
 the typing data must have the following columns:
-- unique sequenceID
-- associated patientID 
-- the sampleDate when the the MDRO was taken from the patient
+- unique **sequenceID**
+- associated **patientID** 
+- the **sampleDate** when the the MDRO was taken from the patient
 - all further columns can have any naming of your choice and are interpreted as characteristics of the sampled MDRO. The values don't have to be numeric as shown in the example. The values are later only evaluated for beeing identical or different. Instead of a cgMLST-sequence you could also supply an antibiogram of the form 
 
 | sequenceID | patientID | sampleDate | Vancomycin | Gentamycin | Amoxicillin | Ciprofloxacin | ... |
@@ -44,14 +44,13 @@ the typing data must have the following columns:
 | ... | ... | ... | ... | ... | ... | ... |
 
 location data fust have the following columns:
-- unique locationID
-- associated patientID
-- from: date when the patient was admitted to this location
-- till: date when the patient left this location
-- clinic: name of the clinic
-- ward: name of the ward
-- room: name of the room
-
+- unique **locationID**
+- associated **patientID**
+- **from**: date when the patient was admitted to this location
+- **till**: date when the patient left this location
+- **clinic**: name of the clinic
+- **ward**: name of the ward
+- **room**: name of the room
 
 <br/>
 <br/>
@@ -97,7 +96,7 @@ The following filters can be applied to the source data to improve its quality:
 
 
 # Distance Matrix Calculation
-The filtered raw data will be now be processed pair-wise to create distance-matrices.
+The filtered typing- and location- data will be now be processed pair-wise to create distance-matrices as described below.
 
 <br/>
 <br/>
