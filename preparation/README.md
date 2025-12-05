@@ -1,5 +1,9 @@
 this README provides an overview of the data preparation module, detailing the required raw data format, available filtering options, and the methods used to compute distance matrices from the provided typing and location data.
 
+![image](pipeline.png)
+
+
+
 # Raw Data Format
 please supply your data as tab-separated-values (TSV) with the following data-structure.
 
@@ -116,18 +120,20 @@ sequence 1 (47, -, 78, 65) and sequence 2 (32, 41, 15, 17) would have a distance
 Similarly, the date-distance between sample dates 2022-07-03 and 2022-07-05 is 2 days, and between 2022-07-05 and 2022-08-09 is 35 days.
 
 The resulting typing distance matrix would look like this:
+
 |           | sequence 1 | sequence 2 | sequence 3 |
 |-----------|------------|------------|------------|
-| sequence 1|     0      |            |         |
-| sequence 2|     3      |     0      |         |                   
-| sequence 3|     2      |     0      |     0   |
+| sequence 1|     0      |            |            |
+| sequence 2|     3      |     0      |            |                   
+| sequence 3|     2      |     0      |     0      |
 
 The resulting sampleDate distance matrix would look like this:
+
 |           | sequence 1 | sequence 2 | sequence 3 |
 |-----------|------------|------------|------------|
-| sequence 1|     0      |            |         |
-| sequence 2|     2      |     0      |         |                   
-| sequence 3|    37      |    35      |     0   |
+| sequence 1|     0      |            |            |
+| sequence 2|     2      |     0      |            |                   
+| sequence 3|    37      |    35      |     0      |
 
 <br/>
 <br/>
@@ -142,24 +148,27 @@ we calculate three distinct distance matrices: clinic-, ward- and room-distance 
 For example, if Patient A stayed in Room 23 from 2022-05-02 to 2022-06-14 and Patient B stayed in Room 23 from 2022-06-10 to 2022-07-01, they have an overlapping stay of 5 days (2022-06-10 to 2022-06-14) at room level, resulting in a room-distance of +5 days. If Patient C stayed in Room 23 from 2022-07-20 to 2022-08-05, the distance between Patient A and Patient C at room level would be -36 days (the gap between 2022-06-14 and 2022-07-20). Similar calculations are performed for ward and clinic levels, considering all relevant location entries for each patient.
 
 The resulting room distance matrix would look like this:
+
 |           | patient 1 | patient 2 | patient 3 |
 |-----------|-----------|-----------|-----------|
-| patient 1 |     0     |           |          |
-| patient 2 |     +5    |     0     |         |                   
-| patient 3 |    -36    |    -91    |     0    | 
+| patient 1 |     0     |           |           |
+| patient 2 |     +5    |     0     |           |                   
+| patient 3 |    -36    |    -91    |     0     | 
 
 
 The resulting ward distance matrix would look like this:
+
 |           | patient 1 | patient 2 | patient 3 |
 |-----------|-----------|-----------|-----------|       
-| patient 1 |     0     |          |        |
-| patient 2 |     +5    |     0     |        |                   
-| patient 3 |    -21    |    -56    |     0    | 
+| patient 1 |     0     |           |           |
+| patient 2 |     +5    |     0     |           |                   
+| patient 3 |    -21    |    -56    |     0     | 
 
 
 The resulting clinic distance matrix would look like this:
+
 |           | patient 1 | patient 2 | patient 3 |
 |-----------|-----------|-----------|-----------|       
-| patient 1 |     0     |         |        |
-| patient 2 |     +5    |     0     |        |                   
-| patient 3 |    -71    |   -126    |     0    |
+| patient 1 |     0     |           |           |
+| patient 2 |     +5    |     0     |           |                   
+| patient 3 |    -71    |   -126    |     0     |
