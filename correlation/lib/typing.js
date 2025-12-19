@@ -26,13 +26,76 @@ export function rebaseOnPatientID(typingMatrix, sequencePatientMap) {
         if (!pid2) console.error('no pid found for', pid2)
         if (!pid1 || !pid2) continue
         if (pid1 == pid2) continue
-        let current = output.get(pid1, pid2)
-        if (!Number.isFinite(current) || dist < current)
-            output.set(pid1, pid2, dist)
+        output.push(pid1, pid2, dist)
+        // console.log('pushing', pid1, pid2, output.get(pid1, pid2))
+        // let current = output.get(pid1, pid2)
+        // if (!Number.isFinite(current) || dist < current)
+        // output.set(pid1, pid2, dist)
     }
     return output
 }
 
+
+
+const mergingFunctions = {
+    'min': (arr) => Math.min(...arr),
+    'mean': (arr) => Math.round(arr.reduce((a, b) => a + b, 0) / arr.length),
+    'max': (arr) => Math.max(...arr),
+}
+export function mergeToSingleValue(typingMatrix, TM) {
+    // console.log('merging to single value with TM=', TM, typingMatrix)
+    let output = new DistanceMatrix('typingDistance')
+    let mergeFunc = mergingFunctions[TM] || mergingFunctions['min']
+    for (let [pid1, pid2, distanceArray] of typingMatrix.iterate({ onProgress: postProgress(`apply merging strategy TM=${TM}`) })) {
+        // console.log('merging', pid1, pid2, distanceArray)
+        if ((distanceArray ?? []).length == 0) continue
+        let val = mergeFunc(distanceArray ?? [])
+        // console.log('merging', pid1, pid2, distanceArray, 'into', val)
+        output.set(pid1, pid2, val)
+    }
+    return output
+}
+
+
+export function checkSamePatientID(typingMatrix, dateMatrix, sequencePatientMap) {
+    let output = {}
+    let idMap = sequencePatientMap
+    for (let [sid1, sid2, dist] of typingMatrix.iterate({ onProgress: postProgress('check for same patient IDs in typing matrix') })) {
+        let pid1 = idMap.get(sid1, 'patientID')
+        let pid2 = idMap.get(sid2, 'patientID')
+        if (!pid1) console.error('no pid found for', pid1)
+        if (!pid2) console.error('no pid found for', pid2)
+        if (!pid1 || !pid2) continue
+        if (pid1 == pid2) {
+            output[pid1] ??= {}//{sids:new Set(), typingDistances:[], dateDistances:[] }
+            output[pid1][sid1] ??= {}
+            output[pid1][sid1][sid2] = {typing:dist, date: dateMatrix.get(sid1, sid2)} 
+            output[pid1][sid2] ??= {}
+            output[pid1][sid2][sid1] = {typing:dist, date: dateMatrix.get(sid1, sid2)}
+            // output[pid1].push([sid1, sid2, dist, dateMatrix.get(sid1, sid2)])
+            // console.warn('issue: same patient ID found in typing matrix', sid1, sid2, pid1)
+            // issues++
+        }
+    }
+    return output
+}
+
+// export function rebaseOnPatientID(typingMatrix, sequencePatientMap) {
+//     let output = new DistanceMatrix('typingDistance')
+//     let idMap = sequencePatientMap
+//     for (let [sid1, sid2, dist] of typingMatrix.iterate({ onProgress: postProgress('rebase typing matrix on patient IDs') })) {
+//         let pid1 = idMap.get(sid1, 'patientID')
+//         let pid2 = idMap.get(sid2, 'patientID')
+//         if (!pid1) console.error('no pid found for', pid1)
+//         if (!pid2) console.error('no pid found for', pid2)
+//         if (!pid1 || !pid2) continue
+//         if (pid1 == pid2) continue
+//         let current = output.get(pid1, pid2)
+//         if (!Number.isFinite(current) || dist < current)
+//             output.set(pid1, pid2, dist)
+//     }
+//     return output
+// }
 
 
 

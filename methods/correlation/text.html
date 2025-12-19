@@ -1,0 +1,50 @@
+<h2><b>4A</b> Filter &amp; Merge</h2>
+<ol>
+  <li>Filter the date-distance matrix by parameter <code>TT</code> (remove values above <code>TT</code>).</li>
+  <li>Reduce the typing-distance matrix to the same set of samples.</li>
+  <li>Map the sequence-based typing-distance matrix to a patient-based matrix using <code>sequence-patient-map</code>. When multiple sequence pairs map to the same patient pair, use the minimum distance.</li>
+  <li>Filter the typing-distance matrix by parameter <code>TD</code> (remove values below <code>TD</code>).</li>
+</ol>
+
+
+<h2><b>4B</b> Filter &amp; Merge</h2>
+<ol>
+  <li>Merge the three location distance matrices (<code>clinic</code>, <code>ward</code>, <code>room</code>) into a single matrix according to parameter <code>CS</code>. For each cell, use the largest value across the three matrices.</li>
+  <li>Filter the merged location-distance matrix by parameter <code>CT</code> (remove values below <code>CT</code>).</li>
+</ol>
+
+
+<h2><b>5</b> Correlation</h2>
+<p>For each patient pair (A,B) with typing distance <code>D</code> in the typing-distance matrix:</p>
+<ol>
+  <li>Build a contact tree from A up to depth <code>CD</code>, or stop earlier if an epidemiological path to B is found.</li>
+  <li>Constrain candidate paths using parameter <code>TV</code>: every edge on the path must have typing distance ≤ <code>D + TV</code>.</li>
+  <li>If a valid path is found, increment the correlation count for typing distance <code>D</code> and path depth <code>d</code>.</li>
+</ol>
+<h2><b>4A</b> Filter-Merge</h2>
+<p>
+    1. filters the date-distance matrix by parameter TT (remove all values *above* TT)
+    2. reduces the typing-distance-matrix to the same samples
+    3. maps the sequence-based typing-distance-matrix to a patient-based matrix with help of sequence-patient-map. in case of multiple entries, the lower value is used.
+    4. filters the typing-distance-matrix by parameter TD (remove all values below TD)
+</p>
+
+
+<h2><b>4B</b> Filter-Merge</h2>
+<p>
+    1. merge the three distance-matrices clinic, ward, room into one according to parameter CS; the largest entry in each matrix is used for the resulting matrix
+    2. filters the merged location-distance matrix by parameter CT (remove all values *below* CT)
+</p>
+
+
+
+<h2><b>5</b> Correlation</h2>
+<p>
+    for each pair A-B at a typing-distance of D in the typing-distance-matrix:
+        1. create a contact-tree up to a depth of CD or until an epidemiological path from A to B is found.
+        2. constrain the resulting path by the TV parameter: each edge in the path must not exceed D+TV in the typing-distance-matrix.
+        3. if a valid path is found, increment the correlation output at typing-distance D and path-depth d .
+</p>
+
+
+

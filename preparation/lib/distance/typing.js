@@ -91,12 +91,12 @@ function convertToTypedArrays(matrix) {
     let out = {}
     // let schema = matrix.colKeys().filter(col => !['patientID', 'sampleDate'].includes(col)).sort()
     let schema = getSchema(matrix)
-    console.log('schema', schema, schema.length)
+    // console.log('schema', schema, schema.length)
     for (let [rowKey, rowData] of matrix.iterateRows()) {
         let int = schema.map(x => rowData[x])
         out[rowKey] = new Uint16Array(int)
     }
-    console.log('converted to typed arrays', out)
+    // console.log('converted to typed arrays', out)
     return out
 }
 

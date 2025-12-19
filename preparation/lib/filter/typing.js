@@ -7,10 +7,11 @@ export function rowFilter(matrix, cutoffPercentage) {
     let maxEntries = matrix.colKeys().length - 2 // exclude 'sampleDate' and 'patientID'
     let cutoffFactor = (cutoffPercentage / 100)
     let cutoffValue = Math.round(maxEntries * cutoffFactor)
-    console.log('typing rowFilter', { maxEntries, cutoffPercentage, cutoffValue })
+    // console.log('typing rowFilter', { maxEntries, cutoffPercentage, cutoffValue })
 
     for (let [rowKey, data] of matrix.iterateRows({ onProgress: postProgress('typing row filter') })) {
         let rowCount = Object.values(data).filter(v => v !== undefined).length - 2 // exclude 'sampleDate' and 'patientID'
+        // console.log('rowfilter test', rowCount, cutoffValue)
         if (rowCount < cutoffValue) continue
         out.setRow(rowKey, data)
     }
@@ -23,7 +24,7 @@ export function columnFilter(matrix, cutoffPercentage) {
     let maxEntries = matrix.rowKeys().length
     let cutoffFactor = (cutoffPercentage / 100)
     let cutoffValue = Math.round(maxEntries * cutoffFactor)
-    console.log('typing columnFilter', { maxEntries, cutoffPercentage, cutoffValue })
+    // console.log('typing columnFilter', { maxEntries, cutoffPercentage, cutoffValue })
     out.setCol('patientID', matrix.column('patientID'))
     out.setCol('sampleDate', matrix.column('sampleDate'))
     for (let [colKey, data] of matrix.iterateColumns({ onProgress: postProgress('typing column filter') })) {

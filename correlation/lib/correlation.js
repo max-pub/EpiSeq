@@ -6,7 +6,7 @@ import { arithmeticMean, standardDeviation, median, medianAbsoluteDeviation } fr
 export function correlate(typingMatrix, contacts, OPTIONS) {
 	// console.log('correlate called with options', OPTIONS, typingMatrix, contacts)
 	let out = new Matrix('absolute')
-	for (let i = 0; i < OPTIONS.TD; i++) { // set all to '0'
+	for (let i = 0; i <= OPTIONS.TD; i++) { // set all to '0'
 		out.set(i, 'total', 0)
 		for (let j = 0; j <= OPTIONS.CD; j++) {
 			out.set(i, 'cd' + j, 0)
@@ -78,6 +78,7 @@ export function relative(correlationAbsolute) {
 			// console.log('xx', distance, cd)
 			if (cd != 'total') {
 				let relativeValue = (correlationAbsolute.get(distance, cd) / total * 100).toFixed(2) * 1
+				if(isNaN(relativeValue)) relativeValue = 0
 				correlationRelative.set(distance, cd, relativeValue)
 			}
 			// correlationRelative[distance][cd] = (correlationAbsolute[distance][cd] / total * 100).toFixed(2) //* 1

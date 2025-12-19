@@ -7,11 +7,17 @@ import { start } from './work.js'
 import { download } from '../lib/download.js'
 import { prettyNumber } from '../lib/ext/bundle.js'
 import { $, $$ } from '../lib/base.js'
+import { loadHTML } from '../lib/loadHTML.js'
 
 import * as main from './main.js'
-console.log('main imported', main)
+// import { exportVectorPdf } from '../lib/pdf.js'
+
+
+// console.log('main imported', main)
 let thread = await new Thread('work.js', import.meta.url).init({ responder: main })
-console.log('thread ready', thread)
+// console.log('thread ready', thread)
+
+await loadHTML('#form','form.html');
 
 if (await KV.prep) {
     console.log('loading data from KV store', await KV.prep)
@@ -23,6 +29,10 @@ if (await KV.prep) {
         `)
 }
 
+// $('#pdf').addEventListener('click', async (e) => {
+//     exportVectorPdf('#correlation', 'correlation-chart.pdf')
+//     // exportVectorPdf($('#correlation .chart'), 'correlation-chart.pdf')
+// })
 
 $('#download').addEventListener('click', async (e) => {
     // console.log('download now')
@@ -35,7 +45,7 @@ $('[type=file]').addEventListener('change', (e) => {
     let file = input.files[0]
     // console.log('file selected', file, file.name)
     if (file) {
-        $('#filename').textContent = file.name
+        // $('#filename').textContent = file.name
         $('[name=data][value=file]').checked = true
     }
 })

@@ -1,0 +1,318 @@
+<script src="components/distance-matrix.js"></script>
+<script src="components/data-grid.js"></script>
+<link rel="stylesheet" href="../style/base.css">
+
+
+<style>
+    /* @media print {
+        .page-break {
+            page-break-before: always;
+        }
+    } */
+    body {
+        background: white;
+    }
+
+    distance-matrix {
+        /* width: 2cm;
+        height: 2cm; */
+        display: inline-block;
+    }
+
+    table {
+        border-collapse: collapse;
+    }
+
+    data-grid {
+        display: inline-block;
+    }
+
+    td,
+    h5 {
+        text-align: center;
+    }
+
+    .arrow {
+        font-size: 70px;
+        padding: 1rem;
+        /* display: inline-block; */
+        /* transform: scaleX(1.5);  */
+        /* transform-origin: left center; */
+    }
+
+    .process {
+        /* border: 2px solid black; */
+        /* padding: 1em; */
+        /* margin: 1.5em; */
+        /* height: 20cm; */
+        /* background: #ddd; */
+        /* border-radius: 10px; */
+        /* background: #EBF3FB; */
+        /* text-align: start; */
+        /* box-sizing: border-box  ; */
+
+        /* vertical-align: middle; */
+        /* text-align: center; */
+    }
+
+    h1 {
+        /* font-size: 3rem; */
+        /* margin: 0.2rem; */
+        /* border: 1px solid black; */
+        /* border-radius: 100px; */
+        /* width: 4rem; */
+        /* height: 4rem; */
+        /* text-align: center; */
+        /* display: block; */
+    }
+
+    .process div {
+        border-radius: 10px;
+        background: #EBF3FB;
+        padding: 1rem;
+        min-height: 16rem;
+
+        /* display: flex; */
+        /* align-items: center; */
+        /* justify-content: center; */
+
+    }
+
+    .process h2 {
+        /* font-size: 2rem; */
+        /* margin: 0.2rem; */
+        /* writing-mode: vertical-rl; */
+        /* text-orientation: upright; */
+        text-transform: uppercase;
+        /* text-align: start; */
+        /* padding-left: -0.5rem */
+        /* padding: 1rem; */
+    }
+
+    h5 {
+        margin: 0
+    }
+
+    ul {
+        padding-left: 1rem;
+    }
+
+    #preparation #shared td:last-child {
+        display: none;
+    }
+
+    #correlation #shared:not(.second) td:first-child {
+        display: none;
+    }
+
+
+
+    td[id]table {
+        height: 100%;
+    }
+
+    .lb {
+        border-left: 1px solid silver;
+        padding-left: 1rem;
+    }
+
+    .rb {
+        border-right: 1px solid silver;
+        padding-right: 1rem;
+    }
+
+    .tb {
+        border-top: 1px solid silver;
+        padding-top: 1rem;
+    }
+
+    .bb {
+        border-bottom: 1px solid silver;
+        padding-bottom: 1rem;
+    }
+</style>
+
+<h1>Methods</h1>
+<p>
+    The following sections describe our data processing pipeline in detail. We divided the processing into two distinct
+    parts. Data “preparation” filters, pseudonymizes and calculates distance matrices from raw clinical data. Data
+    “correlation” produces the actual correlation and between genomic and epidemiological distance-matrices, allowing
+    for fine-grained parameter-control to derive a data-driven threshold.
+    <br/>
+    <br/>
+    see the <a href="../validation/">&rarr; validation</a>-section for detailed step-by-step example-calculations
+</p>
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+
+
+
+<h1 class="page-break">Data Preparation Pipeline</h1>
+
+
+<table id="preparation" class="page-break">
+    <tr>
+        <td id="preparation-input"></td>
+
+        <td class="process">
+            <div>
+                <h1>1</h1>
+                <!-- <h2>1.</h2> -->
+                <h2>Filter</h2>
+                <h4>erroneous</h4>
+                <h4>data</h4>
+            </div>
+        </td>
+
+        <td id="preparation-filtered"></td>
+
+        <td class="process">
+            <div>
+                <h1>2</h1>
+                <h2>Pseudo-</h2>
+                <h2>nymize</h2>
+                <h4>all IDs</h4>
+            </div>
+        </td>
+
+        <td id="preparation-pseudo"></td>
+
+        <td>
+            <div class="process">
+                <div>
+                    <h1>3A</h1>
+                    <h2>calculate</h2>
+                    <h4>typing</h4>
+                    <h4>distance</h4>
+                </div>
+            </div>
+            <br />
+            <br />
+            <br />
+            <div class="process">
+                <div>
+                    <h1>3B</h1>
+                    <h2>calculate</h2>
+                    <h4>location</h4>
+                    <h4>distance</h4>
+                </div>
+            </div>
+        </td>
+
+        <td id="shared"></td>
+    </tr>
+</table>
+
+<div id="preparation-text" class="page-break"></div>
+
+
+<!-- <hr style="margin: 5rem 0;" /> -->
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+
+<h1 class="page-break">Data Correlation Pipeline</h1>
+
+<table id="correlation" class="page-break">
+    <tr>
+        <td id="shared"></td>
+
+        <td class="process">
+            <div>
+                <h1>4A</h1>
+                <!-- <h2>1.</h2> -->
+                <h2>Filter</h2>
+                <h2>Merge</h2>
+                <h4>by TT, TD</h4>
+                <!-- <h4>&amp;</h4> -->
+                <h4>and PatientID</h4>
+            </div>
+            <br />
+            <br />
+            <br />
+            <div>
+                <h1>4B</h1>
+                <!-- <h2>1.</h2> -->
+                <h2>Filter</h2>
+                <h2>Merge</h2>
+                <h4>by CS, CT</h4>
+                <!-- <h4>&amp;</h4> -->
+            </div>
+        </td>
+
+        <!-- <td id="shared" class="second"></td> -->
+
+        <td id="correlation-merged"></td>
+
+        <!-- <td class="process">
+            <div style="min-height:10rem;">
+                <h1>4A</h1>
+                <h2>Filter</h2>
+                <h4>by TD</h4>
+            </div>
+            <br />
+            <br />
+            <br />
+            <div style="min-height:10rem;">
+                <h1>4B</h1>
+                <h2>Filter</h2>
+                <h4>by CT</h4>
+            </div>
+        </td>
+
+        <td id="merged"></td> -->
+
+        <td class="process">
+            <div style="min-height:15rem;">
+                <h1>5</h1>
+                <!-- <h2>1.</h2> -->
+                <h2>Correlate</h2>
+                <h4>by CD, TV</h4>
+            </div>
+        </td>
+        <td>
+            <span class="arrow">&rarr;</span>
+        </td>
+        <td>
+            <data-grid rows="7" cols="4" base-color="green" text="false" cell-size="4"></data-grid>
+            <h5>correlation table</h5>
+        </td>
+    </tr>
+
+</table>
+
+<div id="correlation-text"></div>
+
+
+<!-- <div id="shared"></div> -->
+
+<script type="module">
+    async function loadHTML(id) {
+        const response = await fetch(id + '.html');
+        const html = await response.text();
+        for (let x of document.querySelectorAll('#' + id.replaceAll('/', '-'))) {
+            x.innerHTML = html
+        }
+        // document.getElementById(id).innerHTML = html;
+    }
+    await loadHTML('shared');
+
+    await loadHTML('preparation/input');
+    await loadHTML('preparation/filtered');
+    await loadHTML('preparation/pseudo');
+    await loadHTML('preparation/text');
+    await loadHTML('correlation/merged');
+    await loadHTML('correlation/text');
+
+    // console.log('ss',document.querySelector('#shared'))
+    // fetch('input.html').then(r => r.text()).then(html => document.getElementById('input').innerHTML = html);
+    // fetch('shared.html').then(r => r.text()).then(html => document.getElementById('shared').innerHTML = html);
+</script>

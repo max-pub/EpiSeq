@@ -1,0 +1,216 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" font-family="Arial, sans-serif">
+  <defs>
+    <!-- Arrow Markers -->
+    <marker id="arrowhead-blue" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#365f91" />
+    </marker>
+    <marker id="arrowhead-orange" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#e46c0a" />
+    </marker>
+    <marker id="arrowhead-purple" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#604a7b" />
+    </marker>
+    <marker id="arrowhead-yellow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#ffc000" />
+    </marker>
+    <marker id="arrowhead-teal" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#5f8a94" />
+    </marker>
+
+    <!-- Small Matrix Input (5x5) -->
+    <g id="input-matrix">
+      <rect x="0" y="0" width="12" height="12" fill="#fff2cc" stroke="#333" stroke-width="0.5"/>
+      <rect x="12" y="0" width="12" height="12" fill="#fce4d6" stroke="#333" stroke-width="0.5"/>
+      <rect x="24" y="0" width="12" height="12" fill="#e04c41" stroke="#333" stroke-width="0.5"/>
+      <rect x="36" y="0" width="12" height="12" fill="#4bacc6" stroke="#333" stroke-width="0.5"/>
+      <rect x="48" y="0" width="12" height="12" fill="#1f497d" stroke="#333" stroke-width="0.5"/>
+      
+      <rect x="0" y="12" width="12" height="12" fill="#e04c41" stroke="#333" stroke-width="0.5"/>
+      <rect x="12" y="12" width="12" height="12" fill="#fff2cc" stroke="#333" stroke-width="0.5"/>
+      <rect x="24" y="12" width="12" height="12" fill="#e04c41" stroke="#333" stroke-width="0.5"/>
+      <rect x="36" y="12" width="12" height="12" fill="#8064a2" stroke="#333" stroke-width="0.5"/>
+      <rect x="48" y="12" width="12" height="12" fill="#fce4d6" stroke="#333" stroke-width="0.5"/>
+
+      <rect x="0" y="24" width="12" height="12" fill="#fce4d6" stroke="#333" stroke-width="0.5"/>
+      <rect x="12" y="24" width="12" height="12" fill="#e04c41" stroke="#333" stroke-width="0.5"/>
+      <rect x="24" y="24" width="12" height="12" fill="#fff2cc" stroke="#333" stroke-width="0.5"/>
+      <rect x="36" y="24" width="12" height="12" fill="#9bbb59" stroke="#333" stroke-width="0.5"/>
+      <rect x="48" y="24" width="12" height="12" fill="#f79646" stroke="#333" stroke-width="0.5"/>
+      
+      <rect x="0" y="36" width="12" height="12" fill="#1f497d" stroke="#333" stroke-width="0.5"/>
+      <rect x="12" y="36" width="12" height="12" fill="#4bacc6" stroke="#333" stroke-width="0.5"/>
+      <rect x="24" y="36" width="12" height="12" fill="#9bbb59" stroke="#333" stroke-width="0.5"/>
+      <rect x="36" y="36" width="12" height="12" fill="#fff2cc" stroke="#333" stroke-width="0.5"/>
+      <rect x="48" y="36" width="12" height="12" fill="#fce4d6" stroke="#333" stroke-width="0.5"/>
+      
+      <rect x="0" y="48" width="12" height="12" fill="#4bacc6" stroke="#333" stroke-width="0.5"/>
+      <rect x="12" y="48" width="12" height="12" fill="#8064a2" stroke="#333" stroke-width="0.5"/>
+      <rect x="24" y="48" width="12" height="12" fill="#f79646" stroke="#333" stroke-width="0.5"/>
+      <rect x="36" y="48" width="12" height="12" fill="#fce4d6" stroke="#333" stroke-width="0.5"/>
+      <rect x="48" y="48" width="12" height="12" fill="#fff2cc" stroke="#333" stroke-width="0.5"/>
+    </g>
+
+    <!-- Updated Filter Component (No Slider) -->
+    <g id="filter-box">
+      <rect x="0" y="0" width="100" height="120" rx="10" fill="white" stroke="black" stroke-width="1.5"/>
+      <!-- Centered Funnel -->
+      <path d="M20,35 L80,35 L50,75 Z" fill="#4bacc6" stroke="black" stroke-width="1.5"/>
+      <rect x="45" y="75" width="10" height="15" fill="#4bacc6" stroke="black" stroke-width="1.5"/>
+    </g>
+    
+    <!-- Heatmap Cell Gradient Simulator -->
+    <pattern id="heatmap-pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+       <!-- This is a mock heatmap look -->
+       <rect x="0" y="0" width="20" height="20" fill="#e6e0ec" stroke="black" stroke-width="0.5"/>
+       <rect x="0" y="0" width="20" height="20" fill="#604a7b" opacity="0.2" />
+    </pattern>
+  </defs>
+
+  <!-- Title -->
+  <text x="500" y="40" text-anchor="middle" font-size="28" fill="black">Data Correlation Pipeline</text>
+
+  <!-- ========================================== -->
+  <!-- LAYER 1: CONNECTING PATHS                  -->
+  <!-- ========================================== -->
+  
+  <!-- Group 1 Inputs to Filter 1 (Center Y=140) -->
+  <path d="M110,100 L165,100 Q180,100 180,110 L180,130 Q180,140 195,140 L214,140" fill="none" stroke="#365f91" stroke-width="6" marker-end="url(#arrowhead-blue)"/>
+  <path d="M110,190 L165,190 Q180,190 180,180 L180,150 Q180,140 195,140 L214,140" fill="none" stroke="#365f91" stroke-width="6" marker-end="url(#arrowhead-blue)"/>
+
+  <!-- Group 2 Inputs to Filter 2 (Center Y=390) -->
+  <path d="M110,300 L165,300 Q180,300 180,310 L180,380 Q180,390 195,390 L214,390" fill="none" stroke="#e46c0a" stroke-width="6" marker-end="url(#arrowhead-orange)"/>
+  <path d="M110,390 L214,390" fill="none" stroke="#e46c0a" stroke-width="6" marker-end="url(#arrowhead-orange)"/>
+  <path d="M110,480 L165,480 Q180,480 180,470 L180,400 Q180,390 195,390 L214,390" fill="none" stroke="#e46c0a" stroke-width="6" marker-end="url(#arrowhead-orange)"/>
+
+  <!-- STRAIGHT Filter Outputs to Reduced Matrices -->
+  <!-- Filter 1 (Center Y=140) -> Reduced 1 (Center Y=140) -->
+  <path d="M320,140 L474,140" fill="none" stroke="#604a7b" stroke-width="6" marker-end="url(#arrowhead-purple)"/>
+  <!-- Filter 2 (Center Y=390) -> Reduced 2 (Center Y=390) -->
+  <path d="M320,390 L474,390" fill="none" stroke="#ffc000" stroke-width="6" marker-end="url(#arrowhead-yellow)"/>
+
+  <!-- Reduced Matrices to Shuffle Box (Left Edge 620, Center Y 285) -->
+  <!-- Reduced 1 Out (560, 140) -> Shuffle In -->
+  <path d="M560,140 L580,140 Q600,140 600,160 L600,270 Q600,285 610,285 L614,285" fill="none" stroke="#365f91" stroke-width="6" marker-end="url(#arrowhead-blue)"/>
+  <!-- Reduced 2 Out (560, 390) -> Shuffle In -->
+  <path d="M560,390 L580,390 Q600,390 600,370 L600,300 Q600,285 610,285 L614,285" fill="none" stroke="#ffc000" stroke-width="6" marker-end="url(#arrowhead-yellow)"/>
+
+  <!-- Shuffle to Final Table -->
+  <path d="M680,285 L724,285" fill="none" stroke="#5f8a94" stroke-width="6" marker-end="url(#arrowhead-teal)"/>
+
+
+  <!-- ========================================== -->
+  <!-- LAYER 2: COMPONENTS                        -->
+  <!-- ========================================== -->
+
+  <!-- Inputs -->
+  <g transform="translate(50, 70)">
+    <use href="#input-matrix" x="0" y="0" />
+    <text x="30" y="75" font-size="10" font-weight="bold" text-anchor="middle">Typing Distance</text>
+    <text x="30" y="87" font-size="10" font-weight="bold" text-anchor="middle">Matrix</text>
+  </g>
+  <g transform="translate(50, 160)">
+    <use href="#input-matrix" x="0" y="0" />
+    <text x="30" y="75" font-size="10" font-weight="bold" text-anchor="middle">SampleDate Distance</text>
+    <text x="30" y="87" font-size="10" font-weight="bold" text-anchor="middle">Matrix</text>
+  </g>
+  <g transform="translate(50, 270)">
+    <use href="#input-matrix" x="0" y="0" />
+    <text x="30" y="75" font-size="10" font-weight="bold" text-anchor="middle">CLINIC-CONTACT</text>
+    <text x="30" y="87" font-size="10" font-weight="bold" text-anchor="middle">DISTANCE MATRIX</text>
+  </g>
+  <g transform="translate(50, 360)">
+    <use href="#input-matrix" x="0" y="0" />
+    <text x="30" y="75" font-size="10" font-weight="bold" text-anchor="middle">WARD-CONTACT</text>
+    <text x="30" y="87" font-size="10" font-weight="bold" text-anchor="middle">DISTANCE MATRIX</text>
+  </g>
+  <g transform="translate(50, 450)">
+    <use href="#input-matrix" x="0" y="0" />
+    <text x="30" y="75" font-size="10" font-weight="bold" text-anchor="middle">ROOM-CONTACT</text>
+    <text x="30" y="87" font-size="10" font-weight="bold" text-anchor="middle">DISTANCE MATRIX</text>
+  </g>
+
+  <!-- Filters (Aligned Vertically to match Reduced Matrices) -->
+  <!-- Top Filter Y=80 (Center 140) -->
+  <g transform="translate(220, 80)">
+    <use href="#filter-box" x="0" y="0"/>
+    <text x="50" y="100" font-size="9" font-weight="bold" text-anchor="middle">TYPING-DISTANCE</text>
+    <text x="50" y="110" font-size="9" font-weight="bold" text-anchor="middle">FILTERING</text>
+    <text x="0" y="135" font-size="12" fill="black">Filters: TD, TT, TV</text>
+  </g>
+
+  <!-- Bottom Filter Y=330 (Center 390) -->
+  <g transform="translate(220, 330)">
+    <use href="#filter-box" x="0" y="0"/>
+    <text x="50" y="100" font-size="9" font-weight="bold" text-anchor="middle">LOCATION-DISTANCE</text>
+    <text x="50" y="110" font-size="9" font-weight="bold" text-anchor="middle">FILTERING</text>
+    <text x="0" y="135" font-size="12" fill="black">Filters: CS, CT, CD</text>
+  </g>
+
+  <!-- Reduced Matrices (Moved slightly to align center Y with Filters) -->
+  <!-- Top Reduced Matrix Y=110 (Center 140) -->
+  <g transform="translate(480, 110)">
+    <rect x="0" y="0" width="80" height="60" fill="#b1a0c7" stroke="black" stroke-width="1.5"/>
+    <path d="M0,15 L80,15 M0,30 L80,30 M0,45 L80,45" stroke="black" stroke-width="1"/>
+    <path d="M26,0 L26,60 M52,0 L52,60" stroke="black" stroke-width="1"/>
+    <text x="40" y="75" font-size="10" font-weight="bold" text-anchor="middle">REDUCED TYPING</text>
+    <text x="40" y="87" font-size="10" font-weight="bold" text-anchor="middle">DISTANCE MATRIX</text>
+  </g>
+
+  <!-- Bottom Reduced Matrix Y=360 (Center 390) -->
+  <g transform="translate(480, 360)">
+    <rect x="0" y="0" width="80" height="60" fill="#f79646" stroke="black" stroke-width="1.5"/>
+    <path d="M0,15 L80,15 M0,30 L80,30 M0,45 L80,45" stroke="black" stroke-width="1"/>
+    <path d="M26,0 L26,60 M52,0 L52,60" stroke="black" stroke-width="1"/>
+    <text x="40" y="75" font-size="10" font-weight="bold" text-anchor="middle">REDUCED LOCATION</text>
+    <text x="40" y="87" font-size="10" font-weight="bold" text-anchor="middle">DISTANCE MATRIX</text>
+  </g>
+
+  <!-- Shuffle/Merge -->
+  <g transform="translate(620, 260)">
+    <rect x="0" y="0" width="60" height="50" rx="5" fill="white" stroke="black" stroke-width="1.5"/>
+    <path d="M15,10 C30,10 30,40 45,40 L45,35 L55,42.5 L45,50 L45,45 C25,45 25,15 15,15" fill="#365f91"/>
+    <path d="M15,40 C30,40 30,10 45,10 L45,5 L55,12.5 L45,20 L45,15 C25,15 25,45 15,45" fill="#365f91"/>
+  </g>
+
+  <!-- FINAL CORRELATION TABLE (Redesigned Heatmap) -->
+  <g transform="translate(730, 170)">
+    <!-- Main Box Border -->
+    <rect x="0" y="0" width="180" height="200" fill="white" stroke="black" stroke-width="2"/>
+    
+    <!-- Header -->
+    <rect x="0" y="0" width="180" height="20" fill="#5f497a" stroke="black" stroke-width="0.5"/>
+    
+    <!-- Data Cells - Row 1 -->
+    <rect x="0" y="20" width="20" height="20" fill="#b1a0c7" stroke="black" stroke-width="0.5"/>
+    <rect x="20" y="20" width="20" height="20" fill="#d0c4de" stroke="black" stroke-width="0.5"/>
+    <rect x="40" y="20" width="20" height="20" fill="#604a7b" stroke="black" stroke-width="0.5"/>
+    <rect x="60" y="20" width="20" height="20" fill="#b1a0c7" stroke="black" stroke-width="0.5"/>
+    <rect x="80" y="20" width="20" height="20" fill="#d0c4de" stroke="black" stroke-width="0.5"/>
+    <rect x="100" y="20" width="20" height="20" fill="#604a7b" stroke="black" stroke-width="0.5"/>
+    <rect x="120" y="20" width="20" height="20" fill="#b1a0c7" stroke="black" stroke-width="0.5"/>
+    <rect x="140" y="20" width="20" height="20" fill="#d0c4de" stroke="black" stroke-width="0.5"/>
+    <rect x="160" y="20" width="20" height="20" fill="#604a7b" stroke="black" stroke-width="0.5"/>
+    
+    <!-- Row 2 -->
+    <rect x="0" y="40" width="20" height="20" fill="#d0c4de" stroke="black" stroke-width="0.5"/>
+    <rect x="20" y="40" width="20" height="20" fill="#604a7b" stroke="black" stroke-width="0.5"/>
+    <rect x="40" y="40" width="20" height="20" fill="#b1a0c7" stroke="black" stroke-width="0.5"/>
+    <rect x="60" y="40" width="20" height="20" fill="#d0c4de" stroke="black" stroke-width="0.5"/>
+    <rect x="80" y="40" width="20" height="20" fill="#604a7b" stroke="black" stroke-width="0.5"/>
+    <rect x="100" y="40" width="20" height="20" fill="#b1a0c7" stroke="black" stroke-width="0.5"/>
+    <rect x="120" y="40" width="20" height="20" fill="#d0c4de" stroke="black" stroke-width="0.5"/>
+    <rect x="140" y="40" width="20" height="20" fill="#604a7b" stroke="black" stroke-width="0.5"/>
+    <rect x="160" y="40" width="20" height="20" fill="#b1a0c7" stroke="black" stroke-width="0.5"/>
+
+    <!-- Pattern Fill for remaining rows to simulate data -->
+    <rect x="0" y="60" width="180" height="140" fill="url(#heatmap-pattern)" />
+    
+    <!-- Grid overlay for remaining rows -->
+    <g stroke="black" stroke-width="0.5" fill="none">
+        <path d="M0,60 L180,60 M0,80 L180,80 M0,100 L180,100 M0,120 L180,120 M0,140 L180,140 M0,160 L180,160 M0,180 L180,180"/>
+        <path d="M20,60 L20,200 M40,60 L40,200 M60,60 L60,200 M80,60 L80,200 M100,60 L100,200 M120,60 L120,200 M140,60 L140,200 M160,60 L160,200"/>
+    </g>
+
+    <text x="90" y="220" font-size="12" font-weight="bold" text-anchor="middle">CORRELATION TABLE</text>
+  </g>
+</svg>

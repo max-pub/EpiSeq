@@ -4,26 +4,26 @@ import { pseudonymize, pseudoMAP } from "../../lib/ext/bundle.js"
 import { Matrix } from "../../lib/Matrix.js"
 import { postProgress } from "../../lib/Progress.js"
 
-export function pseudonymizeLocations(matrix) {
+export function pseudonymizeLocations(matrix, len = { patientID: 4, locationID: 5, clinic: 3, ward: 3, room: 4 }) {
 	let out = new Matrix('pseudonymized locations')
-	for (let [rowKey,rowData] of matrix.iterateRows({ onProgress: postProgress('pseudonymize locations') })) {
-		out.setRow(pseudonymize(rowKey, { bucket: 'locations', prefix: 'loc' }), {
-			patientID: pseudonymize(rowData.patientID, { bucket: 'patients', prefix: 'pat', length: 4 }),
+	for (let [rowKey, rowData] of matrix.iterateRows({ onProgress: postProgress('pseudonymize locations') })) {
+		out.setRow(pseudonymize(rowKey, { bucket: 'locations', prefix: 'loc', length: len.locationID }), {
+			patientID: pseudonymize(rowData.patientID, { bucket: 'patients', prefix: 'pat', length: len.patientID }),
 			from: rowData.from,
 			till: rowData.till,
-			clinic: pseudonymize(rowData.clinic, { bucket: 'clinics', prefix: 'c', length: 3 }),
-			ward: pseudonymize(rowData.ward, { bucket: 'wards', prefix: 'w', length: 3 }),
-			room: pseudonymize(rowData.room, { bucket: 'rooms', prefix: 'r', length: 4 }),
+			clinic: pseudonymize(rowData.clinic, { bucket: 'clinics', prefix: 'c', length: len.clinic }),
+			ward: pseudonymize(rowData.ward, { bucket: 'wards', prefix: 'w', length: len.ward }),
+			room: pseudonymize(rowData.room, { bucket: 'rooms', prefix: 'r', length: len.room }),
 		})
 	}
 	return out
 }
 
-export function pseudonymizeTypings(matrix) {
+export function pseudonymizeTypings(matrix, len = { patientID: 4, sequenceID: 5 }) {
 	let out = new Matrix('pseudonymized typings')
-	for (let [rowKey,rowData] of matrix.iterateRows({ onProgress: postProgress('pseudonymize typings') })) {
-		rowData.patientID = pseudonymize(rowData.patientID, { bucket: 'patients', prefix: 'pat', length: 4 })
-		rowKey = pseudonymize(rowKey, { bucket: 'sequences', prefix: 'seq', length: 5 })
+	for (let [rowKey, rowData] of matrix.iterateRows({ onProgress: postProgress('pseudonymize typings') })) {
+		rowData.patientID = pseudonymize(rowData.patientID, { bucket: 'patients', prefix: 'pat', length: len.patientID })
+		rowKey = pseudonymize(rowKey, { bucket: 'sequences', prefix: 'seq', length: len.sequenceID })
 		out.setRow(rowKey, rowData)
 	}
 	return out

@@ -8,6 +8,7 @@ import { Thread, KV, download, $ } from '../lib/ext/bundle.js'
 // import * as dateFilter from './lib/filter/date.js'
 // import * as otherFilter from './lib/filter/other.js'                
 // import { KV } from '../lib/ext/bundle.js'
+import { loadHTML } from '../lib/loadHTML.js'
 
 import * as main from './main.js'
 // import * as work from './work.js'
@@ -18,14 +19,19 @@ let thread = await new Thread('work.js', import.meta.url).init({ responder: main
 let settings = {}
 // console.log("aaa")
 
+
+await loadHTML('#form','form.html');
+
+
+
 $('form').addEventListener('submit', (e) => {
-    console.log('form submit')
+    // console.log('form submit')
     e.preventDefault()
     let form = e.target
     settings = formExtractor(form)
     if (!settings.germName) settings.germName = $('[name="germName"]').getAttribute('placeholder')
-    console.log('extracted settings:', settings)
-    console.log('set', settings)
+    // console.log('extracted settings:', settings)
+    // console.log('set', settings)
     thread.start(settings)
     // await start(settings)
     // console.log('extracted', formExtractor(form))

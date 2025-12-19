@@ -13,7 +13,7 @@
 // 	return title().replaceAll(/[^a-z0-9]/gi, '')
 // }
 
-import { showChart } from '../../lib/apex.bridge.js'
+import { showChart, space } from '../../lib/apex.bridge.js'
 
 
 function template(xLimit, scaleType) {
@@ -70,7 +70,7 @@ export function showTypeChart(container, data, settings = { xLimit: '500', scale
 		// filename: sourceInput.title_ + '_typing_distance_histogram_' + xLimit + '_' + scaleType,
 		filename: 'typing_x',
 		mainTitle: settings.germName ?? 'germX',
-		subTitle: settings.TT ? `TT=${settings.TT}` : '',
+		subTitle: settings.TT ? `TT=${settings.TT} ${space(5)} len=${data.length}` : '', // TM=${settings.TM} ${space(5)} 
 		// filename: 'typing_' + sourceInput.title_,
 		// mainTitle: (sourceInput.title) ?? '',
 		// subTitle: `${typeFilter.formString}`,

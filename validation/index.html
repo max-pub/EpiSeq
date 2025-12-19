@@ -1,0 +1,89 @@
+<link rel="stylesheet" href="../style/base.css">
+<link rel="stylesheet" href="../style/form.css">
+<link rel="stylesheet" href="../style/style.css">
+
+<h1>Validation</h1>
+<p>data validation</p>
+
+<form>
+    <div class="flex-around">
+        <div id="prep"></div>
+        <div id="corr"></div>
+    </div>
+    <center>
+        <button id="submit" type="submit">start validation with given parameters</button>
+    </center>
+</form>
+
+
+<style>
+    h1 {
+        /* margin: 7rem 0 2rem 0; */
+        /* padding: 0; */
+        text-align: center;
+    }
+    p{
+        text-align: center;
+    }
+
+    .help {
+        display: none;
+    }
+
+    td {
+        border: 1px solid silver;
+        padding: 0.2rem 0.5rem;
+        text-align: center;
+        vertical-align: top;
+    }
+
+    .left,
+    .right,
+    .title,
+    .subtitle,
+    .center {
+        border: 0;
+        text-align: center;
+    }
+
+    .left>*,
+    .right>*,
+    .center>* {
+        margin: 1rem auto;
+    }
+
+    .title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        padding-top: 5rem;
+        padding-bottom: 2rem;
+        text-align: center;
+    }
+
+    #output {
+        width: 100%;
+    }
+
+    /* output>*{margin:0 auto;} */
+    #___distance_calculation .left {
+        background: #eee;
+        /* border-left: 1px solid silver; */
+        /* border-bottom: 1px solid silver; */
+        /* border-top: 1px solid silver; */
+    }
+
+    #___distance_calculation .right {
+        background: #eee;
+        /* border-right: 1px solid silver; */
+        /* border-bottom: 1px solid silver; */
+        /* border-top: 1px solid silver; */
+    }
+</style>
+
+
+<table id="output"></table>
+
+<output></output>
+
+
+<script type="module" src="index.js"></script>

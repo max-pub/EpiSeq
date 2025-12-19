@@ -1,0 +1,170 @@
+<fieldset>
+    <legend>Date Filter</legend>
+    <!-- <h2>Date Filter</h2> -->
+
+    <table>
+        <tr>
+            <td> from </td>
+            <td> <input type="date" name="from" value="2014-01-01" /> </td>
+            <td class="help"> remove all entries <i>before</i> the given date </td>
+        </tr>
+
+        <tr>
+            <td> till </td>
+            <td> <input type="date" name="till" value="2024-01-01" /> </td>
+            <td class="help"> remove all entries <i>after</i> the given date </td>
+        </tr>
+
+        <tr>
+            <td> valid dates </td>
+            <td>
+                <label>
+                    <input type="checkbox" name="dateRequired" checked>
+                    required
+                </label>
+                <!-- <div>
+                    <input type="checkbox" id="validdate" value="validdate" checked>
+                    <label for="validdate">required</label>
+                </div> -->
+            </td>
+            <td class="help"> remove records without start or end or sample date </td>
+        </tr>
+
+    </table>
+</fieldset>
+
+
+<fieldset>
+    <legend>Typing Filter</legend>
+    <!-- <h2>Typing Filter</h2> -->
+
+    <table>
+        <!-- <tr class="divider">
+            <td colspan="3">
+                <hr />
+            </td>
+        </tr> -->
+        <tr>
+            <td> rows </td>
+            <td> <input type="number" name="rowFilter" value="90" min="0" max="100" size="3" />% </td>
+            <td class="help"> min. percentage of correctly decoded alleles in any given row (<a
+                    href="https://github.com/max-pub/mro-epi#list-filter" target="_blank">help</a>)</td>
+        </tr>
+
+        <tr>
+            <td> columns </td>
+            <td> <input type="number" name="columnFilter" value="0" min="0" max="100" size="3" />% </td>
+            <td class="help"> min. percentage of correctly decoded alleles in any given column (<a
+                    href="https://github.com/max-pub/mro-epi#list-filter" target="_blank">help</a>)</td>
+        </tr>
+    </table>
+</fieldset>
+
+<fieldset>
+    <legend>Location Filter</legend>
+
+    <!-- <h2>Location Filter</h2> -->
+    <table>
+        <!-- <tr class="divider">
+            <td colspan="3">
+                <hr />
+            </td>
+        </tr> -->
+
+        <tr>
+            <td> clinic </td>
+            <td>
+                <label>
+                    <input type="checkbox" name="clinicRequired" checked>
+                    required
+                </label>
+            </td>
+            <td class="help"> remove records without clinic-entry </td>
+        </tr>
+        <tr>
+            <td> ward </td>
+            <td>
+                <label>
+                    <input type="checkbox" name="wardRequired" checked>
+                    required
+                </label>
+            </td>
+            <td class="help"> remove records without ward-entry </td>
+        </tr>
+        <tr>
+            <td> room </td>
+            <td>
+                <label>
+                    <input type="checkbox" name="roomRequired" checked>
+                    required
+                </label>
+            </td>
+            <td class="help"> remove records without room-entry </td>
+        </tr>
+        <!-- <tr id="adjustOpenEnds">
+			<td> adjust open ends </td>
+			<td> <input type="checkbox" checked> </td>
+			<td class="help"> fix entries without end-dates </td>
+		</tr> -->
+
+    </table>
+</fieldset>
+
+<fieldset>
+    <legend>Other Settings</legend>
+
+
+    <!-- <h2>Other Settings</h2> -->
+
+    <table>
+        <!-- <tr class="divider">
+            <td colspan="3">
+                <hr />
+            </td>
+        </tr> -->
+        <!-- <tr id="hasRoom">
+			<td> room data required </td>
+			<td> <input type="checkbox" checked> </td>
+			<td class="help"> keep only patients that have at least one room entry (i.e. exlude out-patients)</td>
+		</tr> -->
+
+        <tr>
+            <td>pseudonymize  </td>
+            <td>
+                <label>
+                    <input type="checkbox" name="pseudonymize" checked>
+                    all IDs
+                </label>
+                <!-- <div>
+                    <input type="checkbox" id="pseudonymize" value="pseudonymize" checked>
+                    <label for="pseudonymize">pseudonymize</label>
+                </div> -->
+                <!-- <input type="checkbox" checked>  -->
+            </td>
+            <td class="help">
+                replace all identifiers like patientID or sampleID with random strings <br />
+                also replacing clinic,ward,location strings
+            </td>
+        </tr>
+
+
+        <!-- <tr class="divider">
+                <td colspan="3">
+                    <hr />
+                </td>
+            </tr> -->
+
+        <tr>
+            <td> missing typings </td>
+            <td>
+                <label>
+                    <input name="countNull" type="checkbox">
+                    count as different
+                </label>
+            </td>
+            <td class="help"> interpret undeciphered alleles as different (<a
+                    href="https://github.com/max-pub/mro-epi#matrix-calculation" target="_blank">help</a>)</td>
+        </tr>
+
+    </table>
+</fieldset>

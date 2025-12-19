@@ -68,10 +68,10 @@ export function setGermName(name) {
     germName = name
     console.log('germ name set to:', germName)
 }
-export function histogram(data) {
+export function showHistogram(data) {
     // console.log('histogram data received:', data)
     // showTypeChart($('#histogram'), data, '500', 'linear')
-    showTypeChart($('#histogram'), data, { xLimit: '500', scaleType: 'linear', germName, TT: settings.TT })
+    showTypeChart($('#histogram'), data, { xLimit: '500', scaleType: 'linear', germName, TT: settings.TT, TM: settings.TM })
 }
 export function correlation(relative, stats, absolute) {
     // console.log('correlation data received:', relative,stats,absolute)

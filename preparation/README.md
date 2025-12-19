@@ -1,6 +1,6 @@
 this README provides an overview of the data preparation module, detailing the required raw data format, available filtering options, and the methods used to compute distance matrices from the provided typing and location data.
 
-![image](pipeline.png)
+![image](../methods/preparation/preparation.png)
 
 
 
@@ -41,12 +41,12 @@ the typing data must have the following columns:
 
 | locationID | patientID | from | till | clinic | ward | room |
 | ---------- | --------- | ---- | ---- | ------ | ---- | ---- |
-| location1 | patient1 | 2022-05-02 | 2022-06-14 | Dermatology | Ward B | Room 23 |
-| location2 | patient1 | 2022-06-14 | 2022-07-23 | Dermatology | Ward C | Room 12 |
-| location3 | patient2 | 2022-06-10 | 2022-07-01 | Dermatology | Ward B | Room 23 |
-| location4 | patient2 | 2022-07-20 | 2022-08-05 | ICU | Ward A | Room 5 |
-| location5 | patient3 | 2022-05-15 | 2022-06-01 | ICU | Ward A | Room 2 |
-| location6 | patient3 | 2022-06-15 | 2022-07-10 | ICU | Ward A | Room 5 |
+| location1 | patient1 | 2022-05-02 | 2022-06-14 | Dermatology | Phototherapy | Room 23 |
+| location2 | patient1 | 2022-06-14 | 2022-07-23 | Dermatology | Allergy | Room 12 |
+| location3 | patient2 | 2022-06-10 | 2022-07-01 | Dermatology | Phototherapy | Room 23 |
+| location4 | patient2 | 2022-07-20 | 2022-08-05 | Psychiatry | Psychosis | Room 5 |
+| location5 | patient3 | 2022-05-15 | 2022-06-01 | Psychiatry | Dementia | Room 2 |
+| location6 | patient3 | 2022-06-15 | 2022-07-10 | Psychiatry | Psychosis | Room 5 |
 | ... | ... | ... | ... | ... | ... | ... |
 
 location data fust have the following columns:

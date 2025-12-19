@@ -1,0 +1,51 @@
+<!-- <div id="current"> -->
+<!-- <h1>Data Preparation</h1> -->
+
+<p>
+    The preparation module expects two TSV inputs: a typing table (allelic profiles or equivalent characteristics)
+    and a location table (patient stays with from/till dates and clinic/ward/room fields).
+</p>
+
+<h2>1. Filtering</h2>
+
+<p>
+    To ensure data quality, rows or columns with too many missing/undecoded values are removed (default row filter
+    90%).
+    An optional column filter can be applied to exclude rarely decoded alleles from the correlation (default 0%, i.e.,
+    no filtering).
+    Records without required location fields (clinic/ward/room, depending on the selected filters) are
+    excluded.
+
+</p>
+
+<h2>2. Pseudonymization</h2>
+
+<p>
+    For privacy protection, patient IDs and location names are pseudonymized using consistent hashing. This
+    ensures that the same original identifier always maps to the same pseudonym, allowing for consistent analyses
+    without exposing sensitive information.
+</p>
+
+<h2>3a. Typing distances</h2>
+
+<p>
+    Pairwise typing distances are computed as a Hamming distance: the number of differing alleles between two
+    sequences. Undecoded/missing cells are ignored by default unless the <em>count unknown</em> option is enabled,
+    which treats missing values as distinct. A second matrix of sample-date differences (in days) is computed to
+    allow temporal filtering in the correlation step, using the Typing Temporal parameter <strong>TT</strong>
+    (default: 365 days).
+</p>
+
+
+<h2>3b. Epidemiological distances</h2>
+
+<p>
+    For each spatial level (room, ward, clinic), we compute a temporal distance
+    between patients' stays. Overlapping stays are stored as positive integers (number of overlapping days); gaps
+    between stays are stored as negative integers (days between stays). The Contact Temporal parameter
+    <strong>CT</strong>
+    (default: -3 days) allows a small gap/lead to account for indirect transmission, and the Contact Spatial
+    parameter <strong>CS</strong> (default: "CWR") controls which spatial resolution is used for defining contacts.
+</p>
+
+<!-- </div> -->

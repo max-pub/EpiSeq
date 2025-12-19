@@ -8,6 +8,38 @@
 <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous"> -->
 
 <style>
+    @media print {
+
+        /* 1. Hide every element on the page */
+        body>* {
+            display: none;
+            /* visibility: hidden; */
+        }
+
+        /* 2. Reveal the specific chart container and all its children */
+        #histogram,
+        #correlation {
+            display: block;
+            /* visibility: visible; */
+        }
+
+        .flex-between {
+            display: none;
+        }
+
+        .chart {
+            border: none !important;
+            margin-bottom: 7rem;
+            width: 20cm !important;
+            height: 8cm !important;
+        }
+
+        #download {
+            display: none;
+        }
+
+    }
+
     td:nth-child(1) {
         width: 30px;
     }
@@ -38,12 +70,15 @@
         font-size: 1.2rem;
     }
 
-    input {
+    input:not([type="file"]):not([type="radio"]) {
         width: 70px;
     }
 
-    body {
-        padding-bottom: 500px;
+    input[type="file"] {
+        /* width: 250px */
+        /* width: 20px; */
+        /* transform: scale(1.2); */
+        /* margin-right: 0.3rem; */
     }
 
     #filename {
@@ -62,6 +97,15 @@
     label span {
         color: silver;
         font-size: 0.8rem;
+    }
+
+    #histogram .chart,
+    #correlation .chart {
+        width: 100%;
+        /* height: auto ; */
+        aspect-ratio: 3 / 1;
+        /* height: 8cm; */
+        /* border: 1px solid silver; */
     }
 </style>
 
@@ -117,145 +161,7 @@
         </table>
     </fieldset>
 
-
-    <!-- <h2>Typing Settings</h2> -->
-    <fieldset>
-        <legend>Typing Parameters</legend>
-
-        <table>
-            <!-- <tr id="td">
-			<td> TG</td>
-			<td class="help1"> genomial </td>
-			<td> <input type="number" value="5000" min="0" max="3000" size="4" /> </td>
-			<td class="help"> upper limit of typing - distances to be correlated </td>
-		</tr> -->
-
-            <tr>
-                <td> TD </td>
-                <td class="help1"> Typing Distance </td>
-                <td> <input type="number" name="TD" value="100" min="0" max="3000" size="4" /> </td>
-                <td class="help"> amount of typing - distances to be correlated </td>
-            </tr>
-
-            <tr>
-                <td> TT </td>
-                <td class="help1"> Typing Temporal </td>
-                <td> <input type="number" name="TT" value="365" min="0" max="9999" size="4" /> </td>
-                <td class="help"> allowed distance between sample-pairs in days
-                    <!-- <br/> ( "0" = "unlimited")  -->
-                </td>
-            </tr>
-
-            <tr>
-                <td> TV </td>
-                <td class="help1"> Typing Variation </td>
-                <td> <input type="number" name="MR" value="2" min="0" max="50" size="2" /> </td>
-                <td class="help">
-                    max. allowed additional typing distance for links to intermediate contacts<br />
-                    used for indirect contacts only (CD > 0) <br />
-                    e.g: Patients A & B with TypingDistance=3. MutationRate=2 allows for PatientLink of "A-X-B" to have
-                    "A-X" and "X-B" distance of up to 5.
-                </td>
-            </tr>        </table>
-
-    </fieldset>
-
-
-    <!-- <h2>Contact Settings</h2> -->
-    <fieldset>
-        <legend>Contact Parameters</legend>
-
-        <table>
-            <!-- <tr class="divider">
-            <td colspan="4">
-                <hr />
-            </td>
-        </tr> -->
-
-            <tr>
-                <td> CS </td>
-                <td class="help1"> Contact Spacial </td>
-                <td>
-                    <!-- <select>
-					<option>room</option>
-					<option>ward</option>
-					<option>clinic</option>
-					<option selected="selected">any</option>
-				</select> -->
-
-                    <label>
-                        <input type="checkbox" name="CS" value="clinic" checked>
-                        clinic
-                    </label>
-                    <label>
-                        <input type="checkbox" name="CS" value="ward" checked>
-                        ward
-                    </label>
-                    <label>
-                        <input type="checkbox" name="CS" value="room" checked>
-                        room
-                    </label>
-
-
-                    <!-- <div class="nowrap">
-                    <input type="checkbox" name="cs" value="room" checked>
-                    <label for="room">room</label>
-                </div>
-
-                <div class="nowrap">
-                    <input type="checkbox" name="cs" value="ward" checked>
-                    <label for="ward">ward</label>
-                </div>
-
-                <div class="nowrap">
-                    <input type="checkbox" name="cs" value="clinic" checked>
-                    <label for="clinic">clinic</label>
-                </div> -->
-                </td>
-                <td class="help"> select the adminstrative level of contacts that you want to be considered for
-                    correlation
-                </td>
-            </tr>
-            <tr>
-                <td> CT </td>
-                <td class="help1"> Contact Temporal </td>
-                <td> <input type="number" name="CT" value="-3" min="-100" max="100" size="4" /> </td>
-                <td class="help">
-                    specify the maximal temporal distance in days that you want to allow between contacts <br />
-                    (CT&lt;0 = non-overlapping stays, the negative value indicates the <i>days between stays</i>) <br />
-                    (CT&gt;0 = overlapping stays, the positive value indicates the <i>days of overlap</i>)
-                    <!-- negative numbers mean number of days between non-overlapping stays, -->
-                    <!-- positive numbers mean number of days of overlapping stay -->
-                </td>
-            </tr>
-            <!-- <tr id="cd">
-			<td> CD </td>
-			<td class="help1"> Contact Depth </td>
-			<td> <input type="number" value="0" min="0" max="3" size="4" /> </td>
-			<td class="help"> allowed amount of intermediary contacts between two patients, "0" means direct contact
-			</td>
-		</tr>
-		<tr id="cm">
-			<td> CM </td>
-			<td class="help1"> Depth Max  </td>
-			<td> <input type="number" value="5" min="0" max="50" size="4" /> </td>
-			<td class="help"> 
-			</td>
-		</tr> -->
-
-            <tr>
-                <td> CD </td>
-                <td class="help1"> Contact Depth </td>
-                <td> <input type="number" name="CD" value="1" min="0" max="2" size="4" /> </td>
-                <td class="help">
-                    number of allowed intermediary contacts between two patients,
-                    0 = direct contact
-                </td>
-            </tr>
-        </table>
-
-    </fieldset>
-
+    <div id="form"></div>
 
     <!-- <fieldset>
         <legend>Other Parameters</legend>
@@ -309,15 +215,15 @@
 
 
 <output></output>
-<br/>
-<br/>
-<br/>
+<br />
+<br />
+<br />
 
 
 <div id="histogram"></div>
-<br/>
-<br/>
-<br/>
+<br />
+<br />
+<br />
 
 <div id="correlation"></div>
 <!-- 
@@ -345,9 +251,9 @@
         </tr>
     </table>
 </div> -->
-<br/>
-<br/>
-<br/>
+<br />
+<br />
+<br />
 
 <div id="correlation-table"></div>
 <div id="correlation-table2"></div>
@@ -355,4 +261,5 @@
 <a id="download" class="button hidden">download all calculations</a>
 
 
+<!-- <a id="pdf">PDF</a> -->
 <script type="module" src="index.js"></script>
