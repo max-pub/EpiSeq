@@ -24,7 +24,7 @@ The application offers two distinct operational modes:
     * Calculate distance matrices for typing and location data
     * Export the resulting distance-matrices for correlation analysis
 
-2.  [**Correlation:**](correlation/README.md) 
+2.  **Correlation:**
     * **If you want to reproduce the results of our study, start here**
     * Load pre-processed data from our publication or use your own prepared data
     * Correlate typing and location distance matrices
