@@ -19,13 +19,13 @@ The application is available at: [https://mdro-correlation.uni-muenster.de/](htt
 The application offers two distinct operational modes:
 
 1.  **Preparation:**
-    * **If you have raw typing and patient movement data, start here**
+    <!-- * **If you have raw typing and patient movement data, start here** -->
     * Filter, clean, and pseudonymize your raw data
     * Calculate distance matrices for typing and location data
     * Export the resulting distance-matrices for correlation analysis
 
 2.  **Correlation:**
-    * **If you want to reproduce the results of our study, start here**
+    <!-- * **If you want to reproduce the results of our study, start here** -->
     * Load pre-processed data from our publication or use your own prepared data
     * Correlate typing and location distance matrices
     * Visualize correlation with charts
