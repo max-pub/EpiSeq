@@ -57,7 +57,7 @@ $('#cacheAndProceed').addEventListener('click', async (e) => {
 $('#downloadStats').addEventListener('click', async (e) => {
     // console.log('download now')
     let data = main.statExport()
-    download('stats.tsv', data)
+    download('preparation.tsv', data)
 })
 
 

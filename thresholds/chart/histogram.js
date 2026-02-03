@@ -43,13 +43,13 @@ function template(xLimit, scaleType) {
 }
 
 // export function showTypeChart(container, data, xLimit = '500', scaleType = 'linear') {
-export function showTypeChart(container, data, settings = { xLimit: '100', scaleType: 'linear' }) {
+export function typingHistogram(container, data, info, settings = { xLimit: '100', scaleType: 'linear' }) {
 	// console.log('showTypeChart', data)
 	container.innerHTML = template(settings.xLimit, settings.scaleType)
 	// console.log('container options rr',container, container.$$)
 	// console.log('container options',container.$$(`.options`))
-	container.$$(`.limit a`).map(x => x.addEventListener('click', event => showTypeChart(container, data, { ...settings, xLimit: event.target.textContent.trim() })))
-	container.$$(`.scale-type a`).map(x => x.addEventListener('click', event => showTypeChart(container, data, { ...settings, scaleType: event.target.textContent.trim() })))
+	container.$$(`.limit a`).map(x => x.addEventListener('click', event => typingHistogram(container, data, info, { ...settings, xLimit: event.target.textContent.trim() })))
+	container.$$(`.scale-type a`).map(x => x.addEventListener('click', event => typingHistogram(container, data, info, { ...settings, scaleType: event.target.textContent.trim() })))
 	// container.$$(`.options a`).map(x => x.addEventListener('click', event => showTypeChart(container, data, event.target.id, scaleType)))
 	// container.$$(`.scale-type a`).map(x => x.addEventListener('click', event => showTypeChart(container, data, xLimit, event.target.textContent)))
 
@@ -68,13 +68,13 @@ export function showTypeChart(container, data, settings = { xLimit: '100', scale
 	}]
 	// let filename = 'typing.histogram'
 	let filename = 'histogram.' + xMax
-	container.setAttribute('title', filename)
+	// container.setAttribute('title', filename)
 
 	let options = {
 		// filename: sourceInput.title_ + '_typing_distance_histogram_' + xLimit + '_' + scaleType,
 		filename,
-		mainTitle: settings.germName ?? 'germX',
-		subTitle: settings.TT ? `S{gap} = ${settings.TT} ${space(10)} T{len} = ${data.length}` : '', // TM=${settings.TM} ${space(5)} 
+		mainTitle: info.preparationParameters.MDRO ?? 'germX',
+		subTitle: `S{gap} = ${info.correlationParameters.S_gap} ${space(10)} T{len} = ${info.preparationParameters.T_len}`, // TM=${settings.TM} ${space(5)} 
 		// filename: 'typing_' + sourceInput.title_,
 		// mainTitle: (sourceInput.title) ?? '',
 		// subTitle: `${typeFilter.formString}`,

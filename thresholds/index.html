@@ -1,0 +1,50 @@
+<link rel="stylesheet" href="../style/base.css">
+<link rel="stylesheet" href="../style/form.css">
+<link rel="stylesheet" href="../style/style.css">
+<link rel="stylesheet" href="../style/12.css">
+<link rel="stylesheet" href="./style.css">
+<link rel="stylesheet" href="./print.css">
+
+
+<h1><a href='../'>&larr;</a> Threshold</h1>
+
+<form>
+   
+    <div id="data"></div>
+
+    <div id="form"></div>
+
+   
+    <div class="flex-row">
+        <button type="submit">calculate threshold </button>
+
+        <div id="progress" class="flex-row hidden">
+            <progress></progress>
+            <span class="percent"></span>
+            <span class="text"></span>
+        </div>
+    </div>
+
+</form>
+
+<output></output>
+
+
+<!-- <div id="correlation-table2" class="block"></div> -->
+
+<div id="stat_tables" class='block'></div>
+
+<div id="correlation" class="block print"></div>
+
+<div id="correlation-table" class="block data-table"></div>
+
+<div id="histogram" class="block print"></div>
+
+<div id="histogram-table" class="block data-table"></div>
+
+
+<a id="download" class="button hidden">download thresholds</a>
+
+
+<!-- <a id="pdf">PDF</a> -->
+<script type="module" src="index.js"></script>

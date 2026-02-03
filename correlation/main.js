@@ -10,7 +10,7 @@ let settings = {}
 
 export function setSettings(s = {}) {
     settings = s
-    console.log('settings set in main:', settings)
+    // console.log('settings set in main:', settings)
 }
 export function feedback(text) {
     console.log('feedback:', text)
@@ -66,19 +66,37 @@ export function stat({ type, mode, data } = {}) {
 let germName = '???'
 export function setGermName(name) {
     germName = name
-    console.log('germ name set to:', germName)
+    document.title = name
+    // console.log('germ name set to:', germName)
 }
 export function showHistogram(data) {
     // console.log('histogram data received:', data)
     // showTypeChart($('#histogram'), data, '500', 'linear')
-    showTypeChart($('#histogram'), data, { xLimit: '500', scaleType: 'linear', germName, TT: settings.TT, TM: settings.TM })
+    showTypeChart($('#histogram'), data, { xLimit: '100', scaleType: 'linear', germName, TT: settings.TT, TM: settings.TM })
 }
-export function correlation(relative, stats, absolute) {
+export function correlation(relative, stats, absolute, config) {
+    // console.log('chart',relative)
     // console.log('correlation data received:', relative,stats,absolute)
-    showCorrelationChart($('#correlation'), relative, stats, { ...settings, type: 'am2sd', height: '100', germName })
+    showCorrelationChart($('#correlation'), relative, stats, { ...config, type: 'xMED', height: '100', width: '100' })
     $('#correlation-table').innerHTML = new Matrix('absolute').setData(absolute).flip().html()
-    // $('#correlation-table2').innerHTML = new Matrix(rel).flip().html()
+    // $('#correlation-table2').innerHTML = new Matrix('relatative').setData(relative).flip().html()
+}
+
+export function showCorrelationTable(absolute, info) {
+    $('#correlation-table').innerHTML = new Matrix(germName + ' Correlation Results').setData(absolute).flip().html().replaceAll('C_hop', `C<sub>hop</sub>`).replaceAll("_", ' = ')
+}
+
+
+export function showThreshold(stats){
+    let names = { xMED: 'Baseline Relative', MEDxMAD: 'Hampel Filter' }
+    for (let stat in stats) {
+        $('#stat_tables').innerHTML += '<h2>' + names[stat] + '</h2>'
+        $('#stat_tables').innerHTML += new Matrix(stat).setData(stats[stat]).flip().html()
+    }
+}
+export function showDownload(){
     $('#download').classList.remove('hidden')
+
 }
 
 function percent(a, b, p = 1) {

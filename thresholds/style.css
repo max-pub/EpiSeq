@@ -1,0 +1,141 @@
+.flex-between a {
+    margin: 0 7px;
+}
+
+td:nth-child(1) {
+    width: 30px;
+}
+
+td:nth-child(2) {
+    width: 150px;
+}
+
+td:nth-child(3) {
+    width: 100px;
+}
+
+td:nth-child(4) {
+    /* width: 500px; */
+}
+
+.block {
+    margin: 5rem 0;
+}
+
+#data td {
+    vertical-align: top;
+    font-weight: normal;
+    width: 320px
+}
+
+#data td:first-child {
+    /* border-right: 1px solid gray; */
+}
+
+h2 {
+    font-size: 1.2rem;
+}
+
+input:not([type="file"]):not([type="radio"]) {
+    width: 70px;
+}
+
+input[type="file"] {
+    /* width: 250px */
+    /* width: 20px; */
+    /* transform: scale(1.2); */
+    /* margin-right: 0.3rem; */
+}
+
+#filename {
+    padding-left: 1rem;
+}
+
+#progress td {
+    width: auto
+}
+
+#progress .percent {
+    width: 50px;
+    text-align: right;
+}
+
+label span {
+    color: silver;
+    font-size: 0.8rem;
+}
+
+#histogram .chart,
+#correlation .chart {
+    width: 100%;
+    /* height: auto ; */
+    aspect-ratio: 2.5 / 1;
+    /* height: 8cm; */
+    /* border: 1px solid silver; */
+}
+
+
+
+#stat_tables {
+    width: 70%;
+    text-align: right;
+}
+
+#stat_tables h2 {
+    /* padding-right: 5rem; */
+    /* padding-top: 5rem; */
+}
+
+#stat_tables h3 {
+    padding-right: 6rem;
+    font-size: 1rem;
+}
+
+#stat_tables table {
+    /* margin: 0 auto; */
+    margin-left: auto;
+    margin-bottom: 5rem;
+}
+
+#stat_tables th {
+    border: none;
+    text-align: right;
+}
+
+#stat_tables td {
+    border: 1px solid silver;
+    text-align: right;
+    width: 5rem;
+}
+
+#stat_tables caption {
+    display: none;
+}
+
+/* .apexcharts-legend-text{
+        padding-right: 2rem;
+    } */
+
+
+
+
+.data-table,
+.data-table2 {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.data-table table {
+    caption-side: top;
+}
+
+.data-table table th {
+    white-space: nowrap;
+}
+
+.data-table caption {
+    font-size: 1.4rem;
+    color: black;
+    text-align: left;
+    padding-bottom: 1rem;
+}

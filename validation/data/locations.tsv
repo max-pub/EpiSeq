@@ -1,12 +1,12 @@
 locationID	patientID	from	till	clinic	ward	room
-location1	patient1	2022-05-02	2022-06-14	Dermatology	Phototherapy	DP 23
-location2	patient1	2022-06-14	2022-07-23	Dermatology	Allergy	DA 12
-location3	patient1	2022-07-25	2022-08-10	Psychiatry	Psychosis	PP 17
-location4	patient2	2022-06-10	2022-07-01	Dermatology	Phototherapy	DP 23
-location5	patient2	2022-07-02	2022-07-15	Dermatology	Allergy	DA 12
-location6	patient2	2022-07-20	2022-08-05	Dermatology	Phototherapy	DP 5
-location7	patient3	2022-05-15	2022-06-01	Psychiatry	Dementia	PD 2
-location8	patient3	2022-06-15	2022-07-10	Psychiatry	Psychosis	PP 5
-location9	patient3	2022-07-15	2022-07-30	Psychiatry	Dementia	PD 5
-location10	patient4	2022-06-20	2022-07-05	Psychiatry	Dementia	PD 12
-location11	patient4	2022-07-06	2022-07-20	Psychiatry	Psychosis	PP 5
+l1	p1	2022-05-02	2022-06-14	Dermatology	Phototherapy	DP 23
+l2	p1	2022-06-14	2022-07-23	Dermatology	Allergy	DA 12
+l3	p1	2022-07-25	2022-08-10	Psychiatry	Psychosis	PP 17
+l4	p2	2022-06-10	2022-07-01	Dermatology	Phototherapy	DP 23
+l5	p2	2022-07-02	2022-07-15	Dermatology	Allergy	DA 12
+l6	p2	2022-07-20	2022-08-05	Dermatology	Phototherapy	DP 5
+l7	p3	2022-05-15	2022-06-01	Psychiatry	Dementia	PD 2
+l8	p3	2022-06-15	2022-07-10	Psychiatry	Psychosis	PP 5
+l9	p3	2022-07-15	2022-07-30	Psychiatry	Dementia	PD 5
+l10	p4	2022-06-20	2022-07-05	Psychiatry	Dementia	PD 12
+l11	p4	2022-07-06	2022-07-20	Psychiatry	Psychosis	PP 5

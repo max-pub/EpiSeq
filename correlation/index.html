@@ -9,35 +9,70 @@
 
 <style>
     @media print {
+        @page {
+            size: 210mm 91mm;
+            margin: 0;
+            padding: 0;
+        }
 
         /* 1. Hide every element on the page */
+        body {
+            padding: 0;
+            margin: 0
+        }
+
         body>* {
             display: none;
             /* visibility: hidden; */
         }
 
         /* 2. Reveal the specific chart container and all its children */
-        #histogram,
-        #correlation {
+        /* #histogram, */
+        /* #correlation */
+        .print {
             display: block;
+            margin: 0 !important;
+            /* width: 100vw !important; */
+            /* height: 100vh !important; */
             /* visibility: visible; */
         }
+
+        /* .print~* {
+            display: none !important;
+        } */
 
         .flex-between {
             display: none;
         }
 
         .chart {
+            width: 100% !important;
             border: none !important;
-            margin-bottom: 7rem;
-            width: 20cm !important;
-            height: 8cm !important;
+            /* width: 100vw !important; */
+            /* margin-bottom: 11rem; */
+            /* width: 20cm !important; */
+            /* height: 10cm !important; */
+        }
+
+        svg {
+            /* width: 100vw !important; */
+
+        }
+
+        .divider {
+            display: block;
+            page-break-after: always;
+
         }
 
         #download {
             display: none;
         }
 
+    }
+
+    .flex-between a {
+        margin: 0 7px;
     }
 
     td:nth-child(1) {
@@ -54,6 +89,10 @@
 
     td:nth-child(4) {
         /* width: 500px; */
+    }
+
+    .block {
+        margin: 5rem 0;
     }
 
     #data td {
@@ -103,10 +142,62 @@
     #correlation .chart {
         width: 100%;
         /* height: auto ; */
-        aspect-ratio: 3 / 1;
+        aspect-ratio: 2.5 / 1;
         /* height: 8cm; */
         /* border: 1px solid silver; */
     }
+
+    #correlation-table,
+    #correlation-table2 {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+
+    #stat_tables {
+        width: 70%;
+        text-align: right;
+    }
+
+    #stat_tables h2 {
+        padding-right: 5rem;
+        padding-top: 3rem;
+    }
+
+    #stat_tables table {
+        /* margin: 0 auto; */
+        margin-left: auto;
+    }
+
+    #stat_tables th {
+        border: none;
+        text-align: right;
+    }
+
+    #stat_tables td {
+        border: 1px solid silver;
+        text-align: right;
+        width: 5rem;
+    }
+
+    #correlation-table table {
+        caption-side: top;
+    }
+
+    #correlation-table table th {
+        white-space: nowrap;
+    }
+
+    #correlation-table caption {
+        font-size: 1.4rem;
+        color: black;
+        text-align: left;
+        padding-bottom: 1rem;
+    }
+
+    /* .apexcharts-legend-text{
+        padding-right: 2rem;
+    } */
 </style>
 
 
@@ -115,51 +206,7 @@
 <form>
 
     <!-- <h2>Data Selection</h2> -->
-    <fieldset>
-        <legend>Select Data Source</legend>
-        <table id="data">
-            <tr>
-                <td>
-                    <label>
-                        <input type="radio" name="data" value="mrsa">
-                        MRSA <span>from ukm.de</span>
-                    </label>
-                    <label>
-                        <input type="radio" name="data" value="vre">
-                        VRE <span>from ukm.de</span>
-                    </label>
-                    <label>
-                        <input type="radio" name="data" value="coli" checked>
-                        MDR E. coli <span>from ukm.de</span>
-                    </label>
-                    <hr />
-                    <label>
-                        <input type="radio" name="data" value="file">
-
-                        <input type="file" name="file" accept=".tsv" />
-                        <span id="filename"></span>
-                        <!-- <input type="file" name="file" accept=".tsv" /> -->
-
-                    </label>
-
-                </td>
-                <td>
-                    <p>
-                        Use pre-processed,<br />
-                        pseudonymized data<br />
-                        from our publication.
-                        <br />
-                        <br />
-                        <br />
-                        or supply your own data<br />
-                        preprocessed from <a href="../1.preparation/index.html">step 1</a>
-                    </p>
-                    <!-- <br/>
-                <input type="file" name="file" accept=".tsv" /> -->
-                </td>
-            </tr>
-        </table>
-    </fieldset>
+    <div id="data"></div>
 
     <div id="form"></div>
 
@@ -215,17 +262,14 @@
 
 
 <output></output>
-<br />
-<br />
-<br />
 
 
-<div id="histogram"></div>
-<br />
-<br />
-<br />
 
-<div id="correlation"></div>
+<div id="histogram" class="block print"></div>
+
+<!-- <div class="divider"></div> -->
+
+<div id="correlation" class="block print"></div>
 <!-- 
 <div id="correlation2">
     <div class="chart"></div>
@@ -251,14 +295,20 @@
         </tr>
     </table>
 </div> -->
-<br />
-<br />
-<br />
 
-<div id="correlation-table"></div>
-<div id="correlation-table2"></div>
+<div id="correlation-table" class="block"></div>
+<!-- <div id="correlation-table2" class="block"></div> -->
 
-<a id="download" class="button hidden">download all calculations</a>
+<div id="stat_tables" class='block'></div>
+
+
+<div id="download" class="hidden">
+    <a id="downloadResult" class="button ">download results</a>
+    <a id="cacheAndProceed" class="button ">save to cache and proceed with threshold calculation</a>
+    <!-- <a id="downloadStats" class="button ">download statistics</a> -->
+</div>
+<!-- <a id="download" class="button hidden">download all calculations</a> -->
+<!-- <a id="cacheAndProceed" class="button hidden">save to cache and proceed with correlation</a> -->
 
 
 <!-- <a id="pdf">PDF</a> -->

@@ -1,7 +1,7 @@
 
 // import { sourceInput, sourceFilter, typeFilter, locationFilter, correlation } from '../lib/mod.js'
 // import { median, average, standardDeviation, MAD } from '../../lib/ext/bundle.js	'
-import { italicGermName, showChart, space } from '../../lib/apex.bridge.js'
+import { showChart, space } from '../../lib/apex.bridge.js'
 // import { } from '../lib/mod.js'
 
 // function buildRollingAverage(sourceData, rolling) {
@@ -26,32 +26,45 @@ function template() {
 <div class="chart"></div>
 
 <div class="flex-between">
+	<div class="width">
+		<a mode='20'>20</a>
+		<a mode='100'>100</a>
+		<a mode='500'>500</a>
+		<a mode='full'>full</a>
+	</div>
+
+
 	<div class="height">
-		<a mode='60'>60</a>&nbsp;&nbsp;
-		<a mode='80'>80</a>&nbsp;&nbsp;
+		<a mode='60'>60</a>
+		<a mode='80'>80</a>
 		<a mode='100'>100</a>
 	</div>
 
-	<div class="type">
-		<a mode='am2sd'>am+2*sd</a>&nbsp;&nbsp;&nbsp;
-		<a mode='med2mad'>med+2*mad</a>
-	</div> 
+
 
 	<div class="export">
-		<a>tsv</a>&nbsp;&nbsp;
-		<a>svg</a>&nbsp;&nbsp;
+		<a>tsv</a>
+		<a>svg</a>
 		<a>png</a>
+	<!--	<a>print</a> -->
 	</div>
 </div>
 `
 }
+// <div class="type">
+// 	<a mode='xMED'>10&times;MED</a>
+// 	<a mode='MEDxMAD'>MED+5&times;MAD</a>
+// 	<a mode='AMxSD'>AM+2&times;SD</a>
+// </div> 
+
 
 function applyTemplate(container, sourceData, stats, settings) {
 	container.innerHTML = template()
 	container.$$(`.height a`).map(x => x.addEventListener('click', event => showCorrelationChart(container, sourceData, stats, { ...settings, height: event.target.getAttribute('mode').trim() })))
+	container.$$(`.width a`).map(x => x.addEventListener('click', event => showCorrelationChart(container, sourceData, stats, { ...settings, width: event.target.getAttribute('mode').trim() })))
 	container.$$(`.type a`).map(x => x.addEventListener('click', event => showCorrelationChart(container, sourceData, stats, { ...settings, type: event.target.getAttribute('mode').trim() })))
 	container.$(`[mode='${settings.height}']`).classList.add('selected')
-	container.$(`[mode='${settings.type}']`).classList.add('selected')
+	// container.$(`[mode='${settings.type}']`).classList.add('selected')
 }
 
 // function compound(data, CD) {
@@ -81,7 +94,16 @@ function applyTemplate(container, sourceData, stats, settings) {
 
 
 function settingsString(settings) {
-	return `TT=${settings.TT} ${space(5)} TV=${settings.MR} ${space(5)} CS=${settings.CS.map(x => x[0].toUpperCase()).join('')} ${space(5)} CT=${settings.CT} ${space(5)} CD=${settings.CD}`
+	//  ${space(10)} S<<min>> = ${settings.TC}
+	//  ${space(10)} T<<tol>> = ${settings.MR}
+	// return `T<<gap>>=${settings.TT} ${space(5)} T<<tol>>=${settings.MR} ${space(5)} T<<min>>=${settings.TC} ${space(10)} C<<lvl>>=${settings.CS.map(x => x[0].toUpperCase()).join('')} ${space(5)} C<<gap>>=${settings.CT} ${space(5)} C<<hop>>=${settings.CD}`
+	return `S{gap} = ${settings.TT} ${space(10)} C{gap} = ${settings.CT} ${space(10)} C{loc} = ${settings.CS.map(x => x[0].toUpperCase()).join('')}`
+}
+// function settingsString(settings) {
+// 	return `TT=${settings.TT} ${space(5)} TV=${settings.MR} ${space(5)} TM=${settings.TC} ${space(7)} CS=${settings.CS.map(x => x[0].toUpperCase()).join('')} ${space(5)} CT=${settings.CT} ${space(5)} CD=${settings.CD}`
+// }
+function settingsStringFilename(settings) {
+	return `TT${settings.TT}_TV${settings.MR}_TM${settings.TC}_CS${settings.CS.map(x => x[0].toUpperCase()).join('')}_CT${settings.CT}_CD${settings.CD}`
 }
 
 // function dictToString(){
@@ -94,34 +116,52 @@ function settingsString(settings) {
 // 	threshold: 'τ',
 // }
 
-
+function legendString(mode, settings) {
+	let chopN = mode.slice(2) * 1
+	let chop = `C{hop} = ${chopN} ${space(5)}`
+	let ttol = `T{tol} = ${settings.MR} ${space(5)}`
+	return chop + (chopN > 0 ? ttol : '') + space(5)
+}
 function statsString(stat) {
 	// console.log('stats string', stat)
 	// let mappedStats = Object.fromEntries(Object.entries(stats).map(([x, y]) => ([statsMap[x], y])))
 	// return ` (μ=${stat?.arithmeticMean?.toFixed(1) ?? '?'}% &nbsp; σ=${stat?.standardDeviation?.toFixed(1) ?? '?'}%) → (χ ≤ ${stat?.cutOff?.toFixed(1) ?? '?'}% &nbsp; τ ≤ ${stat?.threshold?.toFixed(0) ?? '?'})` // ≡
-	return `  (χ ≤ ${stat?.cutOff?.toFixed(1) ?? '?'}% &nbsp; τ ≤ ${stat?.threshold?.toFixed(0) ?? '?'})` // ≡
+	return ` -> τ ≤ ${stat?.threshold?.toFixed(0) ?? '?'}  (μ=${stat?.arithmeticMean?.toFixed(1) ?? '?'}% &nbsp; σ=${stat?.standardDeviation?.toFixed(1) ?? '?'}% &nbsp; χ ≤ ${stat?.cutOff?.toFixed(1) ?? '?'}%)` // ≡
+	// return ` (μ=${stat?.arithmeticMean?.toFixed(1) ?? '?'}% &nbsp; σ=${stat?.standardDeviation?.toFixed(1) ?? '?'}% &nbsp; χ ≤ ${stat?.cutOff?.toFixed(1) ?? '?'}% &nbsp; τ ≤ ${stat?.threshold?.toFixed(0) ?? '?'})` // ≡
+	// return `  (χ ≤ ${stat?.cutOff?.toFixed(1) ?? '?'}% &nbsp; τ ≤ ${stat?.threshold?.toFixed(0) ?? '?'})` // ≡
 }
 
-export function showCorrelationChart(container, sourceData, stats, settings = { germName, type: 'am2sd', height: '100' }) {
-	// console.log('corr chart', sourceData, stats, settings, type, height)
+export function showCorrelationChart(container, sourceData, stats, settings = { germName, type: 'xMED', height: '100', width: '100' }) {
+	// console.log('showCorrelationChart', sourceData, stats, settings)
 
 	// let xMax = series[0].length
-	let xMax = settings.TD
+	// let xMax = settings.TD
+	let xMax = settings.width == 'full' ? settings.schemaLength * 1 : settings.width * 1
+	// console.log('xMax', xMax, settings.schemaLength)
 	let yMax = settings.height * 1
 	let stat = stats[settings.type]
-	console.log('corr stats',settings,stats,stat)
+	// console.log('corr stats', settings, stats, stat)
 	// console.log('yMax', yMax, '-', height)
 
-	let series = Object.keys(sourceData[0]).map(mode => ({
+	if (xMax > 1000) xMax = Math.ceil(xMax / 100) * 100 // greater 1000 ? round to next 100
+	let xTicks = xMax < 1000 ? 20 : (xMax / 100)
+
+	console.log('source data', sourceData)
+	let firstRow = Object.values(sourceData)[0]
+	console.log('first row', firstRow)
+	let series = Object.keys(firstRow).map(mode => ({
 		// let series = ['c0', 'c1', 'c2'].map(mode => ({
-		name: mode.toUpperCase() + statsString(stat[mode]),
+		// name: mode.toUpperCase(),//+ statsString(stat[mode]),
+		name: legendString(mode, settings),
 		//.replace('cd0', 'primary contacts').replace('cd1', 'secondary contacts').replace('cd2', 'tertiary contacts'),
-		data: Object.entries(sourceData).map(([x, y]) => ({ x: x * 1, y: y[mode] }))
+		// data: Object.entries(sourceData).map(([x, y]) => ({ x: x * 1, y: y[mode] })).filter(x => x.x <= xMax)
+		data: Array(xMax + 1).fill(1).map((x, i) => ({ x: i, y: sourceData[i]?.[mode] ?? 0 }))
 	}))
 
-	let yLines = {}
-	for (let cd in stat)
-		yLines[stat[cd].cutOff] = cd
+	// let yLines = { [`${stat.cd0.median}`]: `median` }
+	// let yLines = {}
+	// for (let cd in stat)
+	// 	yLines[stat[cd].cutOff] = cd
 
 	// console.log('yLines', yLines)
 
@@ -129,10 +169,14 @@ export function showCorrelationChart(container, sourceData, stats, settings = { 
 
 	// console.log('median', med)
 	// console.log('corrrel', correlation.formData, correlation.formString)
+	// let filename = 'correlation___' + settingsStringFilename(settings)
+	let filename = 'correlation.' + xMax
+	container.setAttribute('title', filename)
+
 	let options = {
 		// filename: sourceInput.title_ + '___' + typeFilter.formString_ + '___' + locationFilter.formString_ + '___' + correlation.formString_ + '___h_' + height,
-		filename: 'typing_x',
-		mainTitle: settings.germName ?? 'germX',
+		filename,
+		mainTitle: settings.germName ?? 'germX',  // .replace('E. coli','i[E. coli]i')
 		subTitle: settingsString(settings),//`germX`,
 		// filename: 'correlation_' + sourceInput.title_,
 		// mainTitle: (sourceInput.title) ?? '',
@@ -142,12 +186,15 @@ export function showCorrelationChart(container, sourceData, stats, settings = { 
 		yTitle: `pair connectivity`,
 		yMin: 0,
 		yMax,
-		xTicks: xMax <= 50 ? 'dataPoints' : Math.floor(xMax / 2),
+		xMax,
+		xTicks,
+
+		// xTicks: xMax <= 50 ? 'dataPoints' : Math.floor(xMax / 2),
 		yTicks: yMax / 5,
 		yFormat: v => v.toFixed(0) + '%',
 		height: '500px',
 		// yLines: { [med]: `median = ${med.toFixed(1)}%`, [med * TH]: `median * ${TH} = ${(med * TH).toFixed(1)}%` },
-		yLines,
+		// yLines,
 		// threshold: med * TH,
 		// threshold: sd * 2,
 		// colors: ['#FF4D16', '#FC9C1C', '#FFD81C']

@@ -12,39 +12,6 @@ import { Timer } from './Timer.js'
 // import { postStat } from './main.js'
 
 
-let timer = new Timer()
-
-
-
-export function postTypingStat(name, matrix) {
-    let stat = {
-        typings: prettyNumber(matrix.rowKeys().length, {separator: ' '}),
-        patients: prettyNumber(unique(matrix.columnValues('patientID')).length, {separator: ' '}),
-        alleles: prettyNumber(matrix.colKeys().length, {separator: ' '}),
-        duration: timer.step() + ' ms'
-    }
-    Thread.post.addStat('filter', 'typing', name, stat)
-    // Thread.post.typingStatRow(name, stat)
-}
-export function postLocationStat(name, matrix) {
-    let stat = {
-        locations: prettyNumber(matrix.rowKeys().length, {separator: ' '}),
-        patients: prettyNumber(unique(matrix.columnValues('patientID')).length, {separator: ' '}),
-        duration: timer.step() + ' ms'
-    }
-    Thread.post.addStat('filter', 'location', name, stat)
-    // Thread.post.locationStatRow(name, stat)
-}
-
-
-function getStat(matrix) {
-    return {
-        keys: matrix.rowKeys().length,
-        count: prettyNumber(matrix.count(), {separator: ' '}),
-        size: prettyNumber(matrix.size(), {separator: ' '}),
-        duration: timer.step(),
-    }
-}
 
 
 
@@ -154,13 +121,64 @@ export function calculateLocationDistance(input) {
 
 
 
-// export function getStat(matrix) {
-//     // let timeDiff = Date.now() - time
-//     // time = Date.now()
-//     return {
-//         rows: matrix.rowKeys().length,
-//         patients: unique(matrix.columnValues('patientID')).length,
-//         columns: matrix.colKeys().length,
-//         duration: timer.step()
-//     }
-// }
+
+
+
+
+/// --- TIMER
+
+
+let timer = new Timer()
+
+
+
+export function postTypingStat(name, matrix) {
+    let separator = '_'
+    // let stat = {
+    let typings = matrix.rowKeys().length
+    let patients = unique(matrix.columnValues('patientID')).length
+    let tpp = (typings / patients).toFixed(2)
+    let alleles = matrix.colKeys().length
+    let duration = timer.step()
+    let stat = {
+        typings: prettyNumber(typings, { separator }),
+        patients: prettyNumber(patients, { separator }),
+        alleles: prettyNumber(alleles, { separator }),
+        '#/p': tpp,
+        duration: duration + 'ms'
+    }
+    Thread.post.addStat('filter', 'typing', name, stat)
+}
+export function postLocationStat(name, matrix) {
+    let separator = '_'
+    let locations = matrix.rowKeys().length
+    let patients = unique(matrix.columnValues('patientID')).length
+    let lpp = (locations / patients).toFixed(2)
+    let duration = timer.step()
+    let stat = {
+        locations: prettyNumber(locations, { separator }),
+        patients: prettyNumber(patients, { separator }),
+        '#/p': lpp,
+        duration: duration + 'ms'
+    }
+    Thread.post.addStat('filter', 'location', name, stat)
+    // Thread.post.locationStatRow(name, stat)
+}
+
+
+function getStat(matrix) {
+    let separator = '_'
+    let keys = matrix.rowKeys().length
+    let count = matrix.count()
+    let size = matrix.size()
+    let density = ((count / size) * 100).toFixed(0) + '%'
+    let duration = timer.step()
+
+    return {
+        keys,
+        count: prettyNumber(count, { separator }),
+        size: prettyNumber(size, { separator }),
+        density,
+        duration: duration + ' ms',
+    }
+}

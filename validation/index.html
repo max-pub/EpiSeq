@@ -3,12 +3,16 @@
 <link rel="stylesheet" href="../style/style.css">
 
 <h1>Validation</h1>
-<p>data validation</p>
+<!-- <h3>data validation</h3> -->
 
 <form>
-    <div class="flex-around">
+    <div class="flex-row">
+        <!-- <div> -->
         <div id="prep"></div>
+        <!-- </div> -->
+        <!-- <div> -->
         <div id="corr"></div>
+        <!-- </div> -->
     </div>
     <center>
         <button id="submit" type="submit">start validation with given parameters</button>
@@ -16,15 +20,95 @@
 </form>
 
 
+<output></output>
+
+<!-- <table id="output"></table> -->
+
+
+
 <style>
-    h1 {
-        /* margin: 7rem 0 2rem 0; */
-        /* padding: 0; */
+    @media print {
+        @page {
+            /* size: landscape; */
+            /* margin: 1cm; */
+            /* Optional: defines page margins */
+        }
+
+        output {
+            display: block !important;
+            overflow: visible !important;
+            width: 100% !important;
+            float: none !important;
+            position: static !important;
+        }
+
+        output h2 {
+            display: block !important;
+            /* Clear any float or flex influence */
+            float: none !important;
+
+            /* Apply the break - use only the modern property */
+            break-before: always !important;
+            /* Fallback for older browsers */
+            page-break-before: always !important;
+
+            /* Ensure no margin collapsing prevents the break */
+            margin-top: 0 !important;
+            padding-top: 1cm !important;
+        }
+
+        #___raw_input_data,
+        #___filtered_data,
+        #___pseudonymized_data {
+            flex-direction: column !important;
+        }
+
+        #___correlation_result {
+            break-before: avoid !important;
+        }
+        button{display:none}
+    }
+
+
+    .flex-row {
+        display: flex;
+        flex-direction: row;
+        /* Option A: Space between items only */
+        /* justify-content: space-between; */
+        /* Option B: Space around all items including ends */
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
+    .flex-row>div {
+        /* Forces all items to grow and shrink equally from a 0 basis */
+        flex: 1 1 0;
+
+        /* Optional: Ensure content doesn't push width wider than the flex-basis */
+        min-width: 0;
+        margin: 0 2rem;
+    }
+
+    h1,
+    h2,
+    h3 {
+        margin: 0 auto;
         text-align: center;
     }
-    p{
-        text-align: center;
+
+    h2 {
+        margin-top: 4rem;
     }
+
+    table {
+        margin: 1rem auto;
+    }
+
+    form td {
+        text-align: left;
+        border: none;
+    }
+
 
     .help {
         display: none;
@@ -37,53 +121,12 @@
         vertical-align: top;
     }
 
-    .left,
-    .right,
-    .title,
-    .subtitle,
-    .center {
-        border: 0;
-        text-align: center;
-    }
 
-    .left>*,
-    .right>*,
-    .center>* {
-        margin: 1rem auto;
-    }
-
-    .title {
-        font-size: 1.2rem;
-        font-weight: bold;
-        padding-top: 5rem;
-        padding-bottom: 2rem;
-        text-align: center;
-    }
-
-    #output {
-        width: 100%;
-    }
-
-    /* output>*{margin:0 auto;} */
-    #___distance_calculation .left {
+    #___distance_calculation {
         background: #eee;
-        /* border-left: 1px solid silver; */
-        /* border-bottom: 1px solid silver; */
-        /* border-top: 1px solid silver; */
-    }
-
-    #___distance_calculation .right {
-        background: #eee;
-        /* border-right: 1px solid silver; */
-        /* border-bottom: 1px solid silver; */
-        /* border-top: 1px solid silver; */
     }
 </style>
 
-
-<table id="output"></table>
-
-<output></output>
 
 
 <script type="module" src="index.js"></script>

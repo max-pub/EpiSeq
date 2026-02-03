@@ -1,4 +1,4 @@
-import { Thread } from '../lib/ext/bundle.js'
+import { keep, Thread } from '../lib/ext/bundle.js'
 // import { DistanceMatrix } from '../lib/DistanceMatrix.js'
 import { Matrix } from '../lib/Matrix.js'
 import { TaliStream } from '../lib/tali.stream.js'
@@ -18,7 +18,7 @@ import { Timer } from './Timer.js'
 // let time = 0
 
 
-let DEBUG //= true
+let DEBUG = true
 let DEMO //= true
 
 
@@ -33,6 +33,11 @@ export async function start(config) {
     console.log('thread start with settings', config)
     Thread.post.start()
 
+    // console.log('keep', keep2(config, 'from', 'till', 'rowFilter', 'columnFilter'))
+    // console.log("FROM", config['from'])
+    let prepParam = { MDRO: config.germName, ...keep2(config, 'from', 'till', 'dateRequired', 'rowFilter', 'columnFilter', 'countNull', 'clinicRequired', 'wardRequired', 'roomRequired', 'pseudonymize') }
+    Thread.post.parameterExport(prepParam)
+
     let s0, s1, s2, s3a, s3b
 
     try {
@@ -46,13 +51,15 @@ export async function start(config) {
     }
 
     // Thread.post.statsByYear(statsByYear(s0.typingMatrix, s0.locationMatrix, 'raw data by year').html(), 'before')
+
     Thread.post.statsByYear(statsByYear(s0.typingMatrix, s0.locationMatrix).data, 'before')
 
-    if (DEBUG) {
-        // console.log('pac bio raw', pacBio(filtered.typingMatrix))
-        Thread.post.output(`<p>${config.germName} pac-bio before filter: ` + pacBio(s0.typingMatrix).join(' / ') + `</p>`)
-        // console.log('location names', locationNames(s0.locationMatrix))
-    }
+    Thread.post.pacBio('before', ...pacBio(s0.typingMatrix))
+    // if (DEBUG) {
+    //     // console.log('pac bio raw', pacBio(filtered.typingMatrix))
+    //     Thread.post.output(`<p>${config.germName} pac-bio before filter: ` + pacBio(s0.typingMatrix).join(' / ') + `</p>`)
+    //     // console.log('location names', locationNames(s0.locationMatrix))
+    // }
 
     // t0 = Date.now()
     timer1.measure('1. filter', () => {
@@ -62,10 +69,11 @@ export async function start(config) {
     // Thread.post.statsByYear(statsByYear(s1.typingMatrix, s1.locationMatrix, 'filtered data by year').html(), 'after')
     Thread.post.statsByYear(statsByYear(s1.typingMatrix, s1.locationMatrix).data, 'after')
 
-    if (DEBUG) {
-        Thread.post.output(`<p>${config.germName} pac-bio after filter:` + pacBio(s1.typingMatrix).join(' / ') + `</p>`)
-        // console.log('pac bio filtered', pacBio(filtered.typingMatrix))
-    }
+    Thread.post.pacBio('after', ...pacBio(s1.typingMatrix))
+    // if (DEBUG) {
+    //     Thread.post.output(`<p>${config.germName} pac-bio after filter:` + pacBio(s1.typingMatrix).join(' / ') + `</p>`)
+    //     // console.log('pac bio filtered', pacBio(filtered.typingMatrix))
+    // }
 
     timer1.measure('2. pseudonymization', () => {
         let pseudonymizationLengths = { patientID: 4, sequenceID: 5, locationID: 5, clinic: 3, ward: 3, room: 4 }
@@ -155,7 +163,16 @@ export function tabline() {
 
 
 
-
+function keep2(input, ...keys) {
+    // console.log('keep2', input, keys)
+    let output = {}
+    for (let k of keys)
+        if (input[k] !== undefined)
+            output[k] = input[k]
+        else output[k] = false
+    // console.log('keep output',output)
+    return output
+}
 
 
 

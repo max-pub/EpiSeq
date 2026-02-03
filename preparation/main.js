@@ -44,9 +44,11 @@ export function error(text) {
 let stats = {
     // typing: new Matrix('TypingFilter'),
     // location: new Matrix('LocationFilter'),
+    parameters: new Matrix('preparationParameters'),
     durations: new Matrix('Durations'),
-    before: new Matrix('DataBeforeFilters'),
-    after: new Matrix('DataAfterFilters'),
+    pacBio: new Matrix('PacBio'),
+    // before: new Matrix('DataBeforeFilters'),
+    // after: new Matrix('DataAfterFilters'),
 }
 
 
@@ -89,7 +91,17 @@ export function addStat(primary, secondary, tertiary, data) { // filter, locatio
 //     $(`table#location tbody`).insertAdjacentHTML('beforeend', `<tr><th>${mode}</th><td>${data.rows}</td><td>${data.patients}</td><td class='duration'>${data.duration}ms</td></tr>`)
 // }
 
+export function parameterExport(p) {
+    // console.log('parameter export', p)
+    for (let k in p) {
+        stats.parameters.set(k, 'value', p[k])
+    }
+}
 
+export function pacBio(filter, a, b) {
+    stats.pacBio.set(filter + 'Filter', 'beforeDate', a)
+    stats.pacBio.set(filter + 'Filter', 'afterDate', b)
+}
 
 export function durationTable(list) {
     // let x = new Matrix('durations')
@@ -106,7 +118,10 @@ export function durationTable(list) {
 export function statsByYear(data, n) {
     // console.log('statsByYear html', html)
     // $(`#statsByYear${n}`).innerHTML = html
-    stats[n].setData(data)
+
+    // reactivate lien below to have stats in download
+    // stats[n].setData(data)
+
     // $(`#statsByYear .${n}`).innerHTML = `<h1>${n} filter</h2>`+html
     // $('output').insertAdjacentHTML('beforeend', `<div class="statsByYear">${html}</div>`)
 }

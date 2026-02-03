@@ -1,0 +1,49 @@
+<fieldset>
+    <legend>Select Data Source</legend>
+    <table id="data">
+        <tr>
+            <td>
+                <label>
+                    <input type="radio" name="data" value="mrsa">
+                    MRSA <span>from ukm.de</span>
+                </label>
+                <label>
+                    <input type="radio" name="data" value="vre">
+                    VRE <span>from ukm.de</span>
+                </label>
+                <label>
+                    <input type="radio" name="data" value="coli" checked>
+                    MDR E. coli <span>from ukm.de</span>
+                </label>
+                <hr />
+                <label>
+                    <input type="radio" name="data" value="file">
+
+                    <input type="file" name="file" accept=".tsv" />
+                    <span id="filename"></span>
+                    <!-- <input type="file" name="file" accept=".tsv" /> -->
+
+                </label>
+                <!-- <label>
+                        <input type="radio" name="data" value="coli22" checked>
+                        test <span>from ukm.de</span>
+                    </label> -->
+
+            </td>
+            <td>
+                <p>
+                    Use pre-processed,<br />
+                    pseudonymized data<br />
+                    from our publication.
+                    <br />
+                    <br />
+                    <br />
+                    or supply your own data<br />
+                    preprocessed from <a href="../correlation/">correlation</a>
+                </p>
+                <!-- <br/>
+                <input type="file" name="file" accept=".tsv" /> -->
+            </td>
+        </tr>
+    </table>
+</fieldset>

@@ -23,7 +23,7 @@ export async function start(config) {
         s0.typingMatrix.html(),
         s0.locationMatrix.html()
     )
-
+    // console.log('raw location data', s0.locationMatrix.data)
     let s1 = preparation.filter(s0, config)
     Thread.post.two('1: Filtered Data',
         s1.typingMatrix.html(),
@@ -52,7 +52,8 @@ export async function start(config) {
             s3b.room.html()
         ].join(' '),
     )
-
+    console.log('typing distances', s3a.typingMatrix.tabline())
+    console.log('clinic distances', s3b.clinic.tabline())
 
     let s4a = correlation.typingFilter(s3a, config)
     let s4b = correlation.locationFilter(s3b, config)

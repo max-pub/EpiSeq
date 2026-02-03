@@ -17,6 +17,7 @@ import * as main from './main.js'
 let thread = await new Thread('work.js', import.meta.url).init({ responder: main })
 // console.log('thread ready', thread)
 
+await loadHTML('#data','data.html');
 await loadHTML('#form','form.html');
 
 if (await KV.prep) {
@@ -24,7 +25,7 @@ if (await KV.prep) {
     $('#data hr').insertAdjacentHTML('afterend',`
         <label>
         <input type="radio" name="data" value="prep" checked>
-            cached data from step 1
+            cached data from [preparation]
         </label>
         `)
 }
@@ -34,11 +35,21 @@ if (await KV.prep) {
 //     // exportVectorPdf($('#correlation .chart'), 'correlation-chart.pdf')
 // })
 
-$('#download').addEventListener('click', async (e) => {
+$('#downloadResult').addEventListener('click', async (e) => {
     // console.log('download now')
     let data = await thread.tabline()
-    download('data.tsv', data)
+    download('correlation.tsv', data)
 })
+
+$('#cacheAndProceed').addEventListener('click', async (e) => {
+    let data = await thread.tabline()
+    KV.corr = data
+    await KV.corr // ensure it's saved
+    console.log('data cached to KV store', await KV.corr)
+    window.location.href = '../thresholds/'
+})
+
+
 
 $('[type=file]').addEventListener('change', (e) => {
     let input = e.target

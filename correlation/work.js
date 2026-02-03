@@ -28,13 +28,17 @@ export async function start(config) {
     console.log('worker started with settings:', config)
     // await startStream()
     let s3 = await loadData(config)
+    // console.log("schema", s3.info.data, s3.info.get('schemaLength', 'value'))
+    config = { ...config, schemaLength: s3.info.get('schemaLength', 'value'), germName: s3.info.get('germName', 'value') }
 
     let s4a = correlation.typingFilter(s3, config, { histogram: true })
+    // console.log("S4A",s4a)
     let s4b = correlation.locationFilter(s3, config)
+    config.schemaLength = parseInt(s3.info.get('schemaLength', 'value'))
     let s5 = correlation.doCorrelation({ ...s4a, ...s4b }, config)
+    // console.log('correlation results', s5.correlationAbsolute)
 
-
-    output.correlation = { ...s5, ...s4a, ...s4b }
+    output.correlation = { ...s5, ...s4a, ...s4b, config }
     // output.intermediary = { ...s4a, ...s4b }
 }
 
@@ -55,7 +59,7 @@ export async function start(config) {
 async function loadData(config) {
     let stream = await getStream(config)
     let data = await loadStream(stream)
-    console.log('data loaded', data)
+    // console.log('data loaded', data)
     let result = validateInput(data)
     return data
 }
@@ -66,7 +70,7 @@ async function getStream(settings) {
         case 'prep':
             return await TaliStream.fromString(await KV.prep)
         default:
-            let url = new URL(`../demo/${settings.data}.tsv`, import.meta.url)
+            let url = new URL(`../demo/correlation/${settings.data}.tsv`, import.meta.url)
             return await TaliStream.fromURL(url)
     }
 }
@@ -121,7 +125,34 @@ function validateInput(data) {
 export function tabline(name = 'correlation') {
     console.log('create download', output)
     // console.log('tl1',output.typingHistogram.tabline())
-    let string = Object.values(output[name]).map(x => x.tabline()).join('\n\n')
+    // output.correlation.c12 = correlation.debug
+    let c = output.correlation.config
+    // console.log("CONF", c)
+    let preparationParameters = new Matrix('preparationParameters')
+    preparationParameters.set('MDRO', 'value', c.germName)
+    preparationParameters.set('T_len', 'value', c.schemaLength)
+
+    let correlationParameters = new Matrix('correlationParameters')
+    correlationParameters.set('S_gap', 'value', c.TT)
+    correlationParameters.set('C_gap', 'value', c.CT)
+    correlationParameters.set('C_loc', 'value', c.CS.map(x => x[0].toUpperCase()).join(''))
+    correlationParameters.set('C_hop', 'value', c.CD)
+    correlationParameters.set('T_tol', 'value', c.MR)
+
+    let arr = [
+        preparationParameters.tabline(),
+        correlationParameters.tabline(),
+        // output.correlation.histogram.flip().tabline(),
+        output.correlation.correlationAbsolute.flip().tabline(),
+        // output.correlation.correlationAbsoluteTC.flip().tabline(),
+        // output.correlation.correlationRelative.flip().tabline(),
+        // output.correlation.correlationRelativeCompounded.flip().tabline(),
+        // output.correlation.correlationStats_xMED.flip().tabline(),
+        // output.correlation.correlationStats_MEDxMAD.flip().tabline(),
+        // output.correlation.correlationStats_AMxSD.flip().tabline(),
+    ]
+    let string = arr.join('\n\n')
+    // let string = Object.values(output[name]).map(x => x.tabline()).join('\n\n')
     // let string = new Matrix(output.correlation).tabLine()
     // console.log('dl ', string)
     return string

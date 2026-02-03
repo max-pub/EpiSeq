@@ -1,0 +1,40 @@
+
+
+
+<fieldset>
+    <legend>Threshold Parameters</legend>
+
+    <table>
+
+        <tr>
+            <td> S<sub>min</sub> </td>
+            <td class="help1"> Minimum Sample Count</td>
+            <td> <input type="number" name="S_min" value="20" min="0" max="99" size="2" /> </td>
+            <td class="help"> min. required amount of typings to consider for threshold calculation </td>
+        </tr>
+
+
+        <tr>
+            <td> F<sub>med</sub> </td>
+            <td class="help1">median - Factor </td>
+            <td> <input type="number" name="F_med" value="3" min="0" max="99" size="2" /> </td>
+            <td class="help">for Baseline-Relative metric</td>
+        </tr>
+
+        <tr>
+            <td> F<sub>MAD</sub> </td>
+            <td class="help1">MAD - Factor </td>
+            <td> <input type="number" name="F_mad" value="7" min="0" max="99" size="2" /> </td>
+            <td class="help">for Hampel-Filter metric</td>
+        </tr>
+
+        <!-- <tr>
+            <td> F<sub>SD</sub> </td>
+            <td class="help1">SD - Factor </td>
+            <td> <input type="number" name="F_med" value="2" min="0" max="99" size="2" /> </td>
+            <td class="help"></td>
+        </tr> -->
+
+    </table>
+
+</fieldset>

@@ -6,11 +6,11 @@ import * as typing from './lib/typing.js'
 import * as contact from './lib/contact.js'
 import * as correlation from './lib/correlation.js'
 import { postProgress } from '../lib/Progress.js'
+import { Matrix } from '../lib/Matrix.js'
 
 function getStat(matrix) {
     return { keys: matrix.rowKeys().length, count: matrix.count(), size: matrix.size() }
 }
-
 
 
 function patientID_multiples(input) {
@@ -33,9 +33,10 @@ export function typingFilter(input, settings, options = { patientID: false, hist
     // console.log('typing after merge', JSON.stringify(output.typingMatrix.data))
     Thread.post.stat({ type: 'typing', mode: 'patientID', data: getStat(output.typingMatrix) })
     // console.log('SCHMEA LENGTH', input.info.get('schemaLength', 'value'))
-    if (options.histogram) histogram({ typingMatrix: output.typingMatrix, info: input.info })
-    output.typingMatrix = output.typingMatrix.filter(value => value <= settings.TD, { onProgress: postProgress(`clip typing distance above ${settings.TD}`) })
-    Thread.post.stat({ type: 'typing', mode: 'distanceFilter', data: getStat(output.typingMatrix) })
+    if (options.histogram)
+        output.histogram = histogram({ typingMatrix: output.typingMatrix, info: input.info })
+    // output.typingMatrix = output.typingMatrix.filter(value => value <= settings.TD, { onProgress: postProgress(`clip typing distance above ${settings.TD}`) })
+    // Thread.post.stat({ type: 'typing', mode: 'distanceFilter', data: getStat(output.typingMatrix) })
     return output
 }
 
@@ -45,8 +46,13 @@ export function histogram(data) {
     // console.log('input info', input.info)
     Thread.post.setGermName(data.info.get('germName', 'value'))
     let germName = data.info.get('germName', 'value')
-    Thread.post.showHistogram(typingHistogram, germName)
-
+    // Thread.post.showHistogram(typingHistogram, germName)
+    // console.log("HISTOGRAM", typingHistogram)
+    let out = new Matrix("histogram")
+    for (let i in typingHistogram)
+        out.set(i, 'count', typingHistogram[i])
+    // console.log("HISTO 2",out)
+    return out
 }
 
 
@@ -70,13 +76,24 @@ export function doCorrelation(input, settings) {
     let output = {}
     let contacts = contact.extractContactsPerPatient(input.contactMatrix)
     output.correlationAbsolute = correlation.correlate(input.typingMatrix, contacts, settings)
-    output.correlationRelative = correlation.relative(output.correlationAbsolute)
+    output.correlationAbsoluteTC = correlation.absoluteTC(output.correlationAbsolute, settings)
+    output.correlationRelative = correlation.relative(output.correlationAbsoluteTC)
     output.correlationRelativeCompounded = correlation.compound(output.correlationRelative)
-    output.correlationStats_am2sd = correlation.stats_AM2SD(output.correlationRelativeCompounded)
-    output.correlationStats_med2mad = correlation.stats_MED20MAD(output.correlationRelativeCompounded)
-    console.log('doCorrelation output', output)
-    Thread.post.correlation(output.correlationRelative.data, { am2sd: output.correlationStats_am2sd.flip().data, med2mad: output.correlationStats_med2mad.flip().data }, output.correlationAbsolute.data)
+    output.correlationStats_xMED = correlation.stats_xMED(output.correlationRelativeCompounded)
+    output.correlationStats_MEDxMAD = correlation.stats_MEDxMAD(output.correlationRelativeCompounded)
+    // output.correlationStats_AMxSD = correlation.stats_AMxSD(output.correlationRelativeCompounded)
+    output.correlationDebug = correlation.debug
+    // console.log('doCorrelation output', output)
+    let stats = {
+        xMED: output.correlationStats_xMED.flip().data,
+        MEDxMAD: output.correlationStats_MEDxMAD.flip().data,
+        // AMxSD: output.correlationStats_AMxSD.flip().data, 
+    }
+    Thread.post.showCorrelationTable(output.correlationAbsolute.data)//, data.info.data)
 
+    // Thread.post.correlation(output.correlationRelative.data, stats, output.correlationAbsolute.data, settings)
+    // Thread.post.showThreshold(stats)
+    Thread.post.showDownload()
     Thread.post.showProgress(false)
     return output
 }

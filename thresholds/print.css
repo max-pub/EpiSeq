@@ -1,0 +1,62 @@
+ @media print {
+     @page {
+         size: 210mm 91mm;
+         margin: 0;
+         padding: 0;
+     }
+
+     /* 1. Hide every element on the page */
+     body {
+         padding: 0;
+         margin: 0
+     }
+
+     body>* {
+         display: none;
+         /* visibility: hidden; */
+     }
+
+     /* 2. Reveal the specific chart container and all its children */
+     /* #histogram, */
+     /* #correlation */
+     .print {
+         display: block;
+         margin: 0 !important;
+         /* width: 100vw !important; */
+         /* height: 100vh !important; */
+         /* visibility: visible; */
+     }
+
+     /* .print~* {
+            display: none !important;
+        } */
+
+     .flex-between {
+         display: none;
+     }
+
+     .chart {
+         width: 100% !important;
+         border: none !important;
+         /* width: 100vw !important; */
+         /* margin-bottom: 11rem; */
+         /* width: 20cm !important; */
+         /* height: 10cm !important; */
+     }
+
+     svg {
+         /* width: 100vw !important; */
+
+     }
+
+     .divider {
+         display: block;
+         page-break-after: always;
+
+     }
+
+     #download {
+         display: none;
+     }
+
+ }
